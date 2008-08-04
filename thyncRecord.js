@@ -63,6 +63,10 @@ var thyncRecord = new Class({
       }
       return this;
     },
+    destroy: function() {
+      this.sql = "DELETE FROM " + this.options.table + " WHERE id=" + this.id + ";";
+      //call delete query
+    },
     save: function() {
       if(this.id == null) {
         this.sql = "INSERT INTO " + this.options.table + " " + this.columnNames() + this.columnValues();

@@ -1,88 +1,123 @@
-var thyncRecord = new Class({
+//firefox/air debug function, kill w/ global var named prod
+function puts(str) {
+  if(typeof prod != "undefined")
+    return;
+  if(typeof console != "undefined" && console.log)
+    console.log("%s", str);
+  if(typeof air != "undefined" && air.trace)
+    air.trace(str);
+}
+
+var thyncModel = new Class({
     Implements: Options,
     options: {
       columns: {},
-      id: null,
     },
     initialize: function(options) {
-      this.setOptions(options);
       this.sql = "";
-      this.order = "ASC";
+      this.id = null;
+      this.setOptions(options);
+      this.table = this.options.table;
+      
+      //if table does not exist, create.
+      //manage migrations akelos-style, numbered and in one file
     },
-    count: function() {
-      this.sql = "SELECT COUNT(*) FROM " + this.options.table + ";";
-      return this.sql;
+    count: function(conditions) {
+      this.sql = "SELECT COUNT(*) FROM " + this.table;
+      if(conditions)
+        this.sql += " WHERE " + conditions;
+      this.sql += ";";
+      puts(this.sql);
     },
-    find: function(options) {
-      if(!options)
-        this.sql = "SELECT * FROM " + this.options.table + ";";
+    
+    //finders: find, all, first, last, find_by
+    find: function(id, options) {
+      if (!id) 
+        throw ("Missing ID Parameter");
       else {
-        if(!options.columns)
-          options.columns = "*";
-        this.sql = "SELECT " + options.columns + " FROM " + this.options.table;
-        if(options.conditions)
-          this.sql += " " + options.conditions;
-        if(options.order)
-          this.sql += " ORDER BY " + options.order;
+        this.sql = "SELECT * FROM " + this.table + " WHERE id=" + id;
+        if (options) 
+          this.parseFindOptions(options);
         this.sql += ";";
-      }      
-      return this;
-      //run query, assign results to array of new thyncRecord objects that can be individually overwritten
+        //actually return thyncRecord with proper cols, data
+        puts(this.sql);
+      }
     },
-    find_by: function(column, value) {
-      this.sql = "SELECT * FROM " + this.options.table + " WHERE " + column + "=" + this.typeValue(column, value);
-      return this;
+    find_by: function(field, value) {
+      if(!this.options.columns[field])
+        throw("column " + field + " does not exist in table " + this.table);
+      else {
+        this.sql = "SELECT * FROM " + this.table + " WHERE " + field + "=" + this.typeValue(field, value);
+        puts(this.sql);
+        //return thyncRecord
+      }
+    },
+    all: function(options) {
+      if (!options) 
+        this.sql = "SELECT * FROM " + this.table + ";";
+      else {
+        this.parseFindOptions(options);
+        this.sql += ";";
+      }
+      puts(this.sql);
+      //return array of thyncRecords
     },
     first: function(options) {
-      if(!options) {
-        var options = {};
-      }
-      if(!options.columns)
-        options.columns = "*";
-      this.sql = "SELECT " + options.columns + " FROM " + this.options.table;
-      if(options.conditions)
-        this.sql += " " + options.conditions;
+      if(!options)
+        this.sql = "SELECT * FROM " + this.table;
+      else
+        this.parseFindOptions(options);
       this.sql += " LIMIT 1;";
-      return this;
+      puts(this.sql);
+      //return thyncRecord
     },
     last: function(options) {
-      if(!options) {
-        var options = {};
-      }
-      if(!options.columns)
-        options.columns = "*";
-      this.sql = "SELECT " + options.columns + " FROM " + this.options.table;
-      if(options.conditions)
-        this.sql += " " + options.conditions;
+      if(!options)
+        this.sql = "SELECT * FROM " + this.table;
+      else
+        this.parseFindOptions(options);
       this.sql += " DESC LIMIT 1;";
-      return this;
+      puts(this.sql);
+      //return thyncRecord
     },
+    
+    //equivalent to Model.new in ActiveRecord
     create: function(options) {
+      if(!options)
+        options = {};
+      var data = {};
       for(col in this.options.columns) {
-        this[col] = options[col] || null;
+        data[col] = options[col] || null;
       }
-      return this;
+      return new thyncRecord({
+        model: this,
+        columns: this.options.columns,
+        data: data
+      });
     },
-    destroy: function() {
-      this.sql = "DELETE FROM " + this.options.table + " WHERE id=" + this.id + ";";
-      //call delete query
+    
+    //delete
+    destroy: function(id) {
+      this.sql = "DELETE FROM " + this.table + " WHERE id=" + id + ";";
+      puts(this.sql);
     },
-    save: function() {
-      if(this.id == null) {
-        this.sql = "INSERT INTO " + this.options.table + " " + this.columnNames() + this.columnValues();
+    
+    //insert or update
+    save: function(data) {
+      if(data.id == null) {
+        this.sql = "INSERT INTO " + this.table + " " + this.columnNames() + this.columnValues(data);
       }
       else {
-        this.sql = "UPDATE " + this.options.table + " SET ";
+        this.sql = "UPDATE " + this.table + " SET ";
         for(col in this.options.columns) {
-          this.sql += col + "=" + this.typeValue(col) + ",";
+          this.sql += col + "=" + this.typeValue(col, data[col]) + ",";
         }
         this.sql = this.sql.substr(0, this.sql.length - 1);
-        this.sql += " WHERE id=" + this.id + ";";
+        this.sql += " WHERE id=" + data.id + ";";
       }
-      return this.sql;
-    },
-    reload: function() {
-      //call sql query again
+      puts(this.sql);
+      //be sure to return ID so thyncRecord can set it for reload purposes
+      return 22;
     },
 
 //utilities
@@ -95,31 +130,87 @@ var thyncRecord = new Class({
       columns = columns.substr(0, columns.length - 1);
       return columns + ")";
     },
-    columnValues: function() {
+    columnValues: function(data) {
       var values = " VALUES(";
       for(col in this.options.columns) {
         if(col != "id")
-          values += this.typeValue(col) + ",";
+          values += this.typeValue(col, data[col]) + ",";
       }
       values = values.substr(0, values.length - 1);
       return values + ");";
     },
-    typeValue: function(col, val) {
-      switch(this.options.columns[col]) {
-        case "number":
-          return val || this[col];
+    typeValue: function(field, val) {
+      if(val == null)
+        return "NULL";
+      switch(this.options.columns[field]) {
+        case "integer":
+        case "float":
+          return val || this[field];
         case "text":
-          return "'" + (val || this[col]) + "'";
+          return "'" + (val || this[field]) + "'";
       }
-    }
+    },
+    parseFindOptions: function(options) {
+      if(!options.select)
+        options.select = "*";
+      this.sql = "SELECT " + options.select + " FROM " + this.table;
+      if(options.conditions)
+        this.sql += " WHERE " + options.conditions;
+      if(options.order)
+        this.sql += " ORDER BY " + options.order;
+      if(options.limit)
+        this.sql += " LIMIT " + options.limit;
+    },
 });
 
-//example model
-var Person = new thyncRecord({
-    table: "people",
-    columns: {
-        id: "number",
-        name: "text",
-        company: "text"
+//represents model data in memory, necessary to separate "class" methods from "instance" methods
+var thyncRecord = new Class({
+  Implements: Options,
+  options: {
+    columns: {},
+    data: {}
+  },
+  initialize: function(options) {
+    this.id = null;
+    this.setOptions(options);
+    //copy over column data
+    for(col in this.options.columns) {
+      this[col] = this.options.data[col];
     }
+  },  
+  destroy: function() {
+    if(!this.id)
+      throw("Unsaved record cannot be destroyed");
+    else
+      this.options.model.destroy(this.id);
+  },
+  save: function() {
+    var data = {};
+    for(col in this.options.columns)
+      data[col] = this[col];
+    if(this.id)
+      data["id"] = this.id;
+    this.id = this.options.model.save(data);
+  },
+  reload: function() {
+    this.options.model.find(this.id);
+  }
+});;
+
+//example model
+var Person = new thyncModel({
+  table: "people",
+  columns: {
+    name: "text",
+    company: "text",
+    age: "integer"
+  }
+});
+
+var User = new thyncModel({
+  table: "users",
+  columns: {
+    login_email: "text",
+    password: "text"
+  }
 });

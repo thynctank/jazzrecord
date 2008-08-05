@@ -195,7 +195,7 @@ var ThyncRecord = new Class({
   reload: function() {
     this.options.model.find(this.id);
   }
-});;
+});
 
 //example model
 var Person = new ThyncModel({

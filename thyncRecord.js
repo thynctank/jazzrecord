@@ -35,8 +35,9 @@ var ThyncModel = new Class({
     if (!id) 
       throw ("Missing ID Parameter");
     else {
-      this.sql = "SELECT * FROM " + this.table + " WHERE id=" + id;
-      if (options) 
+      if(!options)
+        this.sql = "SELECT * FROM " + this.table + " WHERE id=" + id;
+      else
         this.parseFindOptions(options);
       this.sql += ";";
       //actually return ThyncRecord with proper cols, data
@@ -142,27 +143,33 @@ var ThyncModel = new Class({
   typeValue: function(field, val) {
     if(val == null)
       return "NULL";
-    switch(this.options.columns[field]) {
-      case "integer":
-      case "float":
-        return val || this[field];
-      case "text":
-        return "'" + (val || this[field]) + "'";
-    }
+    else
+      switch(this.options.columns[field]) {
+        case "integer":
+        case "float":
+          return val || this[field];
+        case "text":
+          return "'" + (val || this[field]) + "'";
+      }
   },
   parseFindOptions: function(options) {
     if(!options.select)
       options.select = "*";
+    else
+      options.select = "id, " + options.select;
+      
     this.sql = "SELECT " + options.select + " FROM " + this.table;
     if(options.conditions)
       this.sql += " WHERE " + options.conditions;
     if(options.order)
       this.sql += " ORDER BY " + options.order;
-    if(options.limit)
+    if(typeof options.limit == "number")
       this.sql += " LIMIT " + options.limit;
   },
   query: function() {
     puts(this.sql);
+    // run query on SQLite
+    // potentially abstract to work with Google Gears as well as AIR
   }
 });
 
@@ -184,23 +191,28 @@ var ThyncRecord = new Class({
   destroy: function() {
     if(!this.id)
       throw("Unsaved record cannot be destroyed");
-    else
+    else {
       this.options.model.destroy(this.id);
+      this.id = null;
+    }
   },
   save: function() {
     var data = {};
     for(col in this.options.columns)
       data[col] = this[col];
     if(this.id)
-      data["id"] = this.id;
+      data.id = this.id;
     this.id = this.options.model.save(data);
   },
   reload: function() {
-    this.options.model.find(this.id);
+    if(!this.id)
+      throw("Unsaved record cannot be reloaded");
+    else
+      this.options.model.find(this.id);
   }
 });
 
-//example model
+//example models
 var Person = new ThyncModel({
   table: "people",
   columns: {

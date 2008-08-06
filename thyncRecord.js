@@ -27,7 +27,7 @@ var ThyncModel = new Class({
     if(conditions)
       this.sql += " WHERE " + conditions;
     this.sql += ";";
-    puts(this.sql);
+    this.query();
   },
   
   //finders: find, find_by, all, first, last
@@ -40,7 +40,7 @@ var ThyncModel = new Class({
         this.parseFindOptions(options);
       this.sql += ";";
       //actually return ThyncRecord with proper cols, data
-      puts(this.sql);
+      this.query();
     }
   },
   find_by: function(field, value) {
@@ -48,7 +48,7 @@ var ThyncModel = new Class({
       throw("column " + field + " does not exist in table " + this.table);
     else {
       this.sql = "SELECT * FROM " + this.table + " WHERE " + field + "=" + this.typeValue(field, value);
-      puts(this.sql);
+      this.query();
       //return ThyncRecord
     }
   },
@@ -59,7 +59,7 @@ var ThyncModel = new Class({
       this.parseFindOptions(options);
       this.sql += ";";
     }
-    puts(this.sql);
+    this.query();
     //return array of ThyncRecords
   },
   first: function(options) {
@@ -68,7 +68,7 @@ var ThyncModel = new Class({
     else
       this.parseFindOptions(options);
     this.sql += " LIMIT 1;";
-    puts(this.sql);
+    this.query();
     //return ThyncRecord
   },
   last: function(options) {
@@ -77,7 +77,7 @@ var ThyncModel = new Class({
     else
       this.parseFindOptions(options);
     this.sql += " DESC LIMIT 1;";
-    puts(this.sql);
+    this.query();
     //return ThyncRecord
   },
   
@@ -99,7 +99,7 @@ var ThyncModel = new Class({
   //delete
   destroy: function(id) {
     this.sql = "DELETE FROM " + this.table + " WHERE id=" + id + ";";
-    puts(this.sql);
+    this.query();
   },
 
   //insert or update
@@ -115,7 +115,7 @@ var ThyncModel = new Class({
       this.sql = this.sql.substr(0, this.sql.length - 1);
       this.sql += " WHERE id=" + data.id + ";";
     }
-    puts(this.sql);
+    this.query();
     //be sure to return ID so ThyncRecord can set it for reload purposes
     return 22;
   },
@@ -160,6 +160,9 @@ var ThyncModel = new Class({
       this.sql += " ORDER BY " + options.order;
     if(options.limit)
       this.sql += " LIMIT " + options.limit;
+  },
+  query: function() {
+    puts(this.sql);
   }
 });
 
@@ -177,7 +180,7 @@ var ThyncRecord = new Class({
     for(col in this.options.columns) {
       this[col] = this.options.data[col] || null;
     }
-  },  
+  },
   destroy: function() {
     if(!this.id)
       throw("Unsaved record cannot be destroyed");

@@ -18,9 +18,12 @@ var ThyncModel = new Class({
     this.id = null;
     this.setOptions(options);
     this.table = this.options.table;
-  
+    this.belongs_to = {};
+    this.has_many = {};
+    this.has_and_belongs_to_many = {};
+    
     //if table does not exist, create.
-    //manage migrations akelos-style, numbered and in one file
+    //manage migrations akelos-style, numbered and in one file (notify user of upgrades)
   },
   count: function(conditions) {
     this.sql = "SELECT COUNT(*) FROM " + this.table;
@@ -36,12 +39,11 @@ var ThyncModel = new Class({
       throw ("Missing ID Parameter");
     else {
       if(!options)
-        this.sql = "SELECT * FROM " + this.table + " WHERE id=" + id;
+        this.sql = "SELECT * FROM " + this.table;
       else
         this.parseFindOptions(options);
-      this.sql += ";";
-      //actually return ThyncRecord with proper cols, data
-      this.query();
+      this.sql += " WHERE id=" + id + ";";
+      return this.query();
     }
   },
   find_by: function(field, value) {
@@ -49,8 +51,7 @@ var ThyncModel = new Class({
       throw("column " + field + " does not exist in table " + this.table);
     else {
       this.sql = "SELECT * FROM " + this.table + " WHERE " + field + "=" + this.typeValue(field, value);
-      this.query();
-      //return ThyncRecord
+      return this.query();
     }
   },
   all: function(options) {
@@ -60,8 +61,7 @@ var ThyncModel = new Class({
       this.parseFindOptions(options);
       this.sql += ";";
     }
-    this.query();
-    //return array of ThyncRecords
+    return this.query();
   },
   first: function(options) {
     if(!options)
@@ -69,8 +69,7 @@ var ThyncModel = new Class({
     else
       this.parseFindOptions(options);
     this.sql += " LIMIT 1;";
-    this.query();
-    //return ThyncRecord
+    return this.query();
   },
   last: function(options) {
     if(!options)
@@ -78,8 +77,7 @@ var ThyncModel = new Class({
     else
       this.parseFindOptions(options);
     this.sql += " DESC LIMIT 1;";
-    this.query();
-    //return ThyncRecord
+    return this.query();
   },
   
   //equivalent to Model.new in ActiveRecord
@@ -153,6 +151,10 @@ var ThyncModel = new Class({
       }
   },
   parseFindOptions: function(options) {
+    // whether to probe associations
+    if(options.deeper == false)
+      this.deeper = false;
+
     if(!options.select)
       options.select = "*";
     else
@@ -168,8 +170,34 @@ var ThyncModel = new Class({
   },
   query: function() {
     puts(this.sql);
+    if(typeof this.deeper == "undefined")
+      this.deeper = true;      
     // run query on SQLite
+    if(this.deeper) {
+    }
+    
+    var data = {};
+    switch(this.table) {
+      case "employees":
+        data = {id: 22, name: "Nick", company_id: 2};
+        break;
+      case "companies":
+        data = {id: 2, name: "RideCharge"};
+        break;
+    }
+    
+    return new ThyncRecord({
+      model: this,
+      columns: this.options.columns,
+      data: data
+    });
+    // preload one level deep of associations, this avoids having to build stack
+    // for preventing infinite loops as a result of models referencing each other
+    // perhaps add stack/deeper recursion later?
+    
     // potentially abstract to work with Google Gears as well as AIR
+    
+    // stub response
   }
 });
 
@@ -187,6 +215,8 @@ var ThyncRecord = new Class({
     for(col in this.options.columns) {
       this[col] = this.options.data[col] || null;
     }
+    if(this.options.data.id)
+      this.id = this.options.data.id;
   },
   destroy: function() {
     if(!this.id)
@@ -213,19 +243,26 @@ var ThyncRecord = new Class({
 });
 
 //example models
-var Person = new ThyncModel({
-  table: "people",
+var Employee = new ThyncModel({
+  table: "employees",
   columns: {
     name: "text",
-    company: "text",
     age: "integer"
   }
 });
 
-var User = new ThyncModel({
-  table: "users",
+var Company = new ThyncModel({
+  table: "companies",
   columns: {
-    login_email: "text",
-    password: "text"
+    name: "text"
   }
 });
+
+//associations must be defined after
+// Employee.belongs_to = {
+//   company: Company
+// };
+// 
+// Company.has_many = {
+//   employees: Employee
+// };

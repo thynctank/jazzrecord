@@ -31,6 +31,10 @@ ThyncRecord.Model = new Class({
     this.table = this.options.table;
 
     //if table does not exist, create.
+    if(!ThyncRecord.models.has(this.table))
+      ThyncRecord.models.set(this.table, this);
+    else
+      throw("You cannot create more than one model referring to table " + this.table);
     
     //manage migrations akelos-style, numbered and in one file (notify user of upgrades)
   },
@@ -151,11 +155,6 @@ ThyncRecord.Model = new Class({
   query: function(options) {
     if(!options)
       options = {};
-    // whether to probe associations
-    if(!$defined(options.depth))
-      this.deeper = ThyncRecord.depth;
-    else
-      this.deeper = options.depth - 1;
 
     this.sql = "{statement} {select} {preposition} {table} {substatement} {special} {conditions} {order} {limit} {offset}";
 
@@ -191,6 +190,12 @@ ThyncRecord.Model = new Class({
     // perhaps add stack/deeper recursion later?
     
     // potentially abstract to work with Google Gears as well as AIR
+
+    // whether to probe associations
+    if(!$defined(options.depth))
+      this.deeper = ThyncRecord.depth;
+    else
+      this.deeper = options.depth - 1;
     
     // stub response
     var id = options.id ? options.id : $random(1,300);
@@ -204,11 +209,16 @@ ThyncRecord.Model = new Class({
         break;
     }
     
+    if(this.deeper > 0 && this.options.belongs_to)
+      for(associated_model in this.options.belongs_to) {
+        data[associated_model] = ThyncRecord.models.get(this.options.belongs_to[associated_model]).find(data[associated_model + "_id"]);
+      }
+    
     var errors = {};
     
     return new ThyncRecord.Record({
       model: this,
-      columns: this.options.columns,
+      columns: $merge(this.options.columns, this.options.belongs_to),
       data: data,
       errors: errors
     });
@@ -265,6 +275,7 @@ ThyncRecord.Record = new Class({
 var Employee = new ThyncRecord.Model({
   table: "employees",
   // assocations defined as assoc_nam: "tablename"
+  belongs_to: {company: "companies"},
   columns: {
     name: "text",
     age: "number",

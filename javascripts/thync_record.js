@@ -31,6 +31,7 @@ ThyncRecord.Model = new Class({
     this.table = this.options.table;
 
     //if table does not exist, create.
+    
     //manage migrations akelos-style, numbered and in one file (notify user of upgrades)
   },
   count: function(conditions) {
@@ -192,7 +193,7 @@ ThyncRecord.Model = new Class({
     // potentially abstract to work with Google Gears as well as AIR
     
     // stub response
-    var id = this.sql.contains("id=") ? this.id : $random(1,300);
+    var id = options.id ? options.id : $random(1,300);
     var data = {};
     switch(this.table) {
       case "employees":
@@ -230,6 +231,8 @@ ThyncRecord.Record = new Class({
     }
     if(this.options.data.id)
       this.id = this.options.data.id;
+    if(this.options.errors)
+      this.errors = this.options.errors;
   },
   destroy: function() {
     if(!this.id)

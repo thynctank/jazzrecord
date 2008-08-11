@@ -211,7 +211,7 @@ ThyncRecord.Model = new Class({
     
     if(this.deeper > 0 && this.options.belongs_to)
       for(associated_model in this.options.belongs_to) {
-        data[associated_model] = ThyncRecord.models.get(this.options.belongs_to[associated_model]).find(data[associated_model + "_id"]);
+        data[associated_model] = ThyncRecord.models.get(this.options.belongs_to[associated_model]).find(data[associated_model + "_id"], {depth: this.deeper});
       }
     
     var errors = {};
@@ -220,7 +220,7 @@ ThyncRecord.Model = new Class({
       model: this,
       columns: $merge(this.options.columns, this.options.belongs_to),
       data: data,
-      errors: errors
+      errors: errors  
     });
   }
 });

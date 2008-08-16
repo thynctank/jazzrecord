@@ -1,9 +1,12 @@
-//firefox/safari/air debug function, kill w/ global var named prod
+//firefox/air debug function, kill w/ global var named prod
 function puts(str) {
   if(typeof prod != "undefined")
     return;
-  if(typeof console != "undefined" && console.log)
-    console.log(str);
+  if(typeof console != "undefined")
+    if(typeof str == "string")
+      console.log(str);
+    if(typeof str == "object")
+      console.dir(str);
   if(typeof air != "undefined" && air.trace)
     air.trace(str);
 }

@@ -24,7 +24,8 @@ ThyncRecord.Model = new Class({
   options: {
     columns: {},
     has_many: {},
-    has_and_belongs_to_many: {}
+    has_and_belongs_to_many: {},
+    has_many_through: {}
   },
   initialize: function(options) {
     this.setOptions(options);
@@ -39,8 +40,9 @@ ThyncRecord.Model = new Class({
     //manage migrations akelos-style, numbered and in one file (notify user of upgrades)
   },
   count: function(conditions) {
-    var options = {statement: "SELECT", select: "COUNT(*)", conditions: conditions};
-    this.query(options);
+    this.sql = "SELECT COUNT(*) FROM " + this.table + ";";
+    return $random(0, 300);
+    // return this.query(options);
   },
   
   //finders: find, find_by, all, first, last
@@ -53,31 +55,64 @@ ThyncRecord.Model = new Class({
         options = $extend({id: id}, options);
         break;
     }
-    return this.query(options);
+    return this.select(options);
   },
   find_by: function(field, value) {
     if(!this.options.columns[field])
       throw("column " + field + " does not exist in table " + this.table);
     else
-      return this.query({conditions: field + "=" + this.typeValue(field, value), limit: 1});
+      return this.select({conditions: field + "=" + this.typeValue(field, value), limit: 1});
   },
   find_all_by: function(field, value) {
     if(!this.options.columns[field])
       throw("column " + field + " does not exist in table " + this.table);
     else
-      return this.query({conditions: field + "=" + this.typeValue(field, value)});
+      return this.select({conditions: field + "=" + this.typeValue(field, value)});
   },
   all: function(options) {
-    return this.query(options);
+    return this.select(options);
   },
   first: function(options) {
     options = $extend({limit: 1}, options);
-    return this.query(options);
+    return this.select(options);
   },
   last: function(options) {
-    options = $extend({limit: 1, order: "id DESC"}, options); 
+    options = $extend({limit: 1, order: "id"}, options);
+    options.order += " DESC";
+    return this.select(options);
+  },
+
+  select: function(options) {
+    if(!options)
+      options = {};
+
+    this.sql = "SELECT {select} FROM {table} {conditions} {order} {limit} {offset};";
+
+    var defaultOptions = {statement: "SELECT", select: "*", table: this.table};
+    
+    options = $extend(defaultOptions, options);
+
+    if(!options.select == "*" && !options.select.contains("id"))
+      options.select = "id, " + options.select;      
+    if(options.order)
+      options.order = "ORDER BY " + options.order;
+    if($type(options.limit) == "number")
+      options.limit = "LIMIT " + options.limit;
+    if($type(options.offset) == "number")
+      options.offset = "OFFSET " + options.offset;
+    //add complex conditions handling as in AR
+    if(options.conditions) {
+      options.conditions = "WHERE " + options.conditions;
+      if(options.id)
+        options.conditions += " AND id=" + options.id;
+    }
+    else if(options.id)
+      options.conditions = "WHERE id=" + options.id;
+    
+    this.sql = this.sql.substitute(options).clean();
     return this.query(options);
   },
+
   
   //equivalent to Model.new in ActiveRecord
   create: function(options) {
@@ -101,24 +136,24 @@ ThyncRecord.Model = new Class({
 
   //insert or update
   save: function(data) {
+    this.sql = "{saveMode} {table} {data} {conditions};";
+    var defaultOptions = {saveMode: "INSERT INTO", table: this.table, data: this.columnNames() + this.columnValues(data)};
+    
     var options = {};
-    options.select = "";
-    if(data.id == null) {
-      options.statement = "INSERT";
-      options.preposition = "INTO";
-      options.special = this.columnNames() + this.columnValues(data);
-    }
-    else {
-      options.id = data.id;
-      options.statement = "UPDATE";
-      options.preposition = "";
-      options.substatement = "SET";
-      options.special = "";
+    if(data.id) {
+      options.saveMode = "UPDATE";
+      options.conditions = "WHERE id=" + data.id;
+      
+      options.data = "";
       for(col in this.options.columns) {
-        options.special += col + "=" + this.typeValue(col, data[col]) + ",";
+        options.data += col + "=" + this.typeValue(col, data[col]) + ", ";
       }
-      options.special = options.special.substr(0, options.special.length - 1);
+      options.data = "SET " + options.data.substr(0, options.data.length - 2);
     }
+    
+    options = $extend(defaultOptions, options);
+    
+    this.sql = this.sql.substitute(options).clean();
     return this.query(options);
   },
 
@@ -127,18 +162,18 @@ ThyncRecord.Model = new Class({
     var columns = "(";
     for(col in this.options.columns) {
       if(col != "id")
-        columns += col + ",";
+        columns += col + ", ";
     }
-    columns = columns.substr(0, columns.length - 1);
+    columns = columns.substr(0, columns.length - 2);
     return columns + ")";
   },
   columnValues: function(data) {
     var values = " VALUES(";
     for(col in this.options.columns) {
       if(col != "id")
-        values += this.typeValue(col, data[col]) + ",";
+        values += this.typeValue(col, data[col]) + ", ";
     }
-    values = values.substr(0, values.length - 1);
+    values = values.substr(0, values.length - 2);
     return values + ")";
   },
   typeValue: function(field, val) {
@@ -153,36 +188,9 @@ ThyncRecord.Model = new Class({
       }
   },
   query: function(options) {
-    if(!options)
-      options = {};
-
-    this.sql = "{statement} {select} {preposition} {table} {substatement} {special} {conditions} {order} {limit} {offset}";
-
-    var defaultOpts = {statement: "SELECT", preposition: "FROM", select: "*", table: this.table};
-    
-    options = $extend(defaultOpts, options);
-
-    if(!options.select == "*" && !options.select.contains("id"))
-      options.select = "id, " + options.select;      
-    if(options.order)
-      options.order = "ORDER BY " + options.order;
-    if($type(options.limit) == "number")
-      options.limit = "LIMIT " + options.limit;
-    if($type(options.offset) == "number")
-      options.offset = "OFFSET " + options.offset;
-    //add complex conditions handling as in AR
-    if(options.conditions) {
-      options.conditions = "WHERE " + options.conditions;
-      if(options.id)
-        options.conditions += " AND id=" + options.id;
-    }
-    else
-      if(options.id)
-        options.conditions = "WHERE id=" + options.id;
-    
-    this.sql = this.sql.substitute(options).clean() + ";";
-
     puts(this.sql);
+    if(typeof options == "undefined")
+      options = {};
     // run query on SQLite
 
     // preload 5 levels deep of associations by default
@@ -192,28 +200,30 @@ ThyncRecord.Model = new Class({
     // potentially abstract to work with Google Gears as well as AIR
 
     // whether to probe associations
-    if(!$defined(options.depth))
-      this.deeper = ThyncRecord.depth;
-    else
+    if($defined(options.depth))
       this.deeper = options.depth - 1;
+    else
+      this.deeper = ThyncRecord.depth;
     
     // stub response
     var id = options.id ? options.id : $random(1,300);
-    var data = {};
-    switch(this.table) {
-      case "employees":
-        data = {id: id, name: "Nick", company_id: 3};
-        break;
-      case "companies":
-        data = {id: id, name: "RideCharge"};
-        break;
-    }
+    if($defined(options.select)) {
+      var data = {};
+      switch(this.table) {
+        case "employees":
+          data = {id: id, name: "Nick", company_id: 3};
+          break;
+        case "companies":
+          data = {id: id, name: "RideCharge"};
+          break;
+      }
+    }    
     
-    if(this.deeper > 0 && this.options.belongs_to)
+    if(this.deeper > 0 && this.options.belongs_to && !$defined(options.saveMode))
       for(associated_model in this.options.belongs_to) {
         data[associated_model] = ThyncRecord.models.get(this.options.belongs_to[associated_model]).find(data[associated_model + "_id"], {depth: this.deeper});
       }
-    
+      
     var errors = {};
     
     return new ThyncRecord.Record({

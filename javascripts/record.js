@@ -26,13 +26,31 @@ ThyncRecord.Record = new Class({
     }
   },
   save: function() {
+    // verify something has changed before wasting cycles on db query
+    var unchanged = true;
+    
     var data = {};
-    for(col in this.options.columns)
+    for(col in this.options.columns) {
+      if(this[col] != this.options.data[col])
+        unchanged = false;
       data[col] = this[col];
+    }
+    
+
+    if(unchanged) {
+      puts("Data unchanged");
+      return;
+    }
+    
     if(this.id)
       data.id = this.id;
+
+    data.originalData = {};
+    for(col in this.options.data)
+      data.originalData[col] = this.options.data[col];
+
     var results = this.options.model.save(data);
-    this.id = results.id;
+    $extend(this, results);
   },
   reload: function() {
     if(!this.id)

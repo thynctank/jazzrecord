@@ -1,26 +1,24 @@
 ThyncRecord.Model.implement({
   //insert or update
-  save: function(data) {
+  save: function(record) {
     this.sql = "{saveMode} {table} {data} {conditions};";
-    var defaultOptions = {saveMode: "INSERT INTO", table: this.table, data: this.columnNames() + this.columnValues(data)};
-    
+    var defaultOptions = {saveMode: "INSERT INTO", table: this.table, data: this.columnNames() + this.columnValues(record)};
+
     var options = {};
-    if(data.id) {
-      options.id = data.id;
+    if(record.id) {
+      options.id = record.id;
       options.saveMode = "UPDATE";
-      options.conditions = "WHERE id=" + data.id;
+      options.conditions = "WHERE id=" + record.id;
       
       options.data = "";
       for(col in this.options.columns) {
         // remove association when passed back null reference
         if(col.contains("_id")) {
           var association_reference = col.split("_id")[0];
-          if(data[association_reference])
-            data[col] = data[association_reference].id;
-          else
-            data[col] = null;
+          if(record[association_reference] && record[col] == record.originalData[col])
+            record[col] = record[association_reference].id;
         }
-        options.data += col + " = " + this.typeValue(col, data[col]) + ", ";
+        options.data += col + " = " + this.typeValue(col, record[col]) + ", ";
       }
       options.data = "SET " + options.data.substr(0, options.data.length - 2);
     }

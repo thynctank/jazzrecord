@@ -17,24 +17,26 @@ ThyncRecord.Model.implement({
 
     switch(this.table) {
       case "employees":
-        data = {id: id, name: "Nick", company_id: 3};
+        data = {id: id, name: "Nick", company_id: 5};
         break;
       case "companies":
         data = {id: id, name: "RideCharge"};
         break;
     }
-    
+
     // for preloading associations for find calls, must happen after iniitial query
     // recursion all winds down in this function
-    if(options.select) {
-      if($chk(options.depth))
-        this.deeper = options.depth - 1;
-      else
-        this.deeper = ThyncRecord.depth;
-      if(this.deeper > 0 && this.options.belongs_to)
-        for(associated_model in this.options.belongs_to)
+    if($chk(options.depth))
+      this.deeper = options.depth - 1;
+    else
+      this.deeper = ThyncRecord.depth;
+    if(this.deeper > 0 && this.options.belongs_to)
+      for(associated_model in this.options.belongs_to) {
+        if(data[associated_model + "_id"] != null)
           data[associated_model] = ThyncRecord.models.get(this.options.belongs_to[associated_model]).find(data[associated_model + "_id"], {depth: this.deeper});
-    }
+        else
+          data[associated_model] = null;
+      }
     
       
     var errors = {};

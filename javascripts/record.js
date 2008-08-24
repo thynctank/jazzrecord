@@ -59,5 +59,11 @@ ThyncRecord.Record = new Class({
       var results = this.options.model.find(this.id);
       $extend(this, results);
     }
+  },
+  toString: function() {
+    if(!this.id)
+      return null;
+    else
+      return this.id;
   }
 });

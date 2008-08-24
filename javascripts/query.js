@@ -12,18 +12,20 @@ ThyncRecord.Model.implement({
     // potentially abstract to work with Google Gears as well as AIR
 
     // stub response
-    var id = options.id ? options.id : $random(1,300);
-    var data = {};
-
-    switch(this.table) {
-      case "employees":
-        data = {id: id, name: "Nick", company_id: 5};
-        break;
-      case "companies":
-        data = {id: id, name: "RideCharge"};
-        break;
-    }
-
+    // var id = options.id ? options.id : $random(1,300);
+    // var data = {};
+    // 
+    // switch(this.table) {
+    //   case "employees":
+    //     data = {id: id, name: "Nick", company_id: 5};
+    //     break;
+    //   case "companies":
+    //     data = {id: id, name: "RideCharge"};
+    //     break;
+    // }
+    
+    var data = ThyncRecord.adapter.run(this.sql);
+    
     // for preloading associations for find calls, must happen after iniitial query
     // recursion all winds down in this function
     if($chk(options.depth))

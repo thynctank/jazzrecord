@@ -2,11 +2,13 @@
 function puts(str) {
   if(typeof prod != "undefined")
     return;
-  if(typeof console != "undefined")
-    if(typeof str == "string")
+  if (typeof console != "undefined") {
+    if (typeof str == "string") 
       console.log(str);
-    if(typeof str == "object")
-      console.dir(str);
+    else 
+      if (typeof str == "object") 
+        console.dir(str);
+  }
   if(typeof air != "undefined" && air.trace)
     air.trace(str);
 }
@@ -17,25 +19,25 @@ var ThyncRecord = {};
 ThyncRecord.AirAdapter = new Class({
   Implements: Options,
   options: {
-    dbFile: null,
-    connection: null,
-    statement: null
+    dbFile: 'tr.db',
   },
-  initialize: function() {
-    connection = new air.SQLConnection();
-    statement = new air.SQLStatement();
-    dbFile = new air.File.applicationDirectory.resolvePath('tr.db');
-    connection.open(dbFile, air.SQLMode.CREATE);
-    statement.sqlConnection = connection;
+  initialize: function(options) {
+    this.setOptions(options);
+    this.connection = new air.SQLConnection();
+    this.dbFile = air.File.applicationDirectory.resolvePath(this.options.dbFile);
+    this.connection.open(this.dbFile, air.SQLMode.CREATE);
+    this.statement = new air.SQLStatement();
+    this.statement.sqlConnection = this.connection;
   },
   run: function(query) {
     this.statement.text = query;
     this.statement.execute();
-    puts(this.statement.getResult().data);
+    var result = this.statement.getResult();
+    return result.data;
   }
 });
 
 // globals
 ThyncRecord.depth = 4;
 ThyncRecord.models = new Hash();
-ThyncRecord.adapter = new ThyncRecord.AirAdapter();
+ThyncRecord.adapter = new ThyncRecord.AirAdapter({dbFile: "test.db"});

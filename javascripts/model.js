@@ -14,6 +14,8 @@ ThyncRecord.Model = new Class({
     // add all-important master listing for this model/table relationship
     if(!ThyncRecord.models.has(this.table))
       ThyncRecord.models.set(this.table, this);
+    if(this.options.migrations)
+      this.migrate(this.options.migrations);
   },
   count: function(conditions) {
     this.sql = "SELECT COUNT(*) FROM " + this.table + ";";

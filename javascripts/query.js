@@ -26,6 +26,11 @@ ThyncRecord.Model.implement({
     
     var data = ThyncRecord.adapter.run(this.sql);
     
+    if(!data || !data.length > 0)
+      return;
+    else
+      data = data[0];
+    
     // for preloading associations for find calls, must happen after iniitial query
     // recursion all winds down in this function
     if($chk(options.depth))

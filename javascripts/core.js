@@ -34,6 +34,7 @@ ThyncRecord.AirAdapter = new Class({
   },
   run: function(query) {
     this.statement.text = query;
-    puts(this.statement.execute());
+    this.statement.execute();
+    puts(this.statement.getResult().data);
   }
 });

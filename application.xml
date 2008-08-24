@@ -14,13 +14,13 @@
 -->
 
 	<!-- The application identifier string, unique to this application. Required. -->
-	<id>com.thynctank.thyncRecordAir</id>
+	<id>com.thynctank.thyncRecord</id>
 
 	<!-- Used as the filename for the application. Required. -->
-	<filename>thyncRecordAir</filename>
+	<filename>thyncRecord</filename>
 
 	<!-- The name that is displayed in the AIR application installer. Optional. -->
-	<name>thyncRecordAir</name>
+	<name>thyncRecord</name>
 
 	<!-- An application version designator (such as "v1", "2.5", or "Alpha 1"). Required. -->
 	<version>1.0</version>
@@ -34,7 +34,7 @@
 	<!-- Settings for the application's initial window. Required. -->
 	<initialWindow>
 		<!-- The main HTML file of the application. Required. -->
-		<content>thyncRecordAir.html</content>
+		<content>index.html</content>
 		
 		<!-- The title of the main window. Optional. -->
 		<title/>

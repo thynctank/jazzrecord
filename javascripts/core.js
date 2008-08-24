@@ -11,12 +11,8 @@ function puts(str) {
     air.trace(str);
 }
 
-var ThyncRecord = {};
 
-// globals
-ThyncRecord.depth = 4;
-ThyncRecord.models = new Hash();
-ThyncRecord.adapter = new ThyncRecord.AirAdapter();
+var ThyncRecord = {};
 
 ThyncRecord.AirAdapter = new Class({
   Implements: Options,
@@ -38,3 +34,8 @@ ThyncRecord.AirAdapter = new Class({
     puts(this.statement.getResult().data);
   }
 });
+
+// globals
+ThyncRecord.depth = 4;
+ThyncRecord.models = new Hash();
+ThyncRecord.adapter = new ThyncRecord.AirAdapter();

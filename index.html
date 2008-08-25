@@ -13,7 +13,7 @@
     <script src="javascripts/save.js" type="text/javascript" charset="utf-8"></script>
     <script src="javascripts/destroy.js" type="text/javascript" charset="utf-8"></script>
     <script src="javascripts/find.js" type="text/javascript" charset="utf-8"></script>
-    <script src="javascripts/migrate.js" type="text/javascript" charset="utf-8"></script>
+    <script src="javascripts/migration.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript" charset="utf-8">
       var Employee = new ThyncRecord.Model({
         table: "employees",
@@ -34,7 +34,13 @@
         }
       });
       
-      ThyncRecord.migrate();
+      ThyncRecord.migrations = [
+        ["createTable", "rabbits", {name: "text", parent_id: "number"}],
+        ["renameTable", "rabbits", "hares"],
+        ["addColumn", "hares", "title", "text"]
+      ];
+      
+      ThyncRecord.migrate(2);
     </script>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>ThyncRecord</title>

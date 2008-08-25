@@ -1,16 +1,20 @@
 //firebug/air debug function, kill w/ global var named prod
 function puts(str) {
-  if(typeof prod != "undefined")
+  if(typeof debug != "undefined" && debug == "false")
     return;
-  if (typeof console != "undefined") {
+  if (typeof console != "undefined" && console.log) {
     if (typeof str == "string") 
       console.log(str);
     else 
       if (typeof str == "object") 
         console.dir(str);
   }
-  if(typeof air != "undefined" && air.trace)
-    air.trace(str);
+  if(typeof air != "undefined") {
+    if(air.Introspector && air.Introspector.Console)
+      air.Introspector.Console.log(str);
+    else
+      air.trace(str);
+  }
 }
 
 

@@ -1,15 +1,15 @@
 //firebug/air debug function, kill w/ global var named prod
 function puts(str) {
-  if(typeof debug != "undefined"  && debug == "false")
+  if(window.debug && window.debug == false)
     return;
-  if(typeof console != "undefined" && console.log) {
+  if(window.console && console.log) {
     if($type(str) == "string") 
       console.log(str);
     else 
       if($type(str) == "object") 
         console.dir(str);
   }
-  if(typeof air != "undefined") {
+  if(Browser.Features.air && air) {
     if (air.Introspector && air.Introspector.Console) {
       if($type(str) == "string")
         air.Introspector.Console.log(str);
@@ -39,10 +39,15 @@ ThyncRecord.AirAdapter = new Class({
     this.statement.sqlConnection = this.connection;
   },
   run: function(query) {
+    puts(query);
     this.statement.text = query;
     this.statement.execute();
     var result = this.statement.getResult();
     return result.data;
+  },
+  count: function(query) {
+    query = query.toUpperCase();
+    return this.run(query)[0]["COUNT(*)"];
   }
 });
 

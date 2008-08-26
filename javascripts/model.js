@@ -17,8 +17,7 @@ ThyncRecord.Model = new Class({
   },
   count: function(conditions) {
     this.sql = "SELECT COUNT(*) FROM " + this.table + ";";
-    return $random(0, 300);
-    // return this.query(options);
+    return ThyncRecord.adapter.count(this.sql);
   },
   
   //equivalent to Model.new in ActiveRecord

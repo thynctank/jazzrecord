@@ -28,7 +28,7 @@ var ThyncRecord = {};
 ThyncRecord.AirAdapter = new Class({
   Implements: Options,
   options: {
-    dbFile: 'tr.db',
+    dbFile: 'tr.db'
   },
   initialize: function(options) {
     this.setOptions(options);

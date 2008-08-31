@@ -30,11 +30,15 @@ ThyncRecord.Record = new Class({
     var unchanged = true;
     
     var data = {};
-    for(col in this.options.columns) {
-      if(this[col] != this.options.data[col])
-        unchanged = false;
-      data[col] = this[col];
+    if (this.id) {
+      for (col in this.options.columns) {
+        if (this[col] != this.options.data[col]) 
+          unchanged = false;
+        data[col] = this[col];
+      }
     }
+    else
+      unchanged = false;
     
 
     if(unchanged) {

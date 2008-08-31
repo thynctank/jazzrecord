@@ -16,7 +16,7 @@ ThyncRecord.Model = new Class({
       ThyncRecord.models.set(this.table, this);
   },
   count: function(conditions) {
-    this.sql = "SELECT COUNT(*) FROM " + this.table + ";";
+    this.sql = "SELECT COUNT(*) FROM " + this.table;
     return ThyncRecord.adapter.count(this.sql);
   },
   

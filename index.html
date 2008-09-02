@@ -28,6 +28,7 @@
 
       var Company = new ThyncRecord.Model({
         table: "companies",
+        foreign_key: "company_id",
         has_many: {employees: "employees"},
         columns: {
           name: "text"

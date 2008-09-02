@@ -52,6 +52,6 @@ ThyncRecord.AirAdapter = new Class({
 });
 
 // globals
-ThyncRecord.depth = 4;
+ThyncRecord.depth = 2;
 ThyncRecord.models = new Hash();
 ThyncRecord.adapter = new ThyncRecord.AirAdapter({dbFile: "test.db"});

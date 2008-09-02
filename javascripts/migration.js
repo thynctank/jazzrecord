@@ -81,12 +81,12 @@ ThyncRecord.migrate = function(migrations, version) {
   else {
     //developer can choose not to use migrations
     this.models.each(function(model) {
-      model.sql = "CREATE TABLE IF NOT EXISTS " + model.table + "(id INTEGER PRIMARY KEY AUTOINCREMENT";
+      var sql = "CREATE TABLE IF NOT EXISTS " + model.table + "(id INTEGER PRIMARY KEY AUTOINCREMENT";
       for(col in model.options.columns) {
-        model.sql += (", " + col + " " + model.options.columns[col].toUpperCase());
+        sql += (", " + col + " " + model.options.columns[col].toUpperCase());
       }
-      model.sql += ")";
-      model.query();
+      sql += ")";
+      ThyncRecord.adapter.run(sql);
     });
   }
-}
+};

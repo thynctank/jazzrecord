@@ -7,7 +7,7 @@ ThyncRecord.Model.implement({
       // add ability to find specific group of results by ID by passing in array
       case "array":
       case "number":
-        options = $extend({id: id}, options);
+        options = $extend({id: id, limit: 1}, options);
         break;
     }
     return this.select(options);
@@ -65,6 +65,7 @@ ThyncRecord.Model.implement({
       options.conditions = "WHERE id=" + options.id;
         
     this.sql = this.sql.substitute(options).clean() + ";";
+    
     return this.query(options);
   }
 });

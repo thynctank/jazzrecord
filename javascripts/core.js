@@ -49,8 +49,15 @@ var AirAdapter = new Class({
     return result.data;
   },
   count: function(query) {
+    puts(query);
     query = query.toUpperCase();
     return this.run(query)[0]["COUNT(*)"];
+  },
+  save: function(query) {
+    puts(query);
+    this.statement.text = query;
+    this.statement.execute();
+    return this.statement.getResult().lastInsertRowID;
   }
 });
 

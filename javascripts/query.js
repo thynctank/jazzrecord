@@ -11,7 +11,7 @@ ThyncRecord.Model.implement({
         
     if(this.sql.contains("LIMIT 1")) {
       data = data[0];
-    
+      
       // for preloading associations for find calls, must happen after iniitial query
       // recursion all winds down in this function
       if($chk(options.depth))
@@ -19,14 +19,14 @@ ThyncRecord.Model.implement({
       else
         this.deeper = ThyncRecord.depth;
       if(this.deeper > 0) {
-        if(this.options.belongs_to)
+        if(this.options.belongsTo)
           for(associatedModel in this.options.belongsTo) {
             if(data[associatedModel + "_id"] != null)
               data[associatedModel] = ThyncRecord.models.get(this.options.belongsTo[associatedModel]).find(data[associatedModel + "_id"], {depth: this.deeper});
             else
               data[associatedModel] = null;
           }
-        if(this.options.has_many) {
+        if(this.options.hasMany) {
           for(associatedModel in this.options.hasMany) {
             data[associatedModel] = [];
             var subdata = ThyncRecord.models.get(this.options.hasMany[associatedModel]).all({conditions: this.options.foreignKey + " = " + data.id});
@@ -40,7 +40,7 @@ ThyncRecord.Model.implement({
     
       return new ThyncRecord.Record({
         model: this,
-        columns: $merge(this.options.columns, this.options.belongsTo),
+        columns: this.options.columns,
         data: data,
         errors: errors  
       });

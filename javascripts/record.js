@@ -49,8 +49,7 @@ ThyncRecord.Record = new Class({
     for(col in this.options.data)
       data.originalData[col] = this.options.data[col];
 
-    var results = this.options.model.save(data);
-    $extend(this, results);
+    this.id = this.options.model.save(data);
   },
   reload: function() {
     if(!this.id)

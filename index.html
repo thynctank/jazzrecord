@@ -2,10 +2,10 @@
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <script type="text/javascript" src="javascripts/air/AIRAliases.js"></script>
-    <script type="text/javascript" src="javascripts/air/AIRIntrospector.js"></script>
-    <script type="text/javascript" src="javascripts/mootools-1.2.js"></script>
-    <script src="javascripts/core.js" type="text/javascript"></script>      
+    <script src="javascripts/air/AIRAliases.js" type="text/javascript"></script>
+    <script src="javascripts/air/AIRIntrospector.js" type="text/javascript"></script>
+    <script src="javascripts/mootools-core.js" type="text/javascript"></script>
+    <script src="javascripts/core.js" type="text/javascript"></script>
     <script src="javascripts/record.js" type="text/javascript" charset="utf-8"></script>
     <script src="javascripts/model.js" type="text/javascript" charset="utf-8"></script>
     <script src="javascripts/util.js" type="text/javascript" charset="utf-8"></script>
@@ -18,7 +18,7 @@
       var Employee = new ThyncRecord.Model({
         table: "employees",
         // assocations defined as assoc_nam: "tablename"
-        belongs_to: {company: "companies"},
+        belongsTo: {company: "companies"},
         columns: {
           name: "text",
           age: "number",
@@ -28,8 +28,8 @@
 
       var Company = new ThyncRecord.Model({
         table: "companies",
-        foreign_key: "company_id",
-        has_many: {employees: "employees"},
+        foreignKey: "company_id",
+        hasMany: {employees: "employees"},
         columns: {
           name: "text"
         }

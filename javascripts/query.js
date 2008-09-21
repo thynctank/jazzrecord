@@ -20,18 +20,18 @@ ThyncRecord.Model.implement({
         this.deeper = ThyncRecord.depth;
       if(this.deeper > 0) {
         if(this.options.belongs_to)
-          for(associated_model in this.options.belongs_to) {
-            if(data[associated_model + "_id"] != null)
-              data[associated_model] = ThyncRecord.models.get(this.options.belongs_to[associated_model]).find(data[associated_model + "_id"], {depth: this.deeper});
+          for(associatedModel in this.options.belongsTo) {
+            if(data[associatedModel + "_id"] != null)
+              data[associatedModel] = ThyncRecord.models.get(this.options.belongsTo[associatedModel]).find(data[associatedModel + "_id"], {depth: this.deeper});
             else
-              data[associated_model] = null;
+              data[associatedModel] = null;
           }
         if(this.options.has_many) {
-          for(associated_model in this.options.has_many) {
-            data[associated_model] = [];
-            var subdata = ThyncRecord.models.get(this.options.has_many[associated_model]).all({conditions: this.options.foreign_key + " = " + data.id});
-            puts("Associated model is: " + associated_model);
-            data[associated_model].extend(subdata);
+          for(associatedModel in this.options.hasMany) {
+            data[associatedModel] = [];
+            var subdata = ThyncRecord.models.get(this.options.hasMany[associatedModel]).all({conditions: this.options.foreignKey + " = " + data.id});
+            puts("Associated model is: " + associatedModel);
+            data[associatedModel].extend(subdata);
           }
         }
       }
@@ -40,7 +40,7 @@ ThyncRecord.Model.implement({
     
       return new ThyncRecord.Record({
         model: this,
-        columns: $merge(this.options.columns, this.options.belongs_to),
+        columns: $merge(this.options.columns, this.options.belongsTo),
         data: data,
         errors: errors  
       });

@@ -55,11 +55,17 @@ var AirAdapter = new Class({
 });
 
 var NullAdapter = new Class({
-  run: $empty,
-  count: $empty
+  run: function(query) {
+    puts(query);
+  },
+  count: function(query) {
+    puts(query);
+    return $random(1, 200);
+  }
 });
 
 // globals
 ThyncRecord.depth = 2;
 ThyncRecord.models = new Hash();
 ThyncRecord.adapter = new AirAdapter({dbFile: "test.db"});
+// ThyncRecord.adapter = new NullAdapter();

@@ -26,6 +26,6 @@ ThyncRecord.Model.implement({
     options = $extend(defaultOptions, options);
     
     this.sql = this.sql.substitute(options).clean();
-    return this.save(this.sql);
+    return ThyncRecord.adapter.save(this.sql);
   }
 });

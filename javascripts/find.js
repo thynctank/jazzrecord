@@ -12,13 +12,13 @@ ThyncRecord.Model.implement({
     }
     return this.select(options);
   },
-  find_by: function(field, value) {
+  findBy: function(field, value) {
     if(!this.options.columns[field])
       throw("column " + field + " does not exist in table " + this.table);
     else
       return this.select({conditions: field + "=" + this.typeValue(field, value), limit: 1});
   },
-  find_all_by: function(field, value) {
+  findAllBy: function(field, value) {
     if(!this.options.columns[field])
       throw("column " + field + " does not exist in table " + this.table);
     else

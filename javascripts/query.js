@@ -9,7 +9,7 @@ ThyncRecord.Model.implement({
     if(!data)
       return;
         
-    if(this.sql.contains("LIMIT")) {
+    if(this.sql.contains("LIMIT 1")) {
       data = data[0];
     
       // for preloading associations for find calls, must happen after iniitial query

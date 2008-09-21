@@ -11,11 +11,14 @@ function puts(str) {
   }
   if(Browser.Features.air && air) {
     if (air.Introspector && air.Introspector.Console) {
-      if($type(str) == "string")
-        air.Introspector.Console.log(str);
-      else
-        if($type(str) == "object")
+      switch($type(str)) {
+        case "string":
+          air.Introspector.Console.log(str);
+          break;
+        case "object":
           air.Introspector.Console.dump(str);
+          break;
+      }
     }
     else 
       air.trace(str);
@@ -25,7 +28,7 @@ function puts(str) {
 
 var ThyncRecord = {};
 
-ThyncRecord.AirAdapter = new Class({
+var AirAdapter = new Class({
   Implements: Options,
   options: {
     dbFile: 'tr.db'
@@ -51,7 +54,12 @@ ThyncRecord.AirAdapter = new Class({
   }
 });
 
+var NullAdapter = new Class({
+  run: $empty,
+  count: $empty
+});
+
 // globals
 ThyncRecord.depth = 2;
 ThyncRecord.models = new Hash();
-ThyncRecord.adapter = new ThyncRecord.AirAdapter({dbFile: "test.db"});
+ThyncRecord.adapter = new AirAdapter({dbFile: "test.db"});

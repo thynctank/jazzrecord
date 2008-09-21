@@ -2,6 +2,7 @@
 ThyncRecord.Record = new Class({
   Implements: Options,
   options: {
+    model: null,
     columns: {},
     data: {}
   },
@@ -27,19 +28,14 @@ ThyncRecord.Record = new Class({
   },
   save: function() {
     // verify something has changed before wasting cycles on db query
-    var unchanged = true;
+    var unchanged = false;
     
     var data = {};
-    if (this.id) {
-      for (col in this.options.columns) {
-        if (this[col] != this.options.data[col]) 
-          unchanged = false;
-        data[col] = this[col];
-      }
+    for (col in this.options.columns) {
+      data[col] = this[col];
+      if(this.id)
+        ;//verify no columns have changed to return w/o querying database
     }
-    else
-      unchanged = false;
-    
 
     if(unchanged) {
       puts("Data unchanged");

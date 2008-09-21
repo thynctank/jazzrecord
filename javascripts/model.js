@@ -21,7 +21,7 @@ ThyncRecord.Model = new Class({
   },
   
   //equivalent to Model.new in ActiveRecord
-  create: function(options) {
+  newRecord: function(options) {
     if(!options)
       options = {};
     var data = {};
@@ -33,5 +33,11 @@ ThyncRecord.Model = new Class({
       columns: this.options.columns,
       data: data
     });
+  },
+  
+  create: function(options) {
+    var record = this.newRecord(options);
+    record.save();
+    return record;
   }
 });

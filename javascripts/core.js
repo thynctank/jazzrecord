@@ -31,7 +31,7 @@ var ThyncRecord = {};
 var AirAdapter = new Class({
   Implements: Options,
   options: {
-    dbFile: 'tr.db'
+    dbFile: "thyncrecord.db"
   },
   initialize: function(options) {
     this.setOptions(options);
@@ -61,18 +61,56 @@ var AirAdapter = new Class({
   }
 });
 
+var GearsAdapter = new Class({
+  Implements: Options,
+  options: {
+    dbName: "thyncrecord.db"
+  },
+  initialize: function(options) {
+    this.setOptions(options);
+    this.db = google.gears.factory.create("beta.database");
+    this.db.open(this.dbName);
+    this.result = null;
+  },
+  run: function(query) {
+    puts(query);
+    this.result = this.db.execute(query);
+    var rows = [];
+    while(this.result.isValidRow()) {
+      var row = {};
+      for(var i = 0, j = this.result.fieldCount(); i < j; i++) {
+        var field = this.result.fieldName(i);
+        row[field] = this.result.field(i);
+      }
+      rows.push(row);
+      this.result.next();
+    }
+    return rows;
+  },
+  count: function(query) {
+    puts(query);
+    this.result = this.db.execute(query);
+    return this.result.field(0);
+  },
+  save: function(query) {
+    puts(query);
+    this.db.execute(query);
+    return this.db.lastInsertRowId;
+  }
+});
+
 var NullAdapter = new Class({
   run: function(query) {
     puts(query);
   },
   count: function(query) {
     puts(query);
-    return $random(1, 200);
   }
 });
 
 // globals
 ThyncRecord.depth = 2;
 ThyncRecord.models = new Hash();
-ThyncRecord.adapter = new AirAdapter({dbFile: "test.db"});
+// ThyncRecord.adapter = new AirAdapter({dbFile: "test.db"});
 // ThyncRecord.adapter = new NullAdapter();
+ThyncRecord.adapter = new GearsAdapter('test');

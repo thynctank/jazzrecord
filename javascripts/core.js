@@ -113,4 +113,4 @@ ThyncRecord.depth = 2;
 ThyncRecord.models = new Hash();
 // ThyncRecord.adapter = new AirAdapter({dbFile: "test.db"});
 // ThyncRecord.adapter = new NullAdapter();
-ThyncRecord.adapter = new GearsAdapter('test');
+ThyncRecord.adapter = new GearsAdapter({dbFile: "test"});

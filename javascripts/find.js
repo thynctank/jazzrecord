@@ -6,6 +6,11 @@ ThyncRecord.Model.implement({
     switch($type(id)) {
       // add ability to find specific group of results by ID by passing in array
       case "array":
+        if($type(options) != "object")
+          options = {};
+        options.conditions = "";
+        options.conditions = " id = " + id.toString().replace(/,/g, " or id = ");
+        break;
       case "number":
         options = $extend({id: id, limit: 1}, options);
         break;

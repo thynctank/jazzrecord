@@ -3,13 +3,10 @@ ThyncRecord.Model.implement({
   find: function(id, options) {
     if(!$defined(id))
       throw("Missing ID Parameter");
-    switch($type(id)) {
+    switch(typeof id) {
       // add ability to find specific group of results by ID by passing in array
-      case "array":
-        if($type(options) != "object")
-          options = {};
-        options.conditions = "";
-        options.conditions = " id = " + id.toString().replace(/,/g, " or id = ");
+      case "object":
+        options = $extend({conditions: " id = " + id.toString().replace(/,/g, " or id = ")}, options);
         break;
       case "number":
         options = $extend({id: id, limit: 1}, options);

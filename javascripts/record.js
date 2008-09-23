@@ -11,7 +11,9 @@ ThyncRecord.Record = new Class({
     this.setOptions(options);
     //copy over column data
     for(col in this.options.columns) {
-      this[col] = this.options.data[col] || null;
+      this[col] = null;
+      if(this.options.data[col])
+        this[col] = this.options.data[col];
     }
     if(this.options.data.id)
       this.id = this.options.data.id;

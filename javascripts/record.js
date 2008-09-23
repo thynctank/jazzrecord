@@ -27,30 +27,31 @@ ThyncRecord.Record = new Class({
     }
   },
   save: function() {
-    // verify something has changed before wasting cycles on db query
-    var unchanged = false;
+    var originalData = $H();
+    $H(this.options.data).each(function(dataVal, dataCol) {
+      if(dataCol != "id")
+        originalData.set(dataCol, dataVal);
+    }, this);
     
-    var data = {};
-    for (col in this.options.columns) {
-      data[col] = this[col];
-      if(this.id)
-        ;//verify no columns have changed to return w/o querying database
-    }
+    var data = $H();
+    $H(this.options.columns).each(function(colType, colName) {
+      data.set(colName, this[colName]);
+      // overwrite original data so it is no longer "dirty"
+      this.options.data[colName] = this[colName];
+    }, this);
 
-    if(unchanged) {
-      puts("Data unchanged");
+    //verify no columns have changed to return w/o querying database
+    if(this.id && data.toQueryString() == originalData.toQueryString()) {
+      puts("Data Unchanged");
       return;
     }
     
     if(this.id)
       data.id = this.id;
 
-    data.originalData = {};
-    for(col in this.options.data)
-      data.originalData[col] = this.options.data[col];
-      
-    var result = this.options.model.save(data);
-      
+    data.set("originalData", originalData);
+    var result = this.options.model.save(data.getClean());
+
     if(!this.id)
       this.id = result;
   },
@@ -62,10 +63,17 @@ ThyncRecord.Record = new Class({
       $extend(this, results);
     }
   },
+  updateAttribute: function(name, val) {
+    this[name] = val;
+    this.save();
+  },
   toString: function() {
-    if(!this.id)
-      return null;
-    else
-      return this.id;
+    var outputTemplate = "#<Table: {modelTable} id: {id} {columnStuff}>";
+    var baseOptions = {modelTable: this.options.model.table, id: this.id};
+    baseOptions.columnStuff = "";
+    $H(this.options.columns).each(function(colType, colName) {
+      baseOptions.columnStuff += " " + colName + ": " + this[colName];
+    }, this);
+    return outputTemplate.substitute(baseOptions);
   }
 });

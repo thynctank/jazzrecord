@@ -19,11 +19,11 @@ ThyncRecord.Migration = {
       return;
     }
     var sql = "CREATE TABLE IF NOT EXISTS " + name;
-    if (columns) {
+    if(columns) {
       sql += "(";
-      for (col in columns) {
-        sql += (col + " " + columns[col].toUpperCase() + ", ");
-      }
+      $H(columns).each(function(colVal, colName) {
+        sql += (colName + " " + colVal.toUpperCase() + ", ");
+      });
       sql = sql.substr(0, sql.length - 2);
       sql += ")";
       ThyncRecord.adapter.run(sql);
@@ -82,9 +82,9 @@ ThyncRecord.migrate = function(migrations, version) {
     //developer can choose not to use migrations
     this.models.each(function(model) {
       var sql = "CREATE TABLE IF NOT EXISTS " + model.table + "(id INTEGER PRIMARY KEY AUTOINCREMENT";
-      for(col in model.options.columns) {
-        sql += (", " + col + " " + model.options.columns[col].toUpperCase());
-      }
+      $H(model.options.columns).each(function(colType, colName) {
+        sql += (", " + colName + " " + colType.toUpperCase());
+      });
       sql += ")";
       ThyncRecord.adapter.run(sql);
     });

@@ -16,13 +16,13 @@ ThyncRecord.Model.implement({
   },
   findBy: function(field, value) {
     if(!this.options.columns[field])
-      throw("column " + field + " does not exist in table " + this.table);
+      throw("Column " + field + " Does Not Exist in Table " + this.table);
     else
       return this.select({conditions: field + "=" + this.typeValue(field, value), limit: 1});
   },
   findAllBy: function(field, value) {
     if(!this.options.columns[field])
-      throw("column " + field + " does not exist in table " + this.table);
+      throw("Column " + field + " Does Not Exist in Table " + this.table);
     else
       return this.select({conditions: field + "=" + this.typeValue(field, value)});
   },

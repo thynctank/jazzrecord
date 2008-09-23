@@ -1,10 +1,13 @@
 ThyncRecord.Model = new Class({
   Implements: Options,
   options: {
+    table: "",
+    foreignKey: "",
     columns: {},
-    has_many: {},
-    has_and_belongs_to_many: {},
-    has_many_through: {}
+    hasOne: {},
+    hasMany: {},
+    belongsTo: {},
+    hasAndBelongsToMany: {}
   },
   initialize: function(options) {
     this.setOptions(options);
@@ -25,9 +28,9 @@ ThyncRecord.Model = new Class({
     if(!options)
       options = {};
     var data = {};
-    for(col in this.options.columns) {
-      data[col] = options[col] || null;
-    }
+    $H(this.options.columns).each(function(colVal, colName) {
+      data[colName] = colVal || null;
+    });
     return new ThyncRecord.Record({
       model: this,
       columns: this.options.columns,

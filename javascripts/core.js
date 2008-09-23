@@ -20,7 +20,7 @@ function puts(str) {
           break;
       }
     }
-    else 
+    else
       air.trace(str);
   }
 }
@@ -28,7 +28,7 @@ function puts(str) {
 
 var ThyncRecord = {};
 
-var AirAdapter = new Class({
+ThyncRecord.AirAdapter = new Class({
   Implements: Options,
   options: {
     dbFile: "thyncrecord.db"
@@ -61,7 +61,7 @@ var AirAdapter = new Class({
   }
 });
 
-var GearsAdapter = new Class({
+ThyncRecord.GearsAdapter = new Class({
   Implements: Options,
   options: {
     dbName: "thyncrecord.db"
@@ -99,18 +99,8 @@ var GearsAdapter = new Class({
   }
 });
 
-var NullAdapter = new Class({
-  run: function(query) {
-    puts(query);
-  },
-  count: function(query) {
-    puts(query);
-  }
-});
-
 // globals
-ThyncRecord.depth = 2;
+ThyncRecord.depth = 0;
 ThyncRecord.models = new Hash();
-// ThyncRecord.adapter = new AirAdapter({dbFile: "test.db"});
-// ThyncRecord.adapter = new NullAdapter();
-ThyncRecord.adapter = new GearsAdapter({dbFile: "test"});
+// ThyncRecord.adapter = new ThyncRecord.AirAdapter({dbFile: "test.db"});
+ThyncRecord.adapter = new ThyncRecord.GearsAdapter({dbFile: "test"});

@@ -2,19 +2,19 @@ ThyncRecord.Model.implement({
   //utilities - used in building query strings
   columnNames: function() {
     var columns = "(";
-    for(col in this.options.columns) {
-      if(col != "id")
-        columns += col + ", ";
-    }
+    $each(this.options.columns, function(colType, colName) {
+      if(colName != "id")
+        columns += colName + ", ";
+    });
     columns = columns.substr(0, columns.length - 2);
     return columns + ")";
   },
   columnValues: function(data) {
     var values = " VALUES(";
-    for(col in this.options.columns) {
-      if(col != "id")
-        values += this.typeValue(col, data[col]) + ", ";
-    }
+    $each(this.options.columns, function(colType, colName) {
+      if(colName != "id")
+        values += this.typeValue(colName, data[colName]) + ", ";
+    }, this);
     values = values.substr(0, values.length - 2);
     return values + ")";
   },
@@ -28,5 +28,5 @@ ThyncRecord.Model.implement({
         case "text":
           return "'" + (val || this[field]) + "'";
       }
-  }  
+  }
 });

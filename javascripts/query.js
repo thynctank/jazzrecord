@@ -26,14 +26,14 @@ ThyncRecord.Model.implement({
     }
     else {
       var records = [];
-      for(var i = 0, j = data.length; i < j; i++) {
+      $each(data, function(row) {
         records.push(new ThyncRecord.Record({
           model: this,
           columns: this.options.columns,
-          data: data[i],
+          data: row,
           errors: {}
         }));
-      }
+      }, this);
       return records;
     }
   }  

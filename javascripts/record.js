@@ -10,11 +10,11 @@ ThyncRecord.Record = new Class({
     this.id = null;
     this.setOptions(options);
     //copy over column data
-    for(col in this.options.columns) {
-      this[col] = null;
-      if(this.options.data[col])
-        this[col] = this.options.data[col];
-    }
+    $each(this.options.columns, function(colType, colName) {
+      this[colName] = null;
+      if(this.options.data[colName])
+        this[colName] = this.options.data[colName];
+    }, this);
     if(this.options.data.id)
       this.id = this.options.data.id;
     if(this.options.errors)
@@ -28,41 +28,56 @@ ThyncRecord.Record = new Class({
       this.id = null;
     }
   },
-  save: function() {
-    var originalData = $H();
-    $H(this.options.data).each(function(dataVal, dataCol) {
-      if(dataCol != "id")
-        originalData.set(dataCol, dataVal);
+  getData : function(source) {
+    var data = {};
+    if(source == "original")
+      source = this.options.data;
+    else
+      source = this;
+      
+    $each(this.options.columns, function(colType, colName) {
+      data[colName] = source[colName];
     }, this);
-    
-    var data = $H();
-    $H(this.options.columns).each(function(colType, colName) {
-      data.set(colName, this[colName]);
-      // overwrite original data so it is no longer "dirty"
-      this.options.data[colName] = this[colName];
-    }, this);
+    return data;
+  },
+  isChanged: function() {
+    var data = $H(this.getData());
+    var originalData = $H(this.getData("original"));
 
     //verify no columns have changed to return w/o querying database
-    if(this.id && data.toQueryString() == originalData.toQueryString()) {
-      puts("Data Unchanged");
-      return;
+    if(this.id && data.toQueryString() == originalData.toQueryString())
+      return false;
+    else
+      return true;
+  },
+  save: function() {
+    if(this.isChanged()) {
+      var data = this.getData();
+      var originalData = this.getData("original");
+
+      if(this.id)
+        data.id = this.id;
+      data.originalData = originalData;
+      var result = this.options.model.save(data);
+
+      if(!this.id)
+        this.id = result;
+      // overwrite original data so it is no longer "dirty"
+      $each(this.options.columns, function(colType, colName) {
+        this.options.data[colName] = this[colName];
+      }, this);
     }
-    
-    if(this.id)
-      data.id = this.id;
-
-    data.set("originalData", originalData);
-    var result = this.options.model.save(data.getClean());
-
-    if(!this.id)
-      this.id = result;
+    else
+      puts("Unchanged data");
   },
   reload: function() {
     if(!this.id)
       throw("Unsaved record cannot be reloaded");
     else {
-      var results = this.options.model.find(this.id);
-      $extend(this, results);
+      if(this.isChanged()) {
+        var results = this.options.model.find(this.id);
+        $extend(this, results);
+      }
     }
   },
   updateAttribute: function(name, val) {
@@ -73,7 +88,7 @@ ThyncRecord.Record = new Class({
     var outputTemplate = "#<Table: {modelTable} id: {id} {columnStuff}>";
     var baseOptions = {modelTable: this.options.model.table, id: this.id};
     baseOptions.columnStuff = "";
-    $H(this.options.columns).each(function(colType, colName) {
+    $each(this.options.columns, function(colType, colName) {
       baseOptions.columnStuff += " " + colName + ": " + this[colName];
     }, this);
     return outputTemplate.substitute(baseOptions);

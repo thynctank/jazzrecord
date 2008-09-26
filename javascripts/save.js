@@ -12,7 +12,7 @@ ThyncRecord.Model.implement({
       options.conditions = "WHERE id=" + record.id;
       
       options.data = "";
-      $H(this.options.columns).each(function(colType, colName) {
+      $each(this.options.columns, function(colType, colName) {
         // implement association logic
         options.data += colName + " = " + this.typeValue(colName, record[colName]) + ", ";
       }, this);

@@ -29,7 +29,7 @@ ThyncRecord.Model = new Class({
       options = {};
     var data = {};
     $H(this.options.columns).each(function(colVal, colName) {
-      data[colName] = colVal || null;
+      data[colName] = options[colName] || null;
     });
     return new ThyncRecord.Record({
       model: this,

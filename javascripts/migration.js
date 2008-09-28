@@ -21,8 +21,8 @@ ThyncRecord.Migration = {
     var sql = "CREATE TABLE IF NOT EXISTS " + name;
     if(columns) {
       sql += "(";
-      $H(columns).each(function(colVal, colName) {
-        sql += (colName + " " + colVal.toUpperCase() + ", ");
+      $each(columns, function(colType, colName) {
+        sql += (colName + " " + colType.toUpperCase() + ", ");
       });
       sql = sql.substr(0, sql.length - 2);
       sql += ")";

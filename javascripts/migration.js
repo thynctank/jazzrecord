@@ -82,7 +82,7 @@ ThyncRecord.migrate = function(migrations, version) {
     //developer can choose not to use migrations
     this.models.each(function(model) {
       var sql = "CREATE TABLE IF NOT EXISTS " + model.table + "(id INTEGER PRIMARY KEY AUTOINCREMENT";
-      $H(model.options.columns).each(function(colType, colName) {
+      $each(model.options.columns, function(colType, colName) {
         sql += (", " + colName + " " + colType.toUpperCase());
       });
       sql += ")";

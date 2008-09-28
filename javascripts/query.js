@@ -17,12 +17,30 @@ ThyncRecord.Model.implement({
       // implement eager/lazy loading for associations
       
       var errors = {};
-      return new ThyncRecord.Record({
+      var record = new ThyncRecord.Record({
         model: this,
         columns: this.options.columns,
         data: data,
         errors: errors
       });
+      
+      $each(this.options.hasOne, function(associatedModel) {
+        
+      }, this);
+      
+      $each(this.options.hasMany, function(associatedModel) {
+        
+      }, this);
+      
+      $each(this.options.belongsTo, function(associatedModel) {
+        
+      }, this);
+      
+      $each(this.options.hasAndBelongsToMany, function(associatedModel) {
+        
+      }, this);
+      
+      return record;
     }
     else {
       var records = [];

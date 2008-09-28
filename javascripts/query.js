@@ -24,20 +24,42 @@ ThyncRecord.Model.implement({
         errors: errors
       });
       
-      $each(this.options.hasOne, function(associatedModel) {
-        
+      $each(this.options.hasOne, function(table, assoc) {
+        var foreignId = data[assoc + "_id"];
+        if(foreignId)
+          record[assoc] = ThyncRecord.models.get(table).find(foreignId);
+      });
+      
+      $each(this.options.hasMany, function(table, assoc) {
+        record[assoc] = ThyncRecord.models.get(table).findAllBy(this.options.foreignKey, data.id);
       }, this);
       
-      $each(this.options.hasMany, function(associatedModel) {
-        
-      }, this);
+      $each(this.options.belongsTo, function(table, assoc) {
+        var foreignId = data[assoc + "_id"];
+        if(foreignId)
+          record[assoc] = ThyncRecord.models.get(table).find(foreignId);
+      });
       
-      $each(this.options.belongsTo, function(associatedModel) {
-        
-      }, this);
-      
-      $each(this.options.hasAndBelongsToMany, function(associatedModel) {
-        
+      $each(this.options.hasAndBelongsToMany, function(foreignTable, assoc) {
+        // var tableInfo = {
+        //   mappingTable: [this.table, table].sort().toString().replace(",", "_"),
+        //   foreignTable: foreignTable,
+        //   foreignKey: ThyncRecord.models.get(foreignTable).foreignKey,
+        //   localTable: this.table,
+        //   id: data.id
+        // };
+        // this.sql = "SELECT * FROM {mappingTable} INNER JOIN {foreignTable} ON {mappingTable}.{foreignKey} = {foreignTable}.id WHERE {localTable}.id = {id}";
+        // this.sql = this.sql.substitute(tableInfo);
+        // debugger;
+        // var mapResults = this.query();
+        // if(mapResults[0][this.options.foreignKey]) {
+        //   var assocRecords = [];
+        //   $each(mapResults, function(row) {
+        //     var foreignId = mappingTable.findBy(this.options.foreignKey, data.id);
+        //     
+        //   });
+        // }
+        // record[assoc] = ThyncRecord.models.get(this.table)
       }, this);
       
       return record;

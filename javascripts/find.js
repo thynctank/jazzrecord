@@ -40,11 +40,10 @@ ThyncRecord.Model.implement({
       options = {};
 
     this.sql = "SELECT {select} FROM {table} {conditions} {order} {limit} {offset}";
-
     var defaultOptions = {select: "*", table: this.table};
-  
+    
     options = $extend(defaultOptions, options);
-
+    
     if(!options.select == "*" && !options.select.contains("id"))
       options.select = "id, " + options.select;      
     if(options.order)
@@ -61,7 +60,7 @@ ThyncRecord.Model.implement({
     }
     else if(options.id)
       options.conditions = "WHERE id=" + options.id;
-        
+      
     this.sql = this.sql.substitute(options).clean() + ";";
     
     return this.query(options);

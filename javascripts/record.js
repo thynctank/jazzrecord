@@ -74,10 +74,8 @@ ThyncRecord.Record = new Class({
     if(!this.id)
       throw("Unsaved record cannot be reloaded");
     else {
-      if(this.isChanged()) {
-        var results = this.options.model.find(this.id);
-        $extend(this, results);
-      }
+      var results = this.options.model.find(this.id);
+      $extend(this, results);
     }
   },
   updateAttribute: function(name, val) {

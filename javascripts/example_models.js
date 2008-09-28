@@ -18,7 +18,7 @@ var Home = new ThyncRecord.Model({
     style: "text",
     footage: "number",
     address: "text"
-  }    
+  }
 });
 
 var Vehicle = new ThyncRecord.Model({
@@ -55,10 +55,4 @@ var Student = new ThyncRecord.Model({
   }
 });
 
-var migrations = [
-  {up:["createTable", "rabbits", {name: "text", parent_id: "number"}], down: ["dropTable", "rabbits"]},
-  {up:["renameTable", "rabbits", "hares"], down: ["renameTable", "hares", "rabbits"]},
-  {up:["addColumn", "hares", "title", "text"], down: ["removeColumn", "hares", "title"]}
-];
-
-ThyncRecord.migrate([], 0);
+ThyncRecord.migrate([]);

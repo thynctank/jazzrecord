@@ -4,10 +4,13 @@ in Model columns
   id (no repurposing allowed)
   methods:
     options
-    initialize
+    destroy
+    getData
+    isChanged
     save
     reload
-    destroy
+    updateAttribute
+    toString
     any user-defined methods of Model cannot have same-named column correlaries
   # Any user-defined Model relationship (hasMany/belongsTo/etc) creates
   # corresponding properties on Record object. These take care of propagating IDs/fetching proper arrays

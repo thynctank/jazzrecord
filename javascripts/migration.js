@@ -87,6 +87,15 @@ ThyncRecord.migrate = function(migrations, version) {
       });
       sql += ")";
       ThyncRecord.adapter.run(sql);
+      
+      $each(model.options.hasAndBelongsToMany, function(assocTable, association) {
+        var mappingTable = [model.table, assocTable].sort().toString().replace(",", "_");
+        var localKey = model.options.foreignKey;
+        var foreignKey = ThyncRecord.models.get(assocTable).options.foreignKey;
+        var keys = [localKey, foreignKey].sort();
+        var sql = "CREATE TABLE IF NOT EXISTS " + mappingTable + "(" + keys[0] + " INTEGER, " + keys[1] + " INTEGER)";
+        ThyncRecord.adapter.run(sql);
+      });
     });
   }
 };

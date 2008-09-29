@@ -18,11 +18,6 @@ ThyncRecord.Model = new Class({
     if(!ThyncRecord.models.has(this.table))
       ThyncRecord.models.set(this.table, this);
   },
-  count: function(conditions) {
-    this.sql = "SELECT COUNT(*) FROM " + this.table;
-    return ThyncRecord.adapter.count(this.sql);
-  },
-  
   //equivalent to Model.new in ActiveRecord
   newRecord: function(options) {
     if(!options)
@@ -37,7 +32,6 @@ ThyncRecord.Model = new Class({
       data: data
     });
   },
-  
   create: function(options) {
     var record = this.newRecord(options);
     record.save();

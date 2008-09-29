@@ -34,7 +34,12 @@ ThyncRecord.Model.implement({
     options.order += " DESC";
     return this.select(options);
   },
-
+  count: function(conditions) {
+    this.sql = "SELECT COUNT(*) FROM " + this.table;
+    if(conditions)
+      this.sql += " WHERE " + conditions;
+    return ThyncRecord.adapter.count(this.sql);
+  },
   select: function(options) {
     if(!options)
       options = {};

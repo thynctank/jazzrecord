@@ -3,6 +3,11 @@ ThyncRecord.Model.implement({
     if(typeof options == "undefined")
       options = {};
     // run query on SQLite
+    // bail if beyond recursion depth
+    if(!options.depth)
+      options.depth = ThyncRecord.depth;
+    if(options.depth < ThyncRecord.depth)
+      return;
 
     var data = ThyncRecord.adapter.run(this.sql);
 
@@ -40,28 +45,20 @@ ThyncRecord.Model.implement({
           record[assoc] = ThyncRecord.models.get(table).find(foreignId);
       });
       
-      $each(this.options.hasAndBelongsToMany, function(foreignTable, assoc) {
-        // var tableInfo = {
-        //   mappingTable: [this.table, table].sort().toString().replace(",", "_"),
-        //   foreignTable: foreignTable,
-        //   foreignKey: ThyncRecord.models.get(foreignTable).foreignKey,
-        //   localTable: this.table,
-        //   id: data.id
-        // };
-        // this.sql = "SELECT * FROM {mappingTable} INNER JOIN {foreignTable} ON {mappingTable}.{foreignKey} = {foreignTable}.id WHERE {localTable}.id = {id}";
-        // this.sql = this.sql.substitute(tableInfo);
-        // debugger;
-        // var mapResults = this.query();
-        // if(mapResults[0][this.options.foreignKey]) {
-        //   var assocRecords = [];
-        //   $each(mapResults, function(row) {
-        //     var foreignId = mappingTable.findBy(this.options.foreignKey, data.id);
-        //     
-        //   });
-        // }
-        // record[assoc] = ThyncRecord.models.get(this.table)
+      $each(this.options.hasAndBelongsToMany, function(assocTable, assoc) {
+        var mappingTable = [this.table, assocTable].sort().toString().replace(",", "_");
+        var sql = "SELECT * FROM " + mappingTable + " WHERE " + this.options.foreignKey + " = " + record.id;
+        record[assoc] = ThyncRecord.adapter.run(sql);
+        var assocModel = ThyncRecord.models.get(assocTable);
+        var assocIdCol = assocModel.options.foreignKey;
+        $each(record[assoc], function(mappingRow) {
+          debugger;
+          record[assoc] = assocModel.find(mappingRow[assocIdCol], {depth: options.depth - 1});
+        });
       }, this);
-      
+
+      // remaining depth needs to shrink to avoid endless looping for related models
+        
       return record;
     }
     else {

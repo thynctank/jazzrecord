@@ -100,7 +100,7 @@ ThyncRecord.GearsAdapter = new Class({
 });
 
 // globals
-ThyncRecord.depth = 0;
+ThyncRecord.depth = 1;
 ThyncRecord.models = new Hash();
 // ThyncRecord.adapter = new ThyncRecord.AirAdapter({dbFile: "test.db"});
 ThyncRecord.adapter = new ThyncRecord.GearsAdapter({dbFile: "test"});

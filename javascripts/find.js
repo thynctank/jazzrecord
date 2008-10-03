@@ -9,7 +9,7 @@ ThyncRecord.Model.implement({
       else if($type(query)=='object')
         options = query;
       else
-        throw("Type Error. You can find by either an ID, an array of IDs, or an object literal containing values for SELECT, TABLE, CONDITIONS, ORDER, LIMIT, and OFFSET.");
+        throw("Type Error. Model.find() expects Number, Array or Object");
     return this.select(options);
   },
   findBy: function(field, value) {

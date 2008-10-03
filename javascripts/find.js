@@ -1,11 +1,6 @@
 ThyncRecord.Model.implement({
   //finders: find, find_by, all, first, last
   find: function(query) {
-			// if($type(options)=='number')
-			// 	options = $extend({id: options});
-			// else if($type(options)=='string')
-			// 	options = $extend({conditions: " id = " + ids.toString().replace(/,/g, " or id = ")}, options);
-			
     if(!$defined(query))
       throw("Missing ID or Options Parameters");
 		else

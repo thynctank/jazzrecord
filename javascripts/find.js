@@ -1,13 +1,16 @@
 ThyncRecord.Model.implement({
   //finders: find, find_by, all, first, last
-  find: function(ids, options) {
-    if(!$defined(ids))
-      throw("Missing ID Parameter");
-    if($splat(ids).length == 1)
-      options = $extend({id: ids, limit: 1}, options);
-    else
-      options = $extend({conditions: " id = " + ids.toString().replace(/,/g, " or id = ")}, options);
-
+  find: function(options) {
+			if($type(options)=='number')
+    	options = $extend({id: ids, limit: 1}, options);			
+		else if($type(options)=='string')
+			options = $extend({conditions: " id = " + ids.toString().replace(/,/g, " or id = ")}, options);
+    // if(!$defined(ids))
+    //   throw("Missing ID Parameter");
+    // if($splat(ids).length == 1)
+    //   options = $extend({id: ids, limit: 1}, options);
+    // else
+    //   options = $extend({conditions: " id = " + ids.toString().replace(/,/g, " or id = ")}, options);
     return this.select(options);
   },
   findBy: function(field, value) {

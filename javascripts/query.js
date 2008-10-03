@@ -52,7 +52,6 @@ ThyncRecord.Model.implement({
         var assocModel = ThyncRecord.models.get(assocTable);
         var assocIdCol = assocModel.options.foreignKey;
         $each(record[assoc], function(mappingRow) {
-          debugger;
           record[assoc] = assocModel.find(mappingRow[assocIdCol], {depth: options.depth - 1});
         });
       }, this);

@@ -1,0 +1,76 @@
+# Outstanding to-do items. Can be tentatively assigned as noted below.
+
+NICK
+---
+recursive model for association-handling and that includes changes to destroy.js so it updates associations and save.js likewise
+
+DAVID
+---
+migration.js - implementing last 3 methods for sqlite-friendliness
+
+UNASSIGNED
+---
+
+methods.js needs to implement both Model and Record methods 3:18
+so you could have custom finders on a Model for instance 3:18
+and any arbitrary methods on Records 3:18
+migration holes need plugging
+Record needs auto-loaders implemented 3:20
+I explained that concept before 3:20
+an autoloader would be a dumb object with a load() method
+which would navigate its way back to the parent object, find out which column it itself was supposed to be, and load the appropriate data into that slot, replacing itself in the process
+standardizing the error messages
+drafting documentation
+hen this is implemented we may be able to get away with using that instead of recursion and just automatically setting it up so load() gets called a fixed number of miliseconds after the loader is created Nick Carter @ 3:22
+or something 3:22
+up to a certain depth 3:22
+so 3:22
+guess it doesn't replace recursion 3:22
+ha 3:22
+fuck it 3:22
+we still want them though 3:22
+so things not yet loaded for performance reasons can be accessed eventually in a convenient manner by the user 3:22
+ 
+hm Me @ 3:23
+right 3:23
+ 
+like I say the user could program defensively around the limitation by using like Nick Carter @ 3:23
+$try(obj.prop.load());
+obj.prop = "something";
+obj.save(); 3:24
+etc 3:24
+sorry 3:24
+uh 3:24
+$try(function() {obj.prop.load()});
+obj.prop = "something";
+obj.save(); 3:24
+slightly uglier 3:24
+but still not bad if we have to access deep-nested objects and can't count on preloading 3:25
+alternatively 3:25
+the user can specify the depth to load in the initial finder call 3:25
+it's one of the options params 3:25
+and there's one last chunk of core functionality 3:26
+ 
+hm Me @ 3:26
+right 3:26
+ 
+which is validations in save.js Nick Carter @ 3:26
+that will be reliant on whatever db types you implement 3:26
+and we also want user-defined validation 3:26
+and maybe Email address and one or two otehers as predefined validations 3:27
+ 
+yeah Me @ 3:27	
+
+and we need to add all of the user definable stuff to the Model initialize Nick Carter @ 3:27
+meaning 3:27
+methods, validation, and event handlers 3:27
+oh 3:27
+we need to add events 3:28
+onSave, etc 3:28
+
+and we need to add all of the user definable stuff to the Model initialize Nick Carter @ 3:27
+meaning 3:27
+methods, validation, and event handlers 3:27
+oh 3:27
+we need to add events 3:28
+onSave, etc

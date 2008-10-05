@@ -8,14 +8,14 @@ ThyncRecord.Model.implement({
       options.depth = ThyncRecord.depth;
     if(options.depth < ThyncRecord.depth)
       return;
-
+    
     var data = ThyncRecord.adapter.run(this.sql);
-
+    
     if(!data || data.length == 0) {
       puts("Found Nothing");
       return;
     }
-        
+    
     if(this.sql.contains("LIMIT 1")) {
       data = data[0];
       
@@ -55,9 +55,7 @@ ThyncRecord.Model.implement({
           record[assoc] = assocModel.find(mappingRow[assocIdCol], {depth: options.depth - 1});
         });
       }, this);
-
-      // remaining depth needs to shrink to avoid endless looping for related models
-        
+      
       return record;
     }
     else {
@@ -72,5 +70,5 @@ ThyncRecord.Model.implement({
       }, this);
       return records;
     }
-  }  
+  }
 });

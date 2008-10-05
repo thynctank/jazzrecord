@@ -1,15 +1,22 @@
 ThyncRecord.Model.implement({
   //finders: find, find_by, all, first, last
-  find: function(query) {
-    if(!$defined(query))
-      throw("Missing ID or Options Parameters");
+  find: function(options) {
+    if(!$defined(options))
+      throw("Missing ID or Options");
     else
-      if($type(query)=='number' || $type(query)=='array')
-        options = {id: query};
-      else if($type(query)=='object')
-        options = query;
-      else
-        throw("Type Error. Model.find() expects Number, Array or Object");
+      switch($type(options)) {
+        case "array":
+          options = {id: options};
+          break;
+        case "number":
+          options = {id: options, limit: 1};
+          break;
+        case "object":
+          break;
+        default:
+          throw("Type Error. Model.find() expects Number, Array or Object");
+      }
+      
     return this.select(options);
   },
   findBy: function(field, value) {

@@ -3,11 +3,13 @@ function puts(str) {
   if(window.debug && window.debug == false)
     return;
   if(window.console && console.log) {
-    if($type(str) == "string") 
-      console.log(str);
-    else 
-      if($type(str) == "object") 
+    switch($type(str)) {
+      case "object":
         console.dir(str);
+        break;
+      default:
+        console.log(str );
+    }
   }
   if(Browser.Features.air && air) {
     if (air.Introspector && air.Introspector.Console) {
@@ -64,12 +66,12 @@ ThyncRecord.AirAdapter = new Class({
 ThyncRecord.GearsAdapter = new Class({
   Implements: Options,
   options: {
-    dbName: "thyncrecord.db"
+    dbFile: "thyncrecord.db"
   },
   initialize: function(options) {
     this.setOptions(options);
     this.db = google.gears.factory.create("beta.database");
-    this.db.open(this.dbName);
+    this.db.open(this.options.dbFile);
     this.result = null;
   },
   run: function(query) {
@@ -100,7 +102,7 @@ ThyncRecord.GearsAdapter = new Class({
 });
 
 // globals
-ThyncRecord.depth = 1;
+ThyncRecord.depth = 4;
 ThyncRecord.models = new Hash();
 // ThyncRecord.adapter = new ThyncRecord.AirAdapter({dbFile: "test.db"});
-ThyncRecord.adapter = new ThyncRecord.GearsAdapter({dbFile: "test"});
+ThyncRecord.adapter = new ThyncRecord.GearsAdapter({dbFile: "test.db"});

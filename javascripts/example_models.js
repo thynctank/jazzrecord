@@ -24,7 +24,7 @@ var Home = new ThyncRecord.Model({
 var Vehicle = new ThyncRecord.Model({
   table: "vehicles",
   foreignKey: "vehicle_id",
-  belongsTo: { person: "people"},
+  belongsTo: { owner: "people"},
   columns: {
     make: "text",
     model: "text",

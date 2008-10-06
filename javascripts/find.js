@@ -16,20 +16,19 @@ ThyncRecord.Model.implement({
         default:
           throw("Type Error. Model.find() expects Number, Array or Object");
       }
-      
     return this.select(options);
   },
-  findBy: function(field, value) {
+  findBy: function(field, value, depth) {
     if(!this.options.columns[field])
       throw("Column " + field + " Does Not Exist in Table " + this.table);
     else
-      return this.select({conditions: field + "=" + this.typeValue(field, value), limit: 1});
+      return this.select({conditions: field + "=" + this.typeValue(field, value), limit: 1, depth: depth});
   },
-  findAllBy: function(field, value) {
+  findAllBy: function(field, value, depth) {
     if(!this.options.columns[field])
       throw("Column " + field + " Does Not Exist in Table " + this.table);
     else
-      return this.select({conditions: field + "=" + this.typeValue(field, value)});
+      return this.select({conditions: field + "=" + this.typeValue(field, value), depth: depth});
   },
   all: function(options) {
     return this.select(options);

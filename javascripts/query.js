@@ -34,7 +34,8 @@ ThyncRecord.Model.implement({
       $each(this.options.hasOne, function(assocTable, assoc) {
         var assocModel = ThyncRecord.models.get(assocTable);
         var assocIdCol = assocModel.options.foreignKey;
-        record[assoc] = assocModel.first({id: record[assocIdCol], depth: remainingDepth});
+        if(record[assocIdCol])
+          record[assoc] = assocModel.first({id: record[assocIdCol], depth: remainingDepth});
       });
       
       $each(this.options.hasMany, function(assocTable, assoc) {
@@ -45,7 +46,8 @@ ThyncRecord.Model.implement({
       $each(this.options.belongsTo, function(assocTable, assoc) {
         var assocModel = ThyncRecord.models.get(assocTable);
         var assocIdCol = assocModel.options.foreignKey;
-        record[assoc] = assocModel.first({id: record[assocIdCol], depth: remainingDepth});
+        if(record[assocIdCol])
+          record[assoc] = assocModel.first({id: record[assocIdCol], depth: remainingDepth});
       });
       
       $each(this.options.hasAndBelongsToMany, function(assocTable, assoc) {
@@ -54,7 +56,8 @@ ThyncRecord.Model.implement({
         record[assoc] = ThyncRecord.adapter.run(sql);
         var assocModel = ThyncRecord.models.get(assocTable);
         var assocIdCol = assocModel.options.foreignKey;
-        record[assoc] = assocModel.find({id: record[assoc][assocIdCol], depth: remainingDepth});
+        if(assocIdCol)
+          record[assoc] = assocModel.find({id: record[assoc][assocIdCol], depth: remainingDepth});
       }, this);
       
       // implement eager/lazy loading for associations

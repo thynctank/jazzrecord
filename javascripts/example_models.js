@@ -55,4 +55,4 @@ var Student = new ThyncRecord.Model({
   }
 });
 
-ThyncRecord.migrate([]);
+ThyncRecord.migrate({fixtures: fixtures});

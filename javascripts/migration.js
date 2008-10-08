@@ -65,13 +65,17 @@ ThyncRecord.Migration = {
   changeColumn: function(tableName, columnName, type) {}
 };
 
-ThyncRecord.migrate = function(migrations, version) {
+ThyncRecord.migrate = function(options) {
+  if(!options)
+    options = {};
+  if(!options.migrations)
+    var migrations = [];
   if(migrations.length > 0) {
     ThyncRecord.Migration.setup();
     var startIndex = ThyncRecord.Migration.current();
     var targetIndex = migrations.length - 1;
-    if(version)
-      targetIndex = version;
+    if(options.version)
+      targetIndex = options.version;
     
     if(targetIndex == startIndex) {
       puts("Up to date");  
@@ -116,4 +120,23 @@ ThyncRecord.migrate = function(migrations, version) {
       });
     });
   }
+  
+  
+  // handle fixture data, if passed in fixtures erase all old data
+  if(!options.fixtures || !$type(options.fixtures) == "object")
+    return;
+    
+  ThyncRecord.models.each(function(model) {
+    model.destroyAll();
+  });
+    
+  $each(options.fixtures.tables, function(tableData, tableName) {
+    $each(tableData, function(record) {
+      ThyncRecord.models.get(tableName).create(record);
+    });
+  });
+  
+  // $each(options.fixtures.mappingTables, function(tableData, tableName) {
+    // build logic for inserting mappingTable data.
+  // });
 };

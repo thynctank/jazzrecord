@@ -42,7 +42,25 @@ ThyncRecord.Migration = {
     ThyncRecord.adapter.run(sql);
   },
   //last three operations will need temp table copy due to sqlite limitations
-  removeColumn: function(tableName, columnName) {},
+  removeColumn: function(tableName, columnName) {
+    tableName = ThyncRecord.models[tableName].table;
+    if(!tableName || !ThyncRecord.models[tableName].options.columns[columnName])
+      return;
+    var tempTableName = "temp_"+tableName;
+    var tempColumns = [];
+    $each(ThyncRecord.models[tableName].options.columns, function(tempColumnType, tempColumnName) {
+      //alert(tempColumnName+columnName);
+      if(tempColumnName != columnName) {
+        tempColumns.push({tempColumnName: tempColumnName});
+      }
+    });
+    alert(tempColumns.toSource());
+    ThyncRecord.Migration.createTable(tempTableName, tempColumns);
+    // Insert each record into the temp table
+    ThyncRecord.Migration.dropTable(tableName);
+    ThyncRecord.Migration.renameTable(tempTableName, tableName);
+    ThyncRecord.Migration.dropTable(tempTableName);
+  },
   renameColumn: function(oldName, newName) {},
   changeColumn: function(tableName, columnName, type) {}
 };

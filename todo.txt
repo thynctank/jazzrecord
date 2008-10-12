@@ -20,7 +20,7 @@ JESSE
 * change dropAll to dropTable in destroy.js
 
 UNASSIGNED
----
+----------
 * implement Model/Record methods in methods.js and initialize code in model.js/record.js
 * add createIndex/dropIndex methods in migrations.js (copy names from activerecord, natch)
 * transaction handling

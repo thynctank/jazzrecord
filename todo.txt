@@ -2,8 +2,8 @@
 
 NICK
 ----
-* association-saving/loading on save, association-unlinking on destroy
 * finish up fixture-loading code for hasAndBelongsToMany mapping tables
+* association-saving/loading on save, association-unlinking on destroy
 * skeleton code for event-handling and validation onSave, onDestroy, onCreate
   and implement initialize code in model.js - should not hit db if not valid, set errors...
 
@@ -17,7 +17,6 @@ JESSE
 * implement storage types (bool, int, float)
 * implement details of validation code per storage type, implementing custom validation
   and common validations (max/min length for strings, email address)
-* change dropAll to dropTable in destroy.js
 
 UNASSIGNED
 ----------

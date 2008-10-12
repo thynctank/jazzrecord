@@ -7,5 +7,10 @@ ThyncRecord.Model.implement({
   destroyAll: function() {
     this.sql = "DELETE FROM " + this.table;
     this.query();
+  },
+  dropAll: function() {
+     this.sql = "DROP TABLE IF EXISTS " + this.table;
+     this.query();
   }
+  
 });

@@ -102,6 +102,12 @@ ThyncRecord.migrate = function(options) {
   }
   else {
     //developer can choose not to use migrations
+    
+    // Drop tables
+    ThyncRecord.models.each(function(model) {
+       model.dropAll();
+    });
+      
     this.models.each(function(model) {
       var sql = "CREATE TABLE IF NOT EXISTS " + model.table + "(id INTEGER PRIMARY KEY AUTOINCREMENT";
       $each(model.options.columns, function(colType, colName) {
@@ -125,10 +131,6 @@ ThyncRecord.migrate = function(options) {
   // handle fixture data, if passed in fixtures erase all old data
   if(!options.fixtures || !$type(options.fixtures) == "object")
     return;
-    
-  ThyncRecord.models.each(function(model) {
-    model.destroyAll();
-  });
     
   $each(options.fixtures.tables, function(tableData, tableName) {
     $each(tableData, function(record) {

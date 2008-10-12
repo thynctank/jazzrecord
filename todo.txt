@@ -2,7 +2,6 @@
 
 NICK
 ----
-* finish up fixture-loading code for hasAndBelongsToMany mapping tables
 * association-saving/loading on save, association-unlinking on destroy
 * skeleton code for event-handling and validation onSave, onDestroy, onCreate
   and implement initialize code in model.js - should not hit db if not valid, set errors...

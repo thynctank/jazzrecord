@@ -104,8 +104,14 @@ ThyncRecord.migrate = function(options) {
     //developer can choose not to use migrations
     
     // Drop tables
-    ThyncRecord.models.each(function(model) {
+    this.models.each(function(model) {
        model.dropTable();
+       
+       $each(model.options.hasAndBelongsToMany, function(assocTable) {
+         var mappingTable = [model.table, assocTable].sort().toString().replace(",", "_");
+         var sql = "DROP TABLE IF EXISTS " + mappingTable;
+         ThyncRecord.adapter.run(sql);
+       });
     });
       
     this.models.each(function(model) {
@@ -138,7 +144,11 @@ ThyncRecord.migrate = function(options) {
     });
   });
   
-  // $each(options.fixtures.mappingTables, function(tableData, tableName) {
-    // build logic for inserting mappingTable data.
-  // });
+  $each(options.fixtures.mappingTables, function(tableData, tableName) {
+    $each(tableData, function(colData) {
+      var dataHash = $H(colData);
+      var sql = "INSERT INTO " + tableName + " (" + dataHash.getKeys().toString() + ") VALUES(" + dataHash.getValues().toString() + ")";
+      ThyncRecord.adapter.run(sql);      
+    });
+  });
 };

@@ -14,11 +14,20 @@ var fixtures = {
       {make: "Nissan", model: "Altima", year: 2005, person_id: 2}
     ],
     high_school_classes: [
+      {name: "English"},
+      {name: "Phys. Ed."}
     ],
     students: [
+      {name: "Joe Bob"},
+      {name: "Peggy Sue"}
     ]
   },
   
   mappingTables: {
+    high_school_classes_students: [
+      {high_school_class_id: 1, student_id: 1},
+      {high_school_class_id: 1, student_id: 2},
+      {high_school_class_id: 2, student_id: 1}
+    ]
   }
 };

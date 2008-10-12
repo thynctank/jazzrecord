@@ -78,6 +78,13 @@ ThyncRecord.Record = new Class({
       $extend(this, results);
     }
   },
+  // for loading as-yet unloaded association data
+  load: function(association, depth) {
+    if(!depth)
+      depth = 0;
+    if(this[association].unloaded)
+      this[association] = this[association].loader(depth);
+  },
   updateAttribute: function(name, val) {
     this[name] = val;
     this.save();

@@ -6,10 +6,10 @@ ThyncRecord.Model.implement({
     // bail if beyond recursion depth
     if(!$defined(options.depth))
       options.depth = ThyncRecord.depth;
-    if(options.depth < 1)
-      return;
       
     var remainingDepth = options.depth - 1;
+    if(remainingDepth < 0)
+      remainingDepth = 0;
       
     var mainSql = this.sql;
     
@@ -34,20 +34,41 @@ ThyncRecord.Model.implement({
       $each(this.options.hasOne, function(assocTable, assoc) {
         var assocModel = ThyncRecord.models.get(assocTable);
         var assocIdCol = assocModel.options.foreignKey;
-        if(record[assocIdCol])
-          record[assoc] = assocModel.first({id: record[assocIdCol], depth: remainingDepth});
+        if(record[assocIdCol]) {
+          var loadHasOne = function(depth) {
+            return assocModel.first({id: record[assocIdCol], depth: depth});
+          };
+          if(options.depth < 1)
+            record[assoc] = new AssociationLoader(loadHasOne);
+          else
+            record[assoc] = loadHasOne(remainingDepth);
+        }
       });
       
       $each(this.options.hasMany, function(assocTable, assoc) {
         var assocModel = ThyncRecord.models.get(assocTable);
-        record[assoc] = assocModel.findAllBy(this.options.foreignKey, rowData.id, remainingDepth);
+        var foreignKey = this.options.foreignKey;
+        var loadHasMany = function(depth) {
+          return assocModel.findAllBy(foreignKey, rowData.id, depth);
+        };
+        if(options.depth < 1)
+          record[assoc] = new AssociationLoader(loadHasMany);
+        else
+          record[assoc] = loadHasMany(remainingDepth);
       }, this);
       
       $each(this.options.belongsTo, function(assocTable, assoc) {
         var assocModel = ThyncRecord.models.get(assocTable);
         var assocIdCol = assocModel.options.foreignKey;
-        if(record[assocIdCol])
-          record[assoc] = assocModel.first({id: record[assocIdCol], depth: remainingDepth});
+        if(record[assocIdCol]) {
+          var loadBelongsTo = function(depth) {
+            return assocModel.first({id: record[assocIdCol], depth: depth});
+          };
+          if(options.depth < 1)
+            record[assoc] = new AssociationLoader(loadBelongsTo);
+          else
+            record[assoc] = loadBelongsTo(remainingDepth);
+        }
       });
       
       $each(this.options.hasAndBelongsToMany, function(assocTable, assoc) {
@@ -56,8 +77,15 @@ ThyncRecord.Model.implement({
         record[assoc] = ThyncRecord.adapter.run(sql);
         var assocModel = ThyncRecord.models.get(assocTable);
         var assocIdCol = assocModel.options.foreignKey;
-        if(assocIdCol)
-          record[assoc] = assocModel.find({id: record[assoc][assocIdCol], depth: remainingDepth});
+        if(assocIdCol) {
+          var loadHasAndBelongsToMany = function(depth) {
+            return assocModel.find({id: record[assoc][assocIdCol], depth: depth});
+          };
+          if(options.depth < 1)
+            record[assoc] = new AssociationLoader(loadHasAndBelongsToMany);
+          else
+            record[assoc] = loadHasAndBelongsToMany(remainingDepth);
+        }
       }, this);
       
       // implement eager/lazy loading for associations

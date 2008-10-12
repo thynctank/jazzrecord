@@ -105,7 +105,7 @@ ThyncRecord.migrate = function(options) {
     
     // Drop tables
     ThyncRecord.models.each(function(model) {
-       model.dropAll();
+       model.dropTable();
     });
       
     this.models.each(function(model) {

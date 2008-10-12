@@ -8,7 +8,7 @@ ThyncRecord.Model.implement({
     this.sql = "DELETE FROM " + this.table;
     this.query();
   },
-  dropAll: function() {
+  dropTable: function() {
      this.sql = "DROP TABLE IF EXISTS " + this.table;
      this.query();
   }

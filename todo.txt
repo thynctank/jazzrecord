@@ -1,49 +1,26 @@
 # Outstanding to-do items. Can be tentatively assigned as noted below.
 
 NICK
----
-recursive model for association-handling and that includes changes to destroy.js so it updates associations and save.js likewise
+----
+* association-saving/loading on save, association-unlinking on destroy
+* finish up fixture-loading code for hasAndBelongsToMany mapping tables
+* skeleton code for event-handling and validation onSave, onDestroy, onCreate
+  and implement initialize code in model.js - should not hit db if not valid, set errors...
 
 DAVID
----
-migration.js - implementing last 3 methods for sqlite-friendliness
+-----
+* migration.js - implementing last 3 methods (removeColumn, renameColumn, changeColumn) for
+  sqlite-friendliness
+
+JESSE
+-----
+* implement storage types (bool, int, float)
+* implement details of validation code per storage type, implementing custom validation
+  and common validations (max/min length for strings, email address)
+* change dropAll to dropTable in destroy.js
 
 UNASSIGNED
 ---
-
-METHODS.JS
--- needs to implement both Model and Record methods; so you could have custom finders on a Model for instance, and any arbitrary methods on Records 
-migration holes need plugging
-
-RECORD.JS
--- needs auto-loaders implemented; an autoloader would be a dumb object with a load() method, which would navigate its way back to the parent object,
-find out which column it itself was supposed to be, and load the appropriate data into that slot, replacing itself in the process
-
-MODEL.JS
--- need to add all of the user definable stuff to the Model initialize: methods, validation, and event handlers, onSave, etc
-
-SAVE.JS:
--- Validations
-
-standardizing the error messages drafting documentation  ??
- 
-like I say the user could program defensively around the limitation by using like
-$try(obj.prop.load());
-obj.prop = "something";
-obj.save(); 3:24
-
-$try(function() {obj.prop.load()});
-obj.prop = "something";
-obj.save(); 3:24
-if we have to access deep-nested objects and can't count on preloading 3:25
-alternatively 3:25
-the user can specify the depth to load in the initial finder call 3:25
-it's one of the options params 3:25
-and there's one last chunk of core functionality 3:26
-
-which is validations in save.js Nick Carter @ 3:26
-that will be reliant on whatever db types you implement 3:26
-and we also want user-defined validation 3:26
-and maybe Email address and one or two otehers as predefined validations 3:27
-
-
+* implement Model/Record methods in methods.js and initialize code in model.js/record.js
+* add createIndex/dropIndex methods in migrations.js (copy names from activerecord, natch)
+* transaction handling

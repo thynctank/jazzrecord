@@ -23,22 +23,20 @@ ThyncRecord.Model.implement({
       return "NULL";
     else
       switch(this.options.columns[field]) {
-        
         case "string":
         case "text":
-           return "'" + (val || this[field]) + "'";
+          return "'" + (val || this[field]) + "'";
         
         case "number":
         case "int":
         case "float":
-           return val || this[field];
+          return val || this[field];
         
         case "bool":
-           if (val || this[field])
-              return 1
-           else
-              return 0;
-      
+          if (val || this[field])
+            return 1;
+          else
+            return 0;
       }
   }
 });

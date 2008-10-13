@@ -9,6 +9,20 @@ var Person = new ThyncRecord.Model({
     home_id: "number",
     income: "float",
     has_vehicle: "bool"
+  },
+  events: {
+    onCreate: function() {
+      console.log("A person was created");
+    },
+    onUpdate: function() {
+      console.log("A person was updated");
+    },
+    onSave: function() {
+      console.log("A person was saved");
+    },
+    onDestroy: function() {
+      console.log("A person was destroyed");
+    }
   }
 });
 

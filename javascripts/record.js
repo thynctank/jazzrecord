@@ -1,24 +1,32 @@
 //represents model data in memory, necessary to separate "class" methods from "instance" methods
 ThyncRecord.Record = new Class({
-  Implements: Options,
+  Implements: [Options, Events],
   options: {
     model: null,
     columns: {},
     data: {}
+    // onDestroy: $empty,
+    // onSave: $empty,
+    // onCreate: $empty,
+    // onUpdate: $empty
   },
   initialize: function(options) {
     this.id = null;
     this.setOptions(options);
+    this.errors = [];
     //copy over column data
     $each(this.options.columns, function(colType, colName) {
       this[colName] = null;
       if(this.options.data[colName])
         this[colName] = this.options.data[colName];
+      if(colType == "bool") {
+        var boolVal = (this[colName] ? true : false);
+        this.options.data[colName] = boolVal;
+        this[colName] = boolVal;
+      }
     }, this);
     if(this.options.data.id)
       this.id = this.options.data.id;
-    if(this.options.errors)
-      this.errors = this.options.errors;
   },
   destroy: function() {
     if(!this.id)
@@ -26,6 +34,7 @@ ThyncRecord.Record = new Class({
     else {
       this.options.model.destroy(this.id);
       this.id = null;
+      this.fireEvent("destroy");
     }
   },
   getData : function(source) {
@@ -43,7 +52,7 @@ ThyncRecord.Record = new Class({
   isChanged: function() {
     var data = $H(this.getData());
     var originalData = $H(this.getData("original"));
-
+    
     //verify no columns have changed to return w/o querying database
     if(this.id && data.toQueryString() == originalData.toQueryString())
       return false;
@@ -54,18 +63,24 @@ ThyncRecord.Record = new Class({
     if(this.isChanged()) {
       var data = this.getData();
       var originalData = this.getData("original");
-
-      if(this.id)
+      
+      if(this.id){
         data.id = this.id;
+        this.fireEvent("update");
+      }
       data.originalData = originalData;
+      
       var result = this.options.model.save(data);
-
-      if(!this.id)
+      
+      if(!this.id) {
         this.id = result;
+        this.fireEvent("create");
+      }
       // overwrite original data so it is no longer "dirty"
       $each(this.options.columns, function(colType, colName) {
         this.options.data[colName] = this[colName];
       }, this);
+      this.fireEvent("save");
     }
     else
       puts("Unchanged data");

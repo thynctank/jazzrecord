@@ -1,13 +1,17 @@
 ThyncRecord.Model = new Class({
   Implements: Options,
   options: {
+    // required data
     table: "",
     foreignKey: "",
     columns: {},
+    // association data
     hasOne: {},
     hasMany: {},
     belongsTo: {},
-    hasAndBelongsToMany: {}
+    hasAndBelongsToMany: {},
+    // events
+    events: {}
   },
   initialize: function(options) {
     this.setOptions(options);
@@ -26,11 +30,18 @@ ThyncRecord.Model = new Class({
     $each(this.options.columns, function(colVal, colName) {
       data[colName] = options[colName] || null;
     });
-    return new ThyncRecord.Record({
+
+    var recordOptions = {
       model: this,
       columns: this.options.columns,
       data: data
+    };
+    
+    $each(this.options.events, function(eventHandler, eventName) {
+      recordOptions[eventName] = eventHandler;
     });
+
+    return new ThyncRecord.Record(recordOptions);
   },
   create: function(options) {
     var record = this.newRecord(options);

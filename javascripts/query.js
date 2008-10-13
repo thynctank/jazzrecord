@@ -24,13 +24,17 @@ ThyncRecord.Model.implement({
     var records = [];
     
     $each(data, function(rowData) {
-      var errors = {};
-      var record = new ThyncRecord.Record({
+      var recordOptions = {
         model: this,
         columns: this.options.columns,
-        data: rowData,
-        errors: errors
+        data: rowData
+      };
+
+      $each(this.options.events, function(eventHandler, eventName) {
+        recordOptions[eventName] = eventHandler;
       });
+      
+      var record = new ThyncRecord.Record(recordOptions);
       
       $each(this.options.hasOne, function(assocTable, assoc) {
         var assocModel = ThyncRecord.models.get(assocTable);

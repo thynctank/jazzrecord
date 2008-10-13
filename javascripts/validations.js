@@ -3,19 +3,19 @@ ThyncRecord.Record.implement({
   validate: function() {
      $each(this.options.columns, function(colType, colName) {
         switch(colType) {
-	case "text":
-		
-	case "number":
-		
-	case "int":
-		
-	case "float":
-		
-	case "bool":
-		
-	case null:
-	   throw "Invalid datatype passed to validate";
-	
+        case "text":
+                
+        case "number":
+                
+        case "int":
+                
+        case "float":
+                
+        case "bool":
+                
+        case null:
+           throw "Invalid datatype passed to validate";
+        
         }
      });
   },

@@ -27,7 +27,7 @@ ThyncRecord.Model.implement({
         case "string":
         case "text":
            return "'" + (val || this[field]) + "'";
-           
+        
         case "number":
         case "int":
         case "float":

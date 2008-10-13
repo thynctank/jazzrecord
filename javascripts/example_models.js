@@ -6,7 +6,9 @@ var Person = new ThyncRecord.Model({
   columns: {
     name: "text",
     age: "number",
-    home_id: "number"
+    home_id: "number",
+    income: "float",
+    has_vehicle: "bool"
   }
 });
 
@@ -17,7 +19,8 @@ var Home = new ThyncRecord.Model({
   columns: {
     style: "text",
     footage: "number",
-    address: "text"
+    address: "text",
+    vacant: "bool"
   }
 });
 

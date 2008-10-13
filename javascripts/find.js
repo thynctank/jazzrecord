@@ -2,7 +2,7 @@ ThyncRecord.Model.implement({
   //finders: find, find_by, all, first, last
   find: function(options) {
     if(!$defined(options))
-      throw("Missing ID or Options");
+      throw "EXPECTS_INT";
     else
       switch($type(options)) {
         case "array":

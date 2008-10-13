@@ -4,7 +4,8 @@ var fixtures = {
       {name: "Nick", age: 28, home_id: 1},
       {name: "Terri", home_id: 1},
       {name: "David"},
-      {name: "Karen"}
+      {name: "Karen"},
+      {name: "Jesse", age: 24, income: 127.5, has_vehicle: true}
     ],
     homes: [
       {address: "4605 Deming Ave, Alexandria, VA 22212"}

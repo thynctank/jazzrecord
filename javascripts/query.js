@@ -16,7 +16,8 @@ ThyncRecord.Model.implement({
     var data = ThyncRecord.adapter.run(mainSql);
     
     if(!data || data.length == 0) {
-      puts("Found Nothing");
+      if(!(this.sql.contains("DELETE") || this.sql.contains("DROP")))
+        puts("Found Nothing");
       return;
     }
     

@@ -11,18 +11,16 @@ var Person = new ThyncRecord.Model({
     has_vehicle: "bool"
   },
   events: {
-    onCreate: function() {
-      console.log("A person was created");
-    },
     onUpdate: function() {
       console.log("A person was updated");
-    },
-    onSave: function() {
-      console.log("A person was saved");
     },
     onDestroy: function() {
       console.log("A person was destroyed");
     }
+  },
+  validate: function() {
+    if(this.name.contains("A"))
+      this.errors.push("We don't like people with A names");
   }
 });
 

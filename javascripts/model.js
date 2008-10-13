@@ -11,7 +11,9 @@ ThyncRecord.Model = new Class({
     belongsTo: {},
     hasAndBelongsToMany: {},
     // events
-    events: {}
+    events: {},
+    // validation function
+    validate: $empty
   },
   initialize: function(options) {
     this.setOptions(options);

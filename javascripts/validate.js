@@ -1,27 +1,30 @@
 ThyncRecord.Record.implement({
-
+  // push errors onto this.errors for every failed validation
   validate: function() {
-     $each(this.options.columns, function(colType, colName) {
-        switch(colType) {
+    $each(this.options.columns, function(colType, colName) {
+      switch(colType) {
         case "text":
-	case "string":
-                puts("String: " + colName);
+        case "string":
+          break;
         case "number":
-                puts("Number: " + colName);
+          break;
         case "int":
-                puts("int: " + colName);
+          break;
         case "float":
-                puts("float: " + colName);
+          break;
         case "bool":
-                puts("bool: " + colName);
-        case null:
-           throw "Invalid datatype passed to validate";
-        
-        }
-     });
+          break;
+        default:
+          throw "Invalid datatype passed to validate";
+      }
+    });
+    // call user-defined validation
+    this.options.model.options.validate.apply(this);
   },
   
+  // run validate and determine if current Record is valid
   isValid: function() {
+    this.validate();
     if (this.errors.length != 0)
        return false;
     else
@@ -29,7 +32,6 @@ ThyncRecord.Record.implement({
   },
   
   validateOnCreate: function() {},
-  
   validateOnSave: function() {},
 
   validates_acceptance_of: function() {},
@@ -44,5 +46,4 @@ ThyncRecord.Record.implement({
   validates_presence_of: function() {},
   validates_size_of: function() {},
   validates_uniqueness_of: function() {}
-  
 });

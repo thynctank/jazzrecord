@@ -8,7 +8,7 @@ ThyncRecord.Record = new Class({
     // onDestroy: $empty,
     // onSave: $empty,
     // onCreate: $empty,
-    // onUpdate: $empty
+    // onUpdate: $empty,
   },
   initialize: function(options) {
     this.id = null;
@@ -60,7 +60,7 @@ ThyncRecord.Record = new Class({
       return true;
   },
   save: function() {
-    if(this.isChanged()) {
+    if(this.isChanged() && this.isValid()) {
       var data = this.getData();
       var originalData = this.getData("original");
       

@@ -3,8 +3,6 @@
 NICK
 ----
 * association-saving/loading on save, association-unlinking on destroy
-* skeleton code for event-handling and validation onSave, onDestroy, onCreate
-  and implement initialize code in model.js - should not hit db if not valid, set errors...
 
 DAVID
 -----
@@ -13,7 +11,6 @@ DAVID
 
 JESSE
 -----
-* implement storage types (bool, int, float)
 * implement details of validation code per storage type, implementing custom validation
   and common validations (max/min length for strings, email address)
 
@@ -22,3 +19,4 @@ UNASSIGNED
 * implement Model/Record methods in methods.js and initialize code in model.js/record.js
 * add createIndex/dropIndex methods in migrations.js (copy names from activerecord, natch)
 * transaction handling
+* (maybe) convert recursive loading algorithms to intelligent join query builder?

@@ -1,24 +1,6 @@
 ThyncRecord.Record.implement({
-  // push errors onto this.errors for every failed validation
   validate: function() {
-    $each(this.options.columns, function(colType, colName) {
-      switch(colType) {
-        case "text":
-        case "string":
-          break;
-        case "number":
-          break;
-        case "int":
-          break;
-        case "float":
-          break;
-        case "bool":
-          break;
-        default:
-          throw "Invalid datatype passed to validate";
-      }
-    });
-    // call user-defined validation
+    // executes user-defined validations
     this.options.model.options.validate.apply(this);
   },
   
@@ -30,20 +12,58 @@ ThyncRecord.Record.implement({
     else
        return true;
   },
-  
+
   validateOnCreate: function() {},
   validateOnSave: function() {},
 
-  validates_acceptance_of: function() {},
-  validates_associated: function() {},
-  validates_confirmation_of: function() {},
-  validates_each: function() {},
-  validates_exclusion_of: function() {},
-  validates_format_of: function() {},
-  validates_inclusion_of: function() {},
-  validates_length_of: function() {},
-  validates_numericality_of: function() {},
-  validates_presence_of: function() {},
-  validates_size_of: function() {},
-  validates_uniqueness_of: function() {}
+  validatesAcceptanceOf: function(val, errText) {
+    if (val == false || val == 0) {
+
+      if(!$defined(errText))
+        customMsg = "must be abided";
+
+      this.errors.push(errText);
+      return false;
+    }
+    return true;
+  },
+  
+  validatesAssociated: function(assocName, errText) {
+  var assocValid = true;
+  var assocModel = ThyncRecord.models.get(this[assocName]);
+  var assocKey = assocModel.foreignKey;
+
+  // alternate paths depending on whether associated record is loaded or not
+  if(this[assocName].unloaded) {
+    if(!assocModel.find(this[assocKey]))
+      assocValid = false;
+  }
+  else if(!this[assocName].id)
+    assocValid = false;
+
+  if(!$defined(errText))
+    errText = assocName + " does not exist with ID " + this[assocKey];
+
+  if(!assocValid)
+    this.errors.push(errText);
+
+  return assocValid;
+  },
+  
+  validatesConfirmationOf: function() {},
+  validatesEach: function() {},
+  validatesExclusionOf: function() {},
+  validatesFormatOf: function() {},
+  validatesInclusionOkf: function() {},
+  validatesLengthOf: function() {},
+  validatesNumericalityOf: function() {},
+  validatesPresenceOf: function() {},
+  validatesSizeOf: function() {},
+  validatesUniquenessOf: function() {},
+  // Generic Validations
+  validateIsString: function(val) {},
+  validateIsBool: function(val) {},
+  validateIsInt: function(val) {},
+  validateIsFloat: function(val) {}
+
 });

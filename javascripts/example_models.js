@@ -69,5 +69,3 @@ var Student = new ThyncRecord.Model({
     home_id: "number"
   }
 });
-
-ThyncRecord.migrate({fixtures: fixtures});

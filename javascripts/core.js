@@ -101,8 +101,9 @@ ThyncRecord.GearsAdapter = new Class({
   }
 });
 
-// globals
+// Globals can be overridden in site-specific js
 ThyncRecord.depth = 3;
 ThyncRecord.models = new Hash();
+// Provide one of the following lines in site-specific js prior to calling migrate()
 // ThyncRecord.adapter = new ThyncRecord.AirAdapter({dbFile: "test.db"});
-ThyncRecord.adapter = new ThyncRecord.GearsAdapter({dbFile: "test.db"});
+// ThyncRecord.adapter = new ThyncRecord.GearsAdapter({dbFile: "test.db"});

@@ -105,5 +105,5 @@ JazzRecord.GearsAdapter = new Class({
 JazzRecord.depth = 3;
 JazzRecord.models = new Hash();
 // Provide one of the following lines in site-specific js prior to calling migrate()
-// JazzRecord.adapter = new JazzRecord.AirAdapter({dbFile: "test.db"});
-// JazzRecord.adapter = new JazzRecord.GearsAdapter({dbFile: "test.db"});
+  // JazzRecord.adapter = new JazzRecord.AirAdapter({dbFile: "test.db"});
+  // JazzRecord.adapter = new JazzRecord.GearsAdapter({dbFile: "test.db"});

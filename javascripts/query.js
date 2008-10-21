@@ -18,7 +18,7 @@ JazzRecord.Model.implement({
     if(!data || data.length == 0) {
       if(!(this.sql.contains("DELETE") || this.sql.contains("DROP")))
         puts("Found Nothing");
-      return;
+      return data;
     }
     
     var records = [];

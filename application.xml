@@ -14,13 +14,13 @@
 -->
 
 	<!-- The application identifier string, unique to this application. Required. -->
-	<id>com.thynctank.thyncRecord</id>
+	<id>com.thynctank.JazzRecord</id>
 
 	<!-- Used as the filename for the application. Required. -->
-	<filename>thyncRecord</filename>
+	<filename>JazzRecord</filename>
 
 	<!-- The name that is displayed in the AIR application installer. Optional. -->
-	<name>thyncRecord</name>
+	<name>JazzRecord</name>
 
 	<!-- An application version designator (such as "v1", "2.5", or "Alpha 1"). Required. -->
 	<version>1.0</version>

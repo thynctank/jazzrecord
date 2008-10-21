@@ -33,7 +33,7 @@ var JazzRecord = {};
 JazzRecord.AirAdapter = new Class({
   Implements: Options,
   options: {
-    dbFile: "thyncrecord.db"
+    dbFile: "jazz_record.db"
   },
   initialize: function(options) {
     this.setOptions(options);
@@ -66,7 +66,7 @@ JazzRecord.AirAdapter = new Class({
 JazzRecord.GearsAdapter = new Class({
   Implements: Options,
   options: {
-    dbFile: "thyncrecord.db"
+    dbFile: "jazz_record.db"
   },
   initialize: function(options) {
     this.setOptions(options);

@@ -1,11 +1,11 @@
-ThyncRecord.Model.implement({
+JazzRecord.Model.implement({
   query: function(options) {
     if(!$defined(options))
       options = {};
     // run query on SQLite
     // bail if beyond recursion depth
     if(!$defined(options.depth))
-      options.depth = ThyncRecord.depth;
+      options.depth = JazzRecord.depth;
       
     var remainingDepth = options.depth - 1;
     if(remainingDepth < 0)
@@ -13,7 +13,7 @@ ThyncRecord.Model.implement({
       
     var mainSql = this.sql;
     
-    var data = ThyncRecord.adapter.run(mainSql);
+    var data = JazzRecord.adapter.run(mainSql);
     
     if(!data || data.length == 0) {
       if(!(this.sql.contains("DELETE") || this.sql.contains("DROP")))
@@ -34,10 +34,10 @@ ThyncRecord.Model.implement({
         recordOptions[eventName] = eventHandler;
       });
       
-      var record = new ThyncRecord.Record(recordOptions);
+      var record = new JazzRecord.Record(recordOptions);
       
       $each(this.options.hasOne, function(assocTable, assoc) {
-        var assocModel = ThyncRecord.models.get(assocTable);
+        var assocModel = JazzRecord.models.get(assocTable);
         var assocIdCol = assocModel.options.foreignKey;
         if(record[assocIdCol]) {
           var loadHasOne = function(depth) {
@@ -51,7 +51,7 @@ ThyncRecord.Model.implement({
       });
       
       $each(this.options.hasMany, function(assocTable, assoc) {
-        var assocModel = ThyncRecord.models.get(assocTable);
+        var assocModel = JazzRecord.models.get(assocTable);
         var foreignKey = this.options.foreignKey;
         var loadHasMany = function(depth) {
           return assocModel.findAllBy(foreignKey, rowData.id, depth);
@@ -63,7 +63,7 @@ ThyncRecord.Model.implement({
       }, this);
       
       $each(this.options.belongsTo, function(assocTable, assoc) {
-        var assocModel = ThyncRecord.models.get(assocTable);
+        var assocModel = JazzRecord.models.get(assocTable);
         var assocIdCol = assocModel.options.foreignKey;
         if(record[assocIdCol]) {
           var loadBelongsTo = function(depth) {
@@ -79,8 +79,8 @@ ThyncRecord.Model.implement({
       $each(this.options.hasAndBelongsToMany, function(assocTable, assoc) {
         var mappingTable = [this.table, assocTable].sort().toString().replace(",", "_");
         var sql = "SELECT * FROM " + mappingTable + " WHERE " + this.options.foreignKey + " = " + record.id;
-        record[assoc] = ThyncRecord.adapter.run(sql);
-        var assocModel = ThyncRecord.models.get(assocTable);
+        record[assoc] = JazzRecord.adapter.run(sql);
+        var assocModel = JazzRecord.models.get(assocTable);
         var assocIdCol = assocModel.options.foreignKey;
         if(assocIdCol) {
           var loadHasAndBelongsToMany = function(depth) {

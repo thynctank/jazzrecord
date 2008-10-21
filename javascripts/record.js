@@ -1,5 +1,5 @@
 //represents model data in memory, necessary to separate "class" methods from "instance" methods
-ThyncRecord.Record = new Class({
+JazzRecord.Record = new Class({
   Implements: [Options, Events],
   options: {
     model: null,

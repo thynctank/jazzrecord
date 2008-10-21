@@ -1,4 +1,4 @@
-var Person = new ThyncRecord.Model({
+var Person = new JazzRecord.Model({
   table: "people",
   foreignKey: "person_id",
   hasOne: { home: "homes"},
@@ -24,7 +24,7 @@ var Person = new ThyncRecord.Model({
   }
 });
 
-var Home = new ThyncRecord.Model({
+var Home = new JazzRecord.Model({
   table: "homes",
   foreignKey: "home_id",
   hasMany: { people: "people"},
@@ -36,7 +36,7 @@ var Home = new ThyncRecord.Model({
   }
 });
 
-var Vehicle = new ThyncRecord.Model({
+var Vehicle = new JazzRecord.Model({
   table: "vehicles",
   foreignKey: "vehicle_id",
   belongsTo: { owner: "people"},
@@ -48,7 +48,7 @@ var Vehicle = new ThyncRecord.Model({
   }
 });
 
-var HighSchoolClass = new ThyncRecord.Model({
+var HighSchoolClass = new JazzRecord.Model({
   table: "high_school_classes",
   foreignKey: "high_school_class_id",
   hasAndBelongsToMany: { students: "students"},
@@ -58,7 +58,7 @@ var HighSchoolClass = new ThyncRecord.Model({
   }
 });
 
-var Student = new ThyncRecord.Model({
+var Student = new JazzRecord.Model({
   table: "students",
   foreignKey: "student_id",
   hasOne: { home: "homes"},

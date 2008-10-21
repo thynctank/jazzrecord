@@ -1,4 +1,4 @@
-ThyncRecord.Model.implement({
+JazzRecord.Model.implement({
   //finders: find, find_by, all, first, last
   find: function(options) {
     if(!$defined(options))
@@ -46,7 +46,7 @@ ThyncRecord.Model.implement({
     this.sql = "SELECT COUNT(*) FROM " + this.table;
     if(conditions)
       this.sql += " WHERE " + conditions;
-    return ThyncRecord.adapter.count(this.sql);
+    return JazzRecord.adapter.count(this.sql);
   },
   select: function(options) {
     if(!options)

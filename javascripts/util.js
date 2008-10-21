@@ -1,4 +1,4 @@
-ThyncRecord.Model.implement({
+JazzRecord.Model.implement({
   //utilities - used in building query strings
   columnNames: function() {
     var columns = "(";

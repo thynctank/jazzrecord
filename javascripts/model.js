@@ -1,4 +1,4 @@
-ThyncRecord.Model = new Class({
+JazzRecord.Model = new Class({
   Implements: Options,
   options: {
     // required data
@@ -21,8 +21,8 @@ ThyncRecord.Model = new Class({
     this.sql = "";
     
     // add all-important master listing for this model/table relationship
-    if(!ThyncRecord.models.has(this.table))
-      ThyncRecord.models.set(this.table, this);
+    if(!JazzRecord.models.has(this.table))
+      JazzRecord.models.set(this.table, this);
   },
   //equivalent to Model.new in ActiveRecord
   newRecord: function(options) {
@@ -43,7 +43,7 @@ ThyncRecord.Model = new Class({
       recordOptions[eventName] = eventHandler;
     });
 
-    return new ThyncRecord.Record(recordOptions);
+    return new JazzRecord.Record(recordOptions);
   },
   create: function(options) {
     var record = this.newRecord(options);

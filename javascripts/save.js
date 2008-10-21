@@ -1,4 +1,4 @@
-ThyncRecord.Model.implement({
+JazzRecord.Model.implement({
   //insert or update
   save: function(record) {
     this.sql = "{saveMode} {table} {set} {data} {conditions};";
@@ -22,6 +22,6 @@ ThyncRecord.Model.implement({
     options = $extend(defaultOptions, options);
     
     this.sql = this.sql.substitute(options).clean();
-    return ThyncRecord.adapter.save(this.sql);
+    return JazzRecord.adapter.save(this.sql);
   }
 });

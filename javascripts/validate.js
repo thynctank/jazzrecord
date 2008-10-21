@@ -1,4 +1,4 @@
-ThyncRecord.Record.implement({
+JazzRecord.Record.implement({
   validate: function() {
     // executes user-defined validations
     this.options.model.options.validate.apply(this);
@@ -30,7 +30,7 @@ ThyncRecord.Record.implement({
   
   validatesAssociated: function(assocName, errText) {
   var assocValid = true;
-  var assocModel = ThyncRecord.models.get(this[assocName]);
+  var assocModel = JazzRecord.models.get(this[assocName]);
   var assocKey = assocModel.foreignKey;
 
   // alternate paths depending on whether associated record is loaded or not

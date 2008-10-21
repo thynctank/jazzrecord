@@ -28,9 +28,9 @@ function puts(str) {
 }
 
 
-var ThyncRecord = {};
+var JazzRecord = {};
 
-ThyncRecord.AirAdapter = new Class({
+JazzRecord.AirAdapter = new Class({
   Implements: Options,
   options: {
     dbFile: "thyncrecord.db"
@@ -63,7 +63,7 @@ ThyncRecord.AirAdapter = new Class({
   }
 });
 
-ThyncRecord.GearsAdapter = new Class({
+JazzRecord.GearsAdapter = new Class({
   Implements: Options,
   options: {
     dbFile: "thyncrecord.db"
@@ -102,8 +102,8 @@ ThyncRecord.GearsAdapter = new Class({
 });
 
 // Globals can be overridden in site-specific js
-ThyncRecord.depth = 3;
-ThyncRecord.models = new Hash();
+JazzRecord.depth = 3;
+JazzRecord.models = new Hash();
 // Provide one of the following lines in site-specific js prior to calling migrate()
-// ThyncRecord.adapter = new ThyncRecord.AirAdapter({dbFile: "test.db"});
-// ThyncRecord.adapter = new ThyncRecord.GearsAdapter({dbFile: "test.db"});
+// JazzRecord.adapter = new JazzRecord.AirAdapter({dbFile: "test.db"});
+// JazzRecord.adapter = new JazzRecord.GearsAdapter({dbFile: "test.db"});

@@ -13,7 +13,7 @@ def build_minified_script(output)
   File.open("build/#{output}.js", "w") { |file| file.write(new_js) }  
 end
 
-desc "Builds JazzRecord out of dust"
+desc "Builds custom-named JazzRecord file"
 task :build do
   if ENV['OUTPUT']
     build_minified_script(ENV['OUTPUT'])

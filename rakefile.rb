@@ -19,9 +19,9 @@ task :build do
     build_minified_script(ENV['OUTPUT'])
   else
     puts "Usage:"
-    puts "rake build OUTPUT=outputscriptname"
-    puts "Outputs:"
-    puts "outputscriptname.js (minified, compressed script)"
+    puts "\trake build OUTPUT=outputscriptname"
+    puts "Output:"
+    puts "\toutputscriptname.js (minified, compressed script)"
   end    
 end
 

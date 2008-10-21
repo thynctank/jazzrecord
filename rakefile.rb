@@ -22,10 +22,12 @@ task :build do
     puts "\trake build OUTPUT=outputscriptname"
     puts "Output:"
     puts "\toutputscriptname.js (minified, compressed script)"
+    puts "Wrote #{ENV['OUTPUT']}"
   end    
 end
 
-desc "Build jazzrecord.js"
+desc "Build jazz_record.js"
 task :default do
   build_minified_script('jazz_record')
+  puts "Wrote jazz_record.js"
 end

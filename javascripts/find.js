@@ -2,7 +2,7 @@ JazzRecord.Model.implement({
   //finders: find, find_by, all, first, last
   find: function(options) {
     if(!$defined(options))
-      throw "EXPECTS_INT";
+      throw("Missing ID or Options");
     else
       switch($type(options)) {
         case "array":

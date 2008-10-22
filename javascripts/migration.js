@@ -134,22 +134,24 @@ JazzRecord.migrate = function(options) {
     });
   }
   
-  
   // handle fixture data, if passed in fixtures erase all old data
-  if(!options.fixtures)
-    return;
+  if(options.fixtures)
+    this.loadFixtures(options.fixtures);
     
-  $each(options.fixtures.tables, function(tableData, tableName) {
+};
+
+JazzRecord.loadFixtures = function(fixtures) {
+  $each(fixtures.tables, function(tableData, tableName) {
     $each(tableData, function(record) {
       JazzRecord.models.get(tableName).create(record);
     });
   });
   
-  $each(options.fixtures.mappingTables, function(tableData, tableName) {
+  $each(fixtures.mappingTables, function(tableData, tableName) {
     $each(tableData, function(colData) {
       var dataHash = $H(colData);
       var sql = "INSERT INTO " + tableName + " (" + dataHash.getKeys().toString() + ") VALUES(" + dataHash.getValues().toString() + ")";
       JazzRecord.adapter.run(sql);      
     });
   });
-};
+}

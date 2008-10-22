@@ -104,15 +104,16 @@ JazzRecord.migrate = function(options) {
     //developer can choose not to use migrations
     
     // Drop tables
-    this.models.each(function(model) {
-       model.dropTable();
+    if(options.refresh)
+      this.models.each(function(model) {
+         model.dropTable();
        
-       $each(model.options.hasAndBelongsToMany, function(assocTable) {
-         var mappingTable = [model.table, assocTable].sort().toString().replace(",", "_");
-         var sql = "DROP TABLE IF EXISTS " + mappingTable;
-         JazzRecord.adapter.run(sql);
-       });
-    });
+         $each(model.options.hasAndBelongsToMany, function(assocTable) {
+           var mappingTable = [model.table, assocTable].sort().toString().replace(",", "_");
+           var sql = "DROP TABLE IF EXISTS " + mappingTable;
+           JazzRecord.adapter.run(sql);
+         });
+      });
       
     this.models.each(function(model) {
       var sql = "CREATE TABLE IF NOT EXISTS " + model.table + "(id INTEGER PRIMARY KEY AUTOINCREMENT";
@@ -135,7 +136,7 @@ JazzRecord.migrate = function(options) {
   
   
   // handle fixture data, if passed in fixtures erase all old data
-  if(!options.fixtures || !$type(options.fixtures) == "object")
+  if(!options.fixtures)
     return;
     
   $each(options.fixtures.tables, function(tableData, tableName) {

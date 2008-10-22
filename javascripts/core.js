@@ -1,6 +1,6 @@
 //firebug/air debug function, kill w/ global var named prod
 function puts(str) {
-  if(window.debug && window.debug == false)
+  if($defined(window.debug) && window.debug == false)
     return;
   if(window.console && console.log) {
     switch($type(str)) {

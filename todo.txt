@@ -2,7 +2,6 @@
 
 NICK
 ----
-* Record.reload needs to not hit db
 * association-saving/loading on save, association-unlinking on destroy
 
 DAVID

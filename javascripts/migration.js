@@ -84,7 +84,7 @@ JazzRecord.migrate = function(options) {
     
     //tack in code that only runs migrations starting from most recently-run index
     for(var i = startIndex, j = targetIndex; (targetIndex > startIndex) ? (i < j) : (i > j); (targetIndex > startIndex) ? i++ : i--) {
-      m = migrations[i];
+      var m = migrations[i];
       m = (targetIndex > startIndex) ? m.up : m.down;
       var operation = m[0];
       switch (m.length) {
@@ -147,6 +147,9 @@ JazzRecord.loadFixtures = function(fixtures) {
     });
   });
   
+  if(!fixtures.mappingTables)
+    return;
+
   $each(fixtures.mappingTables, function(tableData, tableName) {
     $each(tableData, function(colData) {
       var dataHash = $H(colData);

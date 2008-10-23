@@ -61,9 +61,26 @@ JazzRecord.Record.implement({
   validatesSizeOf: function() {},
   validatesUniquenessOf: function() {},
   // Generic Validations
-  validateIsString: function(val) {},
-  validateIsBool: function(val) {},
-  validateIsInt: function(val) {},
-  validateIsFloat: function(val) {}
+  validateIsString: function(val) {
+    if (typeof(val) == "string")
+      return true;
+    else
+      return false;
+  },
+  validateIsBool: function(val) {
+    if (typeof(val) == "boolean")
+      return true;
+    else
+      return false;
+  },
+  validateIsInt: function(val) {
+      if (typeof(val) == "number")
+      return true;
+    else
+      return false;
+  },
+  validateIsFloat: function(val) {
+  alert(typeof(val));
+  }
 
 });

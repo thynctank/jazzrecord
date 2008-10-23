@@ -3,6 +3,7 @@
 NICK
 ----
 * association-saving/loading on save, association-unlinking on destroy
+* Fix GearsAdapter so it can be reloaded if necessary/Same in AirAdapter?
 
 DAVID
 -----

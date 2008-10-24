@@ -21,3 +21,14 @@ UNASSIGNED
 * add createIndex/dropIndex methods in migrations.js (copy names from activerecord, natch)
 * transaction handling
 * (maybe) convert recursive loading algorithms to intelligent join query builder?
+
+
+
+Ideas:
+
+Support HTML5 DB access
+-http://www.whatwg.org/specs/web-apps/current-work/#sql
+-http://www.w3.org/html/wg/html5/#sql
+
+Yahoo BrowserPlus Support
+-http://browserplus.yahoo.com/services/  (PStore - DB ACCESS)

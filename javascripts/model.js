@@ -3,12 +3,12 @@ JazzRecord.Model = new Class({
   options: {
     // required data
     table: "",
-    foreignKey: "",
     columns: {},
     // association data
+    foreignKey: "",
     hasOne: {},
-    hasMany: {},
     belongsTo: {},
+    hasMany: {},
     hasAndBelongsToMany: {},
     // events
     events: {},

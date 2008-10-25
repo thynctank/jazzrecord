@@ -32,9 +32,9 @@ JazzRecord.Record = new Class({
     if(!this.id)
       throw("Unsaved record cannot be destroyed");
     else {
+      this.fireEvent("destroy");
       this.options.model.destroy(this.id);
       this.id = null;
-      this.fireEvent("destroy");
     }
   },
   getData : function(source) {

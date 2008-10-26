@@ -5,10 +5,10 @@ JazzRecord.Record = new Class({
     model: null,
     columns: {},
     data: {}
-    // onDestroy: $empty,
-    // onSave: $empty,
     // onCreate: $empty,
     // onUpdate: $empty,
+    // onSave: $empty,
+    // onDestroy: $empty,
   },
   initialize: function(options) {
     this.id = null;

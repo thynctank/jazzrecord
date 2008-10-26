@@ -2,19 +2,32 @@
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <!-- Platform-specific includes and moo -->
       <script src="javascripts/gears/gears_init.js" type="text/javascript" charset="utf-8"></script>
       <script src="javascripts/mootools/mootools-core.js" type="text/javascript" charset="utf-8"></script>
 
-      <script src="build/jazz_record.js" type="text/javascript" charset="utf-8"></script>
+    <!-- JazzRecord includes -->
+      <script src="javascripts/core.js" type="text/javascript" charset="utf-8"></script>
+      <script src="javascripts/record.js" type="text/javascript" charset="utf-8"></script>
+      <script src="javascripts/model.js" type="text/javascript" charset="utf-8"></script>
+      <script src="javascripts/association_loader.js" type="text/javascript" charset="utf-8"></script>
+      <script src="javascripts/util.js" type="text/javascript" charset="utf-8"></script>
+      <script src="javascripts/validate.js" type="text/javascript" charset="utf-8"></script>
+      <script src="javascripts/query.js" type="text/javascript" charset="utf-8"></script>
+      <script src="javascripts/save.js" type="text/javascript" charset="utf-8"></script>
+      <script src="javascripts/destroy.js" type="text/javascript" charset="utf-8"></script>
+      <script src="javascripts/find.js" type="text/javascript" charset="utf-8"></script>
+      <script src="javascripts/migration.js" type="text/javascript" charset="utf-8"></script>
 
+    <!-- Example models/migrations/data -->
       <script src="javascripts/example_models.js" type="text/javascript" charset="utf-8"></script>
       <script src="javascripts/example_migrations.js" type="text/javascript" charset="utf-8"></script>
       <script src="javascripts/example_fixtures.js" type="text/javascript" charset="utf-8"></script>
       
-      <script type="text/javascript" charset="utf-8">
-        JazzRecord.adapter = new JazzRecord.GearsAdapter();
-        JazzRecord.migrate({fixtures: fixtures, refresh: true});
-      </script>
+    <script type="text/javascript" charset="utf-8">
+      JazzRecord.adapter = new JazzRecord.GearsAdapter({dbFile: "test.db"});
+      JazzRecord.migrate({fixtures: fixtures});
+    </script>
     
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>JazzRecord</title>

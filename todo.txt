@@ -25,6 +25,7 @@ UNASSIGNED
 * add createIndex/dropIndex methods in migrations.js (copy names from activerecord, natch)
 * transaction handling
 * (maybe) convert recursive loading algorithms to intelligent join query builder?
+* TEST TEST TEST! (see http://mootools.net/blog/2007/10/20/whats-new-in-12-behaviour-driven-developmentyou-know-weve-been-telling-you-that-mootools-is-reliable-but-how-can-you-can-be-sure-that-it-will-work-for-your-project-without-just-taking-our-word/)
 
 
 

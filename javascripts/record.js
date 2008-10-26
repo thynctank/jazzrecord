@@ -99,6 +99,7 @@ JazzRecord.Record = new Class({
       depth = 0;
     if(this[association].unloaded)
       this[association] = this[association].loader(depth);
+    return this[association];
   },
   updateAttribute: function(name, val) {
     this[name] = val;

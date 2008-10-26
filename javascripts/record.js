@@ -19,7 +19,7 @@ JazzRecord.Record = new Class({
       this[colName] = null;
       if(this.options.data[colName])
         this[colName] = this.options.data[colName];
-      if(colType == "bool") {
+      if(colType === "bool") {
         var boolVal = (this[colName] ? true : false);
         this.options.data[colName] = boolVal;
         this[colName] = boolVal;
@@ -39,7 +39,7 @@ JazzRecord.Record = new Class({
   },
   getData : function(source) {
     var data = {};
-    if(source == "original")
+    if(source === "original")
       source = this.options.data;
     else
       source = this;
@@ -54,7 +54,7 @@ JazzRecord.Record = new Class({
     var originalData = $H(this.getData("original"));
     
     //verify no columns have changed to return w/o querying database
-    if(this.id && data.toQueryString() == originalData.toQueryString())
+    if(this.id && data.toQueryString() === originalData.toQueryString())
       return false;
     else
       return true;

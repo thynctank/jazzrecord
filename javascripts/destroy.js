@@ -1,7 +1,12 @@
 JazzRecord.Model.implement({
   //delete
   destroy: function(id) {
-    this.sql = "DELETE FROM " + this.table + " WHERE id=" + id;
+    var conditions = "";
+    if($type(id) === 'number')
+      conditions = "WHERE id=" + id;
+    else if($type(id) === 'array')
+      conditions = "WHERE id IN (" + id + ")";
+    this.sql = "DELETE FROM " + this.table + " " + conditions;
     this.query();
   },
   destroyAll: function() {

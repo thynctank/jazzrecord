@@ -52,8 +52,8 @@ JazzRecord.Model.implement({
     if(!options)
       options = {};
 
-    this.sql = "SELECT {select} FROM {table} {conditions} {order} {limit} {offset}";
-    var defaultOptions = {select: "*", table: this.table};
+    this.sql = "SELECT {select} FROM {from} {conditions} {order} {limit} {offset}";
+    var defaultOptions = {select: "*", from: this.table};
     
     options = $extend(defaultOptions, options);
     

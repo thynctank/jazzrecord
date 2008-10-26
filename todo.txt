@@ -9,6 +9,7 @@ NICK
 * Implement group
 * Implement findBySql
 * Implement update, updateAll on Model: Useful in migrations
+* Implement add'l dirty object methods: http://ryandaigle.com/articles/2008/3/31/what-s-new-in-edge-rails-dirty-objects
 
 DAVID
 -----

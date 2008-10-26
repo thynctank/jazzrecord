@@ -85,6 +85,11 @@ JazzRecord.Record = new Class({
     else
       puts("Unchanged data");
   },
+  revert: function() {
+    $each(this.options.columns, function(colType, colName) {
+      this[colName] = this.options.data[colName];
+    }, this);
+  },
   reload: function() {
     if(!this.id)
       throw("Unsaved record cannot be reloaded");

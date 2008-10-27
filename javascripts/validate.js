@@ -191,4 +191,3 @@ JazzRecord.Record.implement({
   }
 
 });
-""

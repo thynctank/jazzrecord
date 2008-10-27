@@ -72,8 +72,10 @@ JazzRecord.Model.implement({
         options.conditions += " AND id=" + options.id;
     }
     else if(options.id)
-      if($type(options.id)=='number')
+      if($type(options.id)=='number') {
         options.conditions = "WHERE id=" + options.id;
+        options.limit = "LIMIT 1";
+      }
       else if($type(options.id)=='array')
         options.conditions = "WHERE id IN (" + options.id + ")";
     this.sql = this.sql.substitute(options).clean() + ";";

@@ -19,8 +19,11 @@ var Person = new JazzRecord.Model({
     }
   },
   validate: function() {
-    if(this.name.contains("A"))
-      this.errors.push("We don't like people with A names");
+	var keywords = new Array(3); 
+	keywords[0] = "jesse";
+	keywords[1] = "moo";
+	keywords[2] = "hi";
+	this.validatesExclusionOf(this.name, keywords);
   }
 });
 

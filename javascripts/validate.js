@@ -1,5 +1,13 @@
 JazzRecord.Record.implement({
 
+/*
+  Nick -- I'm not sure what you wanted these in here for, leaving them blank for now, while I work on the documentation ..
+  
+  validateOnCreate: function() {},
+  validateOnSave: function() {},
+
+*/
+
   pushError: function(errDefault, errCustom) {
     // Use this in all validation methods, eventually, to avoid so much repeated code..
     message = errDefault;
@@ -21,9 +29,6 @@ JazzRecord.Record.implement({
     if (this.errors.length != 0) return false;
     else return true;
   },
-
-  validateOnCreate: function() {},
-  validateOnSave: function() {},
 
   validatesAcceptanceOf: function(val, errText) {
     if (val == false || val == 0) {
@@ -65,8 +70,6 @@ JazzRecord.Record.implement({
     }
     else return true;
   },
-  
-  validatesEach: function() {},
 
   validatesExclusionOf: function(val, keyWordsArray, errText) {
     // keyWordsArray Must be an array atm, implement string processing later
@@ -141,8 +144,14 @@ JazzRecord.Record.implement({
   },
   
   validatesUniquenessOf: function(colName, val, errText) {
-    if (findAllBy(colName, val).length > lengthBasedOnSavedOrNot) {}
+    if (findBy(colName, val).length > 0) {
+      if (!$defined(errText)) errText = "is not unique";
 
+      this.errors.push(errText);
+      return false;
+    } else {
+       return true;
+    }
   },
   
   // Generic Validations

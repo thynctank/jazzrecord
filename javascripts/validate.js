@@ -9,15 +9,16 @@ JazzRecord.Record.implement({
 */
 
   pushError: function(errDefault, errCustom) {
-    // Use this in all validation methods, eventually, to avoid so much repeated code..
+    /*
+    Use this in all the methods eventually to avoid repeating if (!$defined(errText)  etc... 
+    */
     message = errDefault;
     if ($defined(errCustom) && errCustom != "") message = errCustom;
 
     this.errors.push(message);
   },
 
-  parseVars: function(blah) {},
-  // Use this later on to parse %strings into usable data, for custom validations,
+  parseVars: function(blah) {}, // Use this later on to parse %strings into usable data, for custom validations,
   validate: function() {
     // executes user-defined validations
     this.options.model.options.validate.apply(this);

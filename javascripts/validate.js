@@ -95,6 +95,9 @@ JazzRecord.Record.implement({
   },
   
   validatesInclusionOf: function(val, keyWordsArray, errText) {
+    /*
+      Fix this tomorrow.......
+    */
     var passed_Validate = false;
 
     $each(keyWordsArray,

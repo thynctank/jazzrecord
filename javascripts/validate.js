@@ -89,7 +89,10 @@ JazzRecord.Record.implement({
     });
   },
   
-  validatesFormatOf: function() {},
+  validatesFormatOf: function() {
+    // cant believe I missed one lol
+  },
+  
   validatesInclusionOf: function(val, keyWordsArray, errText) {
     var passed_Validate = false;
 
@@ -157,7 +160,7 @@ JazzRecord.Record.implement({
   // Generic Validations
   validateIsString: function(val, errText) {
     if (typeof(val) == "string") return true;
-    else if (!$defined(errText)) customMsg = "must be string";
+    if (!$defined(errText)) customMsg = "must be string";
 
     this.errors.push(errText);
     return false;
@@ -165,7 +168,7 @@ JazzRecord.Record.implement({
   
   validateIsBool: function(val, errText) {
     if (typeof(val) == "boolean") return true;
-    else if (!$defined(errText)) customMsg = "must be boolean";
+    if (!$defined(errText)) customMsg = "must be boolean";
 
     this.errors.push(errText);
     return false;
@@ -173,7 +176,7 @@ JazzRecord.Record.implement({
   
   validateIsInt: function(val, errText) {
     if (typeof(val) == "number") return true;
-    else if (!$defined(errText)) customMsg = "must be int";
+    if (!$defined(errText)) customMsg = "must be int";
 
     this.errors.push(errText);
     return false;
@@ -181,7 +184,7 @@ JazzRecord.Record.implement({
   
   validateIsFloat: function(val) {
     if ((typeof(val) == "number") && (val.contains("."))) return true;
-    else if (!$defined(errText)) customMsg = "must be boolean";
+    if (!$defined(errText)) customMsg = "must be boolean";
 
     this.errors.push(errText);
     return false;

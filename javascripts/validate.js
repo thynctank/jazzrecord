@@ -85,9 +85,8 @@ JazzRecord.Record.implement({
 
         this.errors.push(errText);
       }
-
-      return passed_Validate;
     });
+    return passed_Validate;
   },
   
   validatesFormatOf: function() {
@@ -107,7 +106,9 @@ JazzRecord.Record.implement({
       }
     })
     if (!passed_Validate) {
-      if (!$defined(errText)) errText = val + " must contain " + cur_Word;
+      var flatarr = "";
+      $each(keyWordsArray,function(cwop) { flatarr += cwop + ", "; });
+      if (!$defined(errText)) errText = val + " must contain at least one of the following: " + flatarr;
 
       this.errors.push(errText);
     }
@@ -156,9 +157,8 @@ JazzRecord.Record.implement({
 
       this.errors.push(errText);
       return false;
-    } else {
-       return true;
-    }
+    } else 
+      return true;
   },
   
   // Generic Validations

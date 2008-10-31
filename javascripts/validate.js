@@ -1,14 +1,20 @@
 JazzRecord.Record.implement(
 {
+  validate: function() {
+    // executes user-defined validations
+    this.options.model.options.validate.apply(this);
+  },
+  // run validate and determine if current Record is valid
+  isValid: function() {
+    this.validate();
 
-/*
-  Nick -- I'm not sure what you wanted these in here for, leaving them blank for now, while I work on the documentation ..
-  
-  validateOnCreate: function() {},
-  validateOnSave: function() {},
-
-*/
-
+    if (this.errors.length !== 0) {
+      return false;
+    }
+    else {
+      return true;
+    }
+  },
   pushError: function(errDefault, errCustom) {
     /*
     Use this in all the methods eventually to avoid repeating if (!$defined(errText)  etc... 
@@ -21,83 +27,31 @@ JazzRecord.Record.implement(
 
     this.errors.push(message);
   },
-  validate: function() {
-    // executes user-defined validations
-    this.options.model.options.validate.apply(this);
-  },
-
-  // run validate and determine if current Record is valid
-  isValid: function() {
-    this.validate();
-
-    if (this.errors.length !== 0) {
-      return false;
-    }
-    else {
-      return true;
-    }
-  },
   validatesAcceptanceOf: function(col, errText) {
     var val = this[col];
+    errText = $defined(errText) ? errText : (col + " must be accepted");
 
-    if (val === false || val === 0) {
-      if (!$defined(errText)) {
-        errText = col + " must be abided";
-      }
-
+    if(val)
+      return;
+    else
       this.errors.push(errText);
-      return false;
-    }
-    return true;
   },
-  validatesAssociated: function(assocName, errText) {
-    // This still isn't working, I'm not sure what the issue is
-    var assocValid = true;
-    var assocModel = JazzRecord.models.get(this[assocName]);
-    var assocKey = assocModel.foreignKey;
+  validatesConfirmationOf: function(col, errText) {
+    var val = this[col];
+    // App must assign confirmation value, but we shouldn't confuse this as being an actual column. It's a temporary variable.
+    var confirmationVal = this[col + "_confirmation"];
 
-    // alternate paths depending on whether associated record is loaded or not
-    if (this[assocName].unloaded) {
-      if (!assocModel.find(this[assocKey])) {
-        assocValid = false;
-      }
-    }
-    else if (!this[assocName].id) {
-      assocValid = false;
-    }
-
-    if (!$defined(errText)) {
-      errText = assocName + " does not exist with ID " + this[assocKey];
-    }
-
-    if (!assocValid) {
-      this.errors.push(errText);
-    }
-
-    return assocValid;
+    if (val -= confirmationVal) 
+      return;
+    else
+      errText = $defined(errText) ? errText : "does not match";
   },
-  validatesConfirmationOf: function(col1, col2, errText) {
-    var val1 = this[col1];
-    var val2 = this[col2];
-
-    if (val1 != val2) {
-      if (!$defined(errText)) {
-        errText = "does not match";
-      }
-
-      this.errors.push(errText);
-      return false;
-    }
-    else {
-      return true;
-    }
-  },
-  validatesExclusionOf: function(col, keyWordsArray, errText) {
+  validatesExclusionOf: function(col, values, errText) {
     // keyWordsArray Must be an array atm, implement string processing later
     var val = this[col];
     var passedValidate = true;
 
-    $each(keyWordsArray, function(cur_Word) {
+    $each(values, function(cur_Word) {
       if (val.contains(cur_Word)) {
         passedValidate = false;
 
@@ -248,5 +202,31 @@ JazzRecord.Record.implement(
 
     this.errors.push(errText);
     return false;
+  },
+  validatesAssociated: function(assocName, errText) {
+    // This still isn't working, I'm not sure what the issue is
+    var assocValid = true;
+    var assocModel = JazzRecord.models.get(this[assocName]);
+    var assocKey = assocModel.foreignKey;
+
+    // alternate paths depending on whether associated record is loaded or not
+    if (this[assocName].unloaded) {
+      if (!assocModel.find(this[assocKey])) {
+        assocValid = false;
+      }
+    }
+    else if (!this[assocName].id) {
+      assocValid = false;
+    }
+
+    if (!$defined(errText)) {
+      errText = assocName + " does not exist with ID " + this[assocKey];
+    }
+
+    if (!assocValid) {
+      this.errors.push(errText);
+    }
+
+    return assocValid;
   }
 });

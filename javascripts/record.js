@@ -71,24 +71,34 @@ JazzRecord.Record = new Class({
       this.fireEvent("save");
     }
     else {
-      // delete any associated objects if old foreignKey was set but has become unset
+      // delete any associated objects if old foreignKey was set but has become unset, autolink if assigned an object
       $each(this.options.model.options.belongsTo, function(assocTable, assoc) {
         var assocModel = JazzRecord.models.get(assocTable);
         var assocIdCol = assocModel.options.foreignKey;
         if(this.options.data[assocIdCol] && !this[assocIdCol])
           delete this[assoc];
         else if(this.options.data[assocIdCol] && !this[assoc]) {
-          debugger;
-          this[assocIdCol] = null;
+          delete this[assocIdCol];
         }
+        else if(!this.options.data[assocIdCol] && this[assoc])
+          this[assocIdCol] = this[assoc].id;
       }, this);
       
-      // delete HABTM associations
-      // $each(this.options.model.options.hasAndBelongsToMany, function(assocTable, association) {
+      $each(this.options.model.options.hasOne, function(assocTable, assoc) {
+        // var assocModel = JazzRecord.models.get(assocTable);
+        // var foreignKey = this.options.foreignKey;
+      });
+      
+      $each(this.options.hasMany, function(assocTable, assoc) {
+        // var assocModel = JazzRecord.models.get(assocTable);
+        // var foreignKey = this.options.foreignKey;
+      }, this);
+      
+      $each(this.options.model.options.hasAndBelongsToMany, function(assocTable, association) {
       //   var mappingTable = [this.model.table, assocTable].sort().toString().replace(",", "_");
       //   var localKey = model.options.foreignKey;
       //   var foreignKey = JazzRecord.models.get(assocTable).options.foreignKey;        
-      // }, this);
+      }, this);
       
       var data = this.getData();
       var originalData = this.getData("original");

@@ -41,22 +41,21 @@ JazzRecord.Record.implement(
     // App must assign confirmation value, but we shouldn't confuse this as being an actual column. It's a temporary variable.
     var confirmationVal = this[col + "_confirmation"];
 
-    if (val -= confirmationVal) 
-      return;
-    else
+    if (val !== confirmationVal || !$defined(confirmationVal) || confirmationVal == "") {
       errText = $defined(errText) ? errText : "does not match";
+    }
   },
   validatesExclusionOf: function(col, values, errText) {
     // keyWordsArray Must be an array atm, implement string processing later
     var val = this[col];
     var passedValidate = true;
 
-    $each(values, function(cur_Word) {
-      if (val.contains(cur_Word)) {
+    $each(values, function(curValue) {
+      if (val.contains(curValue)) {
         passedValidate = false;
 
         if (!$defined(errText)) {
-          errText = col + " must not contain " + cur_Word;
+          errText = col + " must not contain " + curValue;
         }
 
         this.errors.push(errText);
@@ -67,31 +66,29 @@ JazzRecord.Record.implement(
   validatesFormatOf: function() {
   // cant believe I missed one lol
   },
-  validatesInclusionOf: function(col, keyWordsArray, errText) {
+  validatesInclusionOf: function(col, values, errText) {
     var val = this[col];
-    var flatarr = "";
-    var passed_Validate = false;
+    var flatarr = '';
+    var passedValidate = false;
 
-    $each(keyWordsArray, function(cur_Word) {
-      if (val.contains(cur_Word)) {
-        passed_Validate = true;
+    $each(values, function(curValue) {
+      flatarr += curValue + ", ";
+      if (val.contains(curValue)) {
+        passedValidate = true;
       }
     });
 
-    if (!passed_Validate) {
-      $each(keyWordsArray, function(cwop) {
-        flatarr += cwop + ", ";
-      });
-
+    if (!passedValidate) {
       if (!$defined(errText)) {
         errText = col + " must contain at least one of the following: " + flatarr;
       }
 
       this.errors.push(errText);
     }
-    return passed_Validate;
+    return passedValidate;
   },
   validatesLengthOf: function(col, min, max, errText) {
+          //options ..
     var val = this[col];
 
     if ((val.length) > max || (val.length) < min) {
@@ -107,14 +104,13 @@ JazzRecord.Record.implement(
   },
   validatesNumericalityOf: function(col, errText) {
     if (validatesIsInt(col) || validatesIsFloat(col)) {
-      return true;
+      return;
     }
     else {
       if (!$defined(errText)) {
         errText = col + " must be numeric";
       }
       this.errors.push(errText);
-      return false;
     }
   },
   validatesPresenceOf: function(col, errText) {
@@ -126,10 +122,6 @@ JazzRecord.Record.implement(
       }
 
       this.errors.push(errText);
-      return false;
-    }
-    else {
-      return true;
     }
   },
   validatesUniquenessOf: function(col, val, errText) {
@@ -139,10 +131,6 @@ JazzRecord.Record.implement(
       }
 
       this.errors.push(errText);
-      return false;
-    }
-    else {
-      return true;
     }
   },
 
@@ -151,7 +139,7 @@ JazzRecord.Record.implement(
     var val = this[col];
 
     if (typeof (val) == "string") {
-      return true;
+      return;
     }
 
     if (!$defined(errText)) {
@@ -159,13 +147,12 @@ JazzRecord.Record.implement(
     }
 
     this.errors.push(errText);
-    return false;
   },
   validatesIsBool: function(col, errText) {
     var val = this[col];
 
     if (typeof (val) == "boolean") {
-      return true;
+      return;
     }
 
     if (!$defined(errText)) {
@@ -173,13 +160,12 @@ JazzRecord.Record.implement(
     }
 
     this.errors.push(errText);
-    return false;
   },
   validatesIsInt: function(col, errText) {
     var val = this[col];
 
     if (typeof (val) == "number") {
-      return true;
+      return;
     }
 
     if (!$defined(errText)) {
@@ -187,13 +173,12 @@ JazzRecord.Record.implement(
     }
 
     this.errors.push(errText);
-    return false;
   },
   validatesIsFloat: function(col, errText) {
     var val = this[col];
 
     if (( typeof (val) == "number") && ((val + '').contains("."))) {
-      return true;
+      return;
     }
 
     if (!$defined(errText)) {
@@ -201,7 +186,6 @@ JazzRecord.Record.implement(
     }
 
     this.errors.push(errText);
-    return false;
   },
   validatesAssociated: function(assocName, errText) {
     // This still isn't working, I'm not sure what the issue is

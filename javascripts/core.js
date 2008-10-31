@@ -102,7 +102,7 @@ JazzRecord.GearsAdapter = new Class({
 });
 
 // Globals can be overridden in site-specific js
-JazzRecord.depth = 3;
+JazzRecord.depth = 2;
 JazzRecord.models = new Hash();
 // Provide one of the following lines in site-specific js prior to calling migrate()
   // JazzRecord.adapter = new JazzRecord.AirAdapter({dbFile: "test.db"});

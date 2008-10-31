@@ -19,7 +19,7 @@ var fixtures = {
       {name: "Phys. Ed."}
     ],
     students: [
-      {name: "Joe Bob"},
+      {name: "Joe Bob", home_id: 1},
       {name: "Peggy Sue"}
     ]
   },

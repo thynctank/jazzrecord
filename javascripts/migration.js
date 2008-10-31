@@ -157,4 +157,4 @@ JazzRecord.loadFixtures = function(fixtures) {
       JazzRecord.adapter.run(sql);      
     });
   });
-}
+};

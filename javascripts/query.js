@@ -15,10 +15,13 @@ JazzRecord.Model.implement({
     
     var data = JazzRecord.adapter.run(mainSql);
     
-    if(!data || data.length == 0) {
-      if(!(this.sql.contains("DELETE") || this.sql.contains("DROP")))
+    if(!data || data.length === 0) {
+      if(this.sql.contains("SELECT"))
         puts("Found Nothing");
-      return data;
+      if(this.sql.contains("LIMIT"))
+        return null;
+      else
+        return data;
     }
     
     var records = [];
@@ -38,17 +41,15 @@ JazzRecord.Model.implement({
       
       $each(this.options.hasOne, function(assocTable, assoc) {
         var assocModel = JazzRecord.models.get(assocTable);
-        var assocIdCol = assocModel.options.foreignKey;
-        if(record[assocIdCol]) {
-          var loadHasOne = function(depth) {
-            return assocModel.first({id: record[assocIdCol], depth: depth});
-          };
-          if(options.depth < 1)
-            record[assoc] = new AssociationLoader(loadHasOne);
-          else
-            record[assoc] = loadHasOne(remainingDepth);
-        }
-      });
+        var foreignKey = this.options.foreignKey;
+        var loadHasOne = function(depth) {
+          return assocModel.findBy(foreignKey, rowData.id, depth);
+        };
+        if(options.depth < 1)
+          record[assoc] = new AssociationLoader(loadHasOne);
+        else
+          record[assoc] = loadHasOne(remainingDepth);
+      }, this);
       
       $each(this.options.hasMany, function(assocTable, assoc) {
         var assocModel = JazzRecord.models.get(assocTable);

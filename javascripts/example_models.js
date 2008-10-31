@@ -1,8 +1,8 @@
 var Person = new JazzRecord.Model({
   table: "people",
   foreignKey: "person_id",
-  hasOne: { home: "homes"},
-  hasMany: { vehicles: "vehicles"},
+  belongsTo: { home: "homes"},
+  hasOne: { vehicle: "vehicles"},
   columns: {
     name: "text",
     age: "number",
@@ -19,18 +19,18 @@ var Person = new JazzRecord.Model({
     }
   },
   validate: function() {
-	var keywords = new Array(3); 
-	keywords[0] = "jesse";
-	keywords[1] = "moo";
-	keywords[2] = "hi";
-	this.validatesExclusionOf(this.name, keywords);
+  // var keywords = new Array(3); 
+  // keywords[0] = "jesse";
+  // keywords[1] = "moo";
+  // keywords[2] = "hi";
+  // this.validatesExclusionOf(this.name, keywords);
   }
 });
 
 var Home = new JazzRecord.Model({
   table: "homes",
   foreignKey: "home_id",
-  hasMany: { people: "people"},
+  hasMany: { people: "people", students: "students"},
   columns: {
     style: "text",
     footage: "number",
@@ -64,8 +64,8 @@ var HighSchoolClass = new JazzRecord.Model({
 var Student = new JazzRecord.Model({
   table: "students",
   foreignKey: "student_id",
-  hasOne: { home: "homes"},
-  hasAndBelongsToMany: { highSchoolClasses: "high_school_classes"},
+  belongsTo: { home: "homes"},
+  hasAndBelongsToMany: { classes: "high_school_classes"},
   columns: {
     name: "text",
     grade: "text",

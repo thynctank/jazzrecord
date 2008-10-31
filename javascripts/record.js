@@ -50,6 +50,10 @@ JazzRecord.Record = new Class({
     return data;
   },
   isChanged: function() {
+    //bail if brand-new record
+    if(!this.id)
+      return false;
+
     var data = $H(this.getData());
     var originalData = $H(this.getData("original"));
     
@@ -60,30 +64,50 @@ JazzRecord.Record = new Class({
       return true;
   },
   save: function() {
-    if(this.isChanged() && this.isValid()) {
+    if(!this.id) {
+      var data = this.getData();
+      this.id = this.options.model.save(data);;
+      this.fireEvent("create");
+      this.fireEvent("save");
+    }
+    else {
+      // delete any associated objects if old foreignKey was set but has become unset
+      $each(this.options.model.options.belongsTo, function(assocTable, assoc) {
+        var assocModel = JazzRecord.models.get(assocTable);
+        var assocIdCol = assocModel.options.foreignKey;
+        if(this.options.data[assocIdCol] && !this[assocIdCol])
+          delete this[assoc];
+        else if(this.options.data[assocIdCol] && !this[assoc]) {
+          debugger;
+          this[assocIdCol] = null;
+        }
+      }, this);
+      
+      // delete HABTM associations
+      // $each(this.options.model.options.hasAndBelongsToMany, function(assocTable, association) {
+      //   var mappingTable = [this.model.table, assocTable].sort().toString().replace(",", "_");
+      //   var localKey = model.options.foreignKey;
+      //   var foreignKey = JazzRecord.models.get(assocTable).options.foreignKey;        
+      // }, this);
+      
       var data = this.getData();
       var originalData = this.getData("original");
       
-      if(this.id){
-        data.id = this.id;
+      data.id = this.id;
+      data.originalData = originalData;      
+
+      if(this.isChanged()) {
+        this.options.model.save(data);
+        this.reload();
+        // overwrite original data so it is no longer "dirty"
+        $each(this.options.columns, function(colType, colName) {
+          this.options.data[colName] = this[colName];
+        }, this);
+
         this.fireEvent("update");
+        this.fireEvent("save");
       }
-      data.originalData = originalData;
-      
-      var result = this.options.model.save(data);
-      
-      if(!this.id) {
-        this.id = result;
-        this.fireEvent("create");
-      }
-      // overwrite original data so it is no longer "dirty"
-      $each(this.options.columns, function(colType, colName) {
-        this.options.data[colName] = this[colName];
-      }, this);
-      this.fireEvent("save");
     }
-    else
-      puts("Unchanged data");
   },
   revert: function() {
     $each(this.options.columns, function(colType, colName) {

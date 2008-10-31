@@ -4,7 +4,7 @@ NICK
 ----
 * Verify hasOne/belongsTo is working as documented
 * association-saving/loading on save, association-unlinking on destroy
-* Fix GearsAdapter so it can be reloaded if necessary/Same in AirAdapter?
+* Fix GearsAdapter so it can be unloaded/reloaded if necessary/Same in AirAdapter?
 * Implement proper conditions array handling: ["col1 = ? AND col2 = ?", col1_match, col2_match]
 * Implement group
 * Implement findBySql
@@ -20,6 +20,8 @@ JESSE
 -----
 * implement details of validation code per storage type, implementing custom validation
   and common validations (max/min length for strings, email address)
+* Swap out existing Model.Options.validation object for one with two sub-methods of a validation object
+* Setup calls to isValid("create") and isValid("update") in Record.save(), removing existing call to isValid() and moving into sections right before firing associated events.
 
 UNASSIGNED
 ----------

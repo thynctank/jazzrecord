@@ -24,7 +24,7 @@ JazzRecord.Record.implement(
     }
     
     else if (event === "onsave") {
-      this.validatseOnSave(); 
+      this.validatesOnSave(); 
     }
     
     else {

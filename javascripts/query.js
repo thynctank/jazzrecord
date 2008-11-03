@@ -16,8 +16,6 @@ JazzRecord.Model.implement({
     var data = JazzRecord.adapter.run(mainSql);
     
     if(!data || data.length === 0) {
-      if(this.sql.contains("SELECT"))
-        puts("Found Nothing");
       if(this.sql.contains("LIMIT"))
         return null;
       else

@@ -82,7 +82,7 @@ JazzRecord.Record = new Class({
       }
     }
     
-    if (!this.isValid("onsave")) {
+    if (this.isValid("onsave")) {
       this.fireEvent("save");
     }
     else {

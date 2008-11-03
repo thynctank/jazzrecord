@@ -20,12 +20,11 @@ var Person = new JazzRecord.Model({
   },
   
   validate: {
-    onCreate: function() {},
-    onUpdate: function() {
+    atUpdate: function() {
       this.validatesIsInt("age");
       this.validatesIsFloat("income");
     },
-    onSave: function() {
+    atSave: function() {
       this.validatesIsInt("age");
       this.validatesIsFloat("income");
     }

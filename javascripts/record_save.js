@@ -31,7 +31,7 @@ JazzRecord.Record.implement({
     // delete any associated objects if old foreignKey was set but has become unset, autolink if assigned an object    
     var data = this.getData();
     
-    if(!this.id && this.isValid("oncreate")) {
+    if(!this.id && this.isValid("create")) {
       this.id = this.options.model.save(data);;
       this.fireEvent("create");
     }
@@ -39,7 +39,7 @@ JazzRecord.Record.implement({
       // data.id = this.id;
       data.originalData = this.originalData;
 
-      if(!this.isValid("onupdate") || !this.isChanged()) {
+      if(!this.isValid("update") || !this.isChanged()) {
         return false;
       }
 
@@ -56,7 +56,7 @@ JazzRecord.Record.implement({
       }
     }
     
-    if(this.isValid("onsave")) {
+    if(this.isValid("save")) {
       this.fireEvent("save");
       return true;
     }

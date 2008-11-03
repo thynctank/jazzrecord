@@ -1,34 +1,31 @@
-JazzRecord.Record.implement(
-{
-  validatesOnCreate: function() {
-    this.options.model.options.validate.onCreate.apply(this);
+JazzRecord.Record.implement({
+  validatesAtCreate: function() {
+    this.options.model.options.validate.atCreate.apply(this);
   },
   
-  validatesOnUpdate: function() {
-    this.options.model.options.validate.onUpdate.apply(this);
+  validatesAtUpdate: function() {
+    this.options.model.options.validate.atUpdate.apply(this);
   },
   
-  validatesOnSave: function() {
-    this.options.model.options.validate.onSave.apply(this);
+  validatesAtSave: function() {
+    this.options.model.options.validate.atSave.apply(this);
   },
 
-  isValid: function(event) {
-    this.errors = Array();
+  isValid: function(timing) {
+    this.errors = [];
     
-    if (event === "oncreate") {
-      this.validatesOnCreate();
-    }
-    
-    else if (event === "onupdate") {
-     this.validatesOnUpdate();
-    }
-    
-    else if (event === "onsave") {
-      this.validatesOnSave(); 
-    }
-    
-    else {
-      throw("Invalid event passed to isValid(). Expecting 'onsave', 'oncreate' or 'onupdate'");
+    switch(timing) {
+      case "create":
+        this.validatesAtCreate();
+        break;
+      case "update":
+        this.validatesAtUpdate();
+        break;
+      case "save":
+        this.validatesAtSave();
+        break;
+      default:
+        throw("Invalid event passed to isValid(). Expecting 'onsave', 'oncreate' or 'onupdate'");
     }
 
     if (this.errors.length !== 0) {
@@ -156,9 +153,8 @@ JazzRecord.Record.implement(
   validatesIsString: function(col, errText) {
     var val = this[col];
 
-    if (typeof (val) == "string") {
+    if (!val || $type(val) === "string")
       return;
-    }
 
     if (!$defined(errText)) {
       errText = val + " is not a string";
@@ -169,7 +165,7 @@ JazzRecord.Record.implement(
   validatesIsBool: function(col, errText) {
     var val = this[col];
 
-    if (typeof (val) == "boolean") {
+    if($type(val) === "boolean") {
       return;
     }
 
@@ -182,22 +178,18 @@ JazzRecord.Record.implement(
   validatesIsInt: function(col, errText) {
     var val = this[col];
 
-    if (typeof (val) == "number") {
+    if(!val || val.toInt() === val)
       return;
-    }
 
-    if (!$defined(errText)) {
-      errText = val + " is not a int";
-    }
+    errText = val + " is not a int";
 
     this.errors.push(errText);
   },
   validatesIsFloat: function(col, errText) {
     var val = this[col];
-
-    if (( typeof (val) == "number") && ((val + '').contains("."))) {
+    
+    if(!val || val.toFloat() === val)
       return;
-    }
 
     if (!$defined(errText)) {
       errText = col + " is not a float";

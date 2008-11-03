@@ -14,9 +14,9 @@ JazzRecord.Model = new Class({
     events: {},
     // validation
     validate: {
-      onCreate: $empty,
-      onUpdate: $empty,
-      onSave:   $empty
+      atCreate: $empty,
+      atUpdate: $empty,
+      atSave:   $empty
     }
   },
   initialize: function(options) {

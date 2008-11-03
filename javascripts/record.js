@@ -79,6 +79,7 @@ JazzRecord.Record = new Class({
       this.fireEvent("save");
       return true;
     }
+    return false;
   },
   revert: function() {
     $each(this.options.columns, function(colType, colName) {

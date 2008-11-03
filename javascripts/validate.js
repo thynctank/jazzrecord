@@ -4,7 +4,7 @@ JazzRecord.Record.implement(
     this.options.model.options.validate.onCreate.apply(this);
   },
   
-  validatseOnUpdate: function() {
+  validatesOnUpdate: function() {
     this.options.model.options.validate.onUpdate.apply(this);
   },
   

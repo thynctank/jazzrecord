@@ -4,7 +4,7 @@ JazzRecord.Record.implement({
       var foreignKey = this.options.model.options.foreignKey;
       // remove original association and replace w/ new one
       var assocModel = JazzRecord.models.get(assocTable);
-      var oldRec = assocModel.findBy(foreignKey, this.id);
+      var oldRec = assocModel.findBy(foreignKey, this.id, 0);
       if(oldRec) {
         delete oldRec[foreignKey];
         oldRec.save();

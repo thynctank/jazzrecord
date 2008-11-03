@@ -52,22 +52,18 @@ JazzRecord.Record = new Class({
     // delete any associated objects if old foreignKey was set but has become unset, autolink if assigned an object    
     var data = this.getData();
     
-    if(!this.id) {
-            
-    if (this.isValid("oncreate")) {
-      this.id = this.options.model.save(data);
-      this.fireEvent("create");
-     }
-     else {
-       return false;   
-     }
-     
+    if(!this.id && this.isValid("oncreate")) {
+        this.id = this.options.model.save(data);
+        this.fireEvent("create");
     }
     else {
       // data.id = this.id;
       data.originalData = this.originalData;
 
-      if(this.isChanged() && this.isValid("onupdate")) {
+      if(!this.isValid("onupdate") || !this.isChanged()) {
+        return false;
+      }
+      else {
           data.id = this.id;
           this.options.model.save(data);
           this.reload();
@@ -77,18 +73,12 @@ JazzRecord.Record = new Class({
           }, this);
           this.fireEvent("update");
       }
-      else {
-        return false;
-      }
     }
     
     if (this.isValid("onsave")) {
       this.fireEvent("save");
+      return true;
     }
-    else {
-      return false;
-    }
-    
   },
   revert: function() {
     $each(this.options.columns, function(colType, colName) {

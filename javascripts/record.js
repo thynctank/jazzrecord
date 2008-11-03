@@ -48,39 +48,6 @@ JazzRecord.Record = new Class({
     }, this);
     return data;
   },
-  save: function() {
-    // delete any associated objects if old foreignKey was set but has become unset, autolink if assigned an object    
-    var data = this.getData();
-    
-    if(!this.id && this.isValid("oncreate")) {
-        this.id = this.options.model.save(data);
-        this.fireEvent("create");
-    }
-    else {
-      // data.id = this.id;
-      data.originalData = this.originalData;
-
-      if(!this.isValid("onupdate") || !this.isChanged()) {
-        return false;
-      }
-      else {
-          data.id = this.id;
-          this.options.model.save(data);
-          this.reload();
-        // overwrite original data so it is no longer "dirty"
-          $each(this.options.columns, function(colType, colName) {
-            this.originalData[colName] = this[colName];
-          }, this);
-          this.fireEvent("update");
-      }
-    }
-    
-    if (this.isValid("onsave")) {
-      this.fireEvent("save");
-      return true;
-    }
-    return false;
-  },
   revert: function() {
     $each(this.options.columns, function(colType, colName) {
       this[colName] = this.originalData[colName];

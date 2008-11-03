@@ -1,5 +1,5 @@
 def build_minified_script(output)
-  script_names = %w(core record record_is_changed model association_loader util validate query save destroy find migration)
+  script_names = %w(core record record_is_changed record_save model association_loader util validate query save destroy find migration)
   
   new_js = ""
   

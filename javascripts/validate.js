@@ -25,7 +25,7 @@ JazzRecord.Record.implement({
         this.validatesAtSave();
         break;
       default:
-        throw("Invalid event passed to isValid(). Expecting 'onsave', 'oncreate' or 'onupdate'");
+        throw("Invalid event passed to isValid(). Expecting 'save', 'create' or 'update'");
     }
 
     if (this.errors.length !== 0) {
@@ -84,8 +84,15 @@ JazzRecord.Record.implement({
     }, this);
     return passedValidate;
   },
-  validatesFormatOf: function() {
-  // cant believe I missed one lol
+  validatesFormatOf: function(col, regex, errText) {
+    val = this[col];
+    if (!val.match(regex)) {
+      if (!$defined(errText) {
+        errText = val + " does not match";
+      }
+      this.errors.push(errText);
+    }
+  
   },
   validatesInclusionOf: function(col, values, errText) {
     var val = this[col];
@@ -106,16 +113,53 @@ JazzRecord.Record.implement({
     }
     return passedValidate;
   },
-  validatesLengthOf: function(col, min, max, errText) {
-          //options ..
+  validatesLengthOf: function(col, options, errText) {
+  /*
+   Supported options:
+ 
+      minimum: length
+      maximum: length
+      is: length
+      exactly: length
+      allow_nil: true or false
+  */
+    var passedValidation = true;
+    
     var val = this[col];
+    var defaultOptions = {};
+    options = $extend(defaultOptions, options);
 
-    if ((val.length) > max || (val.length) < min) {
+    if ($defined(options.minimum)) {
+      if (val.length < options.minimum) {
+         passedValidation = false;
+      }
+    }
+    
+    if ($defined(options.maximum)) {
+      if (val.length > options.maximum) {
+         passedValidation = false;
+      }
+    }
+    
+    if ($defined(options.is) || $defined(options.exactly)) {
+      if (val.length !== options.is || val.length !== options.exactly) {
+        passedValidation = false;
+      }
+    }
+        
+    if ($defined(options.allow_nil)) {
+      if (val !== options.allow_nill) {
+        passedValidation = false;       
+      }
+    }
+    
+    if (!passedValidation) {
       if (!$defined(errText)) {
-        errText = col + " must be between " + min + " and " + max;
+        errText = "impelement error messages for this later";
       }
       this.errors.push(errText);
     }
+
   },
   validatesNumericalityOf: function(col, errText) {
     if (validatesIsInt(col) || validatesIsFloat(col)) {

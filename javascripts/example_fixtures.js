@@ -8,7 +8,9 @@ var fixtures = {
       {name: "Jesse", age: 24, income: 127.5, has_vehicle: true}
     ],
     homes: [
-      {address: "4605 Deming Ave, Alexandria, VA 22212"}
+      {address: "4605 Deming Ave"},
+      {address: "15009 Ulderic Dr"},
+      {address: "65 Branch Way"}
     ],
     vehicles: [
       {make: "Suzuki", model: "Forenza", year: 2004, person_id: 1},

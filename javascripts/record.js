@@ -14,14 +14,18 @@ JazzRecord.Record = new Class({
     this.id = null;
     this.setOptions(options);
     this.errors = [];
+    
+    this.originalData = {};
     //copy over column data
     $each(this.options.columns, function(colType, colName) {
       this[colName] = null;
-      if(this.options.data[colName])
+      if(this.options.data[colName]) {
         this[colName] = this.options.data[colName];
+        this.originalData[colName] = this.options.data[colName];        
+      }
       if(colType === "bool") {
         var boolVal = (this[colName] ? true : false);
-        this.options.data[colName] = boolVal;
+        this.originalData[colName] = boolVal;
         this[colName] = boolVal;
       }
     }, this);
@@ -37,91 +41,42 @@ JazzRecord.Record = new Class({
       this.id = null;
     }
   },
-  getData : function(source) {
-    var data = {};
-    if(source === "original")
-      source = this.options.data;
-    else
-      source = this;
-      
+  getData : function() {
+    var data = {};      
     $each(this.options.columns, function(colType, colName) {
-      data[colName] = source[colName];
+      data[colName] = this[colName];
     }, this);
     return data;
   },
-  isChanged: function() {
-    //bail if brand-new record
-    if(!this.id)
-      return false;
-
-    var data = $H(this.getData());
-    var originalData = $H(this.getData("original"));
-    
-    //verify no columns have changed to return w/o querying database
-    if(this.id && data.toQueryString() === originalData.toQueryString())
-      return false;
-    else
-      return true;
-  },
   save: function() {
+    // delete any associated objects if old foreignKey was set but has become unset, autolink if assigned an object    
+    var data = this.getData();
+    
     if(!this.id) {
-      var data = this.getData();
       this.id = this.options.model.save(data);;
       this.fireEvent("create");
-      this.fireEvent("save");
     }
     else {
-      // delete any associated objects if old foreignKey was set but has become unset, autolink if assigned an object
-      $each(this.options.model.options.belongsTo, function(assocTable, assoc) {
-        var assocModel = JazzRecord.models.get(assocTable);
-        var assocIdCol = assocModel.options.foreignKey;
-        if(this.options.data[assocIdCol] && !this[assocIdCol])
-          delete this[assoc];
-        else if(this.options.data[assocIdCol] && !this[assoc]) {
-          delete this[assocIdCol];
-        }
-        else if(!this.options.data[assocIdCol] && this[assoc])
-          this[assocIdCol] = this[assoc].id;
-      }, this);
-      
-      $each(this.options.model.options.hasOne, function(assocTable, assoc) {
-        // var assocModel = JazzRecord.models.get(assocTable);
-        // var foreignKey = this.options.foreignKey;
-      });
-      
-      $each(this.options.hasMany, function(assocTable, assoc) {
-        // var assocModel = JazzRecord.models.get(assocTable);
-        // var foreignKey = this.options.foreignKey;
-      }, this);
-      
-      $each(this.options.model.options.hasAndBelongsToMany, function(assocTable, association) {
-      //   var mappingTable = [this.model.table, assocTable].sort().toString().replace(",", "_");
-      //   var localKey = model.options.foreignKey;
-      //   var foreignKey = JazzRecord.models.get(assocTable).options.foreignKey;        
-      }, this);
-      
-      var data = this.getData();
-      var originalData = this.getData("original");
-      
-      data.id = this.id;
-      data.originalData = originalData;      
+      // data.id = this.id;
+      data.originalData = this.originalData;
 
       if(this.isChanged()) {
+        data.id = this.id;
         this.options.model.save(data);
         this.reload();
         // overwrite original data so it is no longer "dirty"
         $each(this.options.columns, function(colType, colName) {
-          this.options.data[colName] = this[colName];
+          this.originalData[colName] = this[colName];
         }, this);
 
         this.fireEvent("update");
-        this.fireEvent("save");
       }
     }
+    this.fireEvent("save");
   },
   revert: function() {
     $each(this.options.columns, function(colType, colName) {
-      this[colName] = this.options.data[colName];
+      this[colName] = this.originalData[colName];
     }, this);
   },
   reload: function() {

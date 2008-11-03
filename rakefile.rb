@@ -1,11 +1,11 @@
 def build_minified_script(output)
-  script_names = %w(core.js record.js model.js association_loader.js util.js validate.js query.js save.js destroy.js find.js migration.js)
+  script_names = %w(core record record_is_changed model association_loader util validate query save destroy find migration)
   
   new_js = ""
   
   script_names.each do |script_name|
     compressor = IO.popen("java -jar yuicompressor-2.3.6.jar --type js -v --charset UTF-8", "w+")
-    compressor.puts IO.read("javascripts/#{script_name}")
+    compressor.puts IO.read("javascripts/#{script_name}.js")
     compressor.close_write
     new_js += compressor.gets
   end

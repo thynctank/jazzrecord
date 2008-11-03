@@ -12,8 +12,12 @@ JazzRecord.Model = new Class({
     hasAndBelongsToMany: {},
     // events
     events: {},
-    // validation function
-    validate: $empty
+    // validation
+    validate: {
+      onCreate: $empty,
+      onUpdate: $empty,
+      onSave:   $empty
+    }
   },
   initialize: function(options) {
     this.setOptions(options);

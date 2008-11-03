@@ -18,13 +18,19 @@ var Person = new JazzRecord.Model({
       console.log("A person was destroyed");
     }
   },
-  validate: function() {
-  // var keywords = new Array(3); 
-  // keywords[0] = "jesse";
-  // keywords[1] = "moo";
-  // keywords[2] = "hi";
-  // this.validatesExclusionOf(this.name, keywords);
-  }
+  
+  validate: {
+    onCreate: function() {},
+    onUpdate: function() {
+      this.validatesIsInt("age");
+      this.validatesIsFloat("income");
+    },
+    onSave: function() {
+      this.validatesIsInt("age");
+      this.validatesIsFloat("income");
+    }
+}
+
 });
 
 var Home = new JazzRecord.Model({

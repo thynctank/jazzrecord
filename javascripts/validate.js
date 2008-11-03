@@ -1,12 +1,35 @@
 JazzRecord.Record.implement(
 {
-  validate: function() {
-    // executes user-defined validations
-    this.options.model.options.validate.apply(this);
+  validatesOnCreate: function() {
+    this.options.model.options.validate.onCreate.apply(this);
   },
-  // run validate and determine if current Record is valid
-  isValid: function() {
-    this.validate();
+  
+  validatseOnUpdate: function() {
+    this.options.model.options.validate.onUpdate.apply(this);
+  },
+  
+  validatesOnSave: function() {
+    this.options.model.options.validate.onSave.apply(this);
+  },
+
+  isValid: function(event) {
+    this.errors = Array();
+    
+    if (event === "oncreate") {
+      this.validatesOnCreate();
+    }
+    
+    else if (event === "onupdate") {
+     this.validatesOnUpdate();
+    }
+    
+    else if (event === "onsave") {
+      this.validatseOnSave(); 
+    }
+    
+    else {
+      throw("Invalid event passed to isValid(). Expecting 'onsave', 'oncreate' or 'onupdate'");
+    }
 
     if (this.errors.length !== 0) {
       return false;
@@ -17,7 +40,7 @@ JazzRecord.Record.implement(
   },
   pushError: function(errDefault, errCustom) {
     /*
-    Use this in all the methods eventually to avoid repeating if (!$defined(errText)  etc... 
+      Use this in all the methods eventually to avoid repeating if (!$defined(errText)  etc... 
     */
     var message = errDefault;
 
@@ -33,8 +56,9 @@ JazzRecord.Record.implement(
 
     if(val)
       return;
-    else
+    else {
       this.errors.push(errText);
+    }
   },
   validatesConfirmationOf: function(col, errText) {
     var val = this[col];
@@ -42,7 +66,7 @@ JazzRecord.Record.implement(
     var confirmationVal = this[col + "_confirmation"];
 
     if (val !== confirmationVal || !$defined(confirmationVal) || confirmationVal == "") {
-      errText = $defined(errText) ? errText : "does not match";
+      errText = $defined(errText) ? errText : "doesn't match confirmation";
     }
   },
   validatesExclusionOf: function(col, values, errText) {
@@ -55,7 +79,7 @@ JazzRecord.Record.implement(
         passedValidate = false;
 
         if (!$defined(errText)) {
-          errText = col + " must not contain " + curValue;
+          errText = curValue + " is reserved" + curValue;
         }
 
         this.errors.push(errText);
@@ -68,11 +92,9 @@ JazzRecord.Record.implement(
   },
   validatesInclusionOf: function(col, values, errText) {
     var val = this[col];
-    var flatarr = '';
     var passedValidate = false;
 
     $each(values, function(curValue) {
-      flatarr += curValue + ", ";
       if (val.contains(curValue)) {
         passedValidate = true;
       }
@@ -80,7 +102,7 @@ JazzRecord.Record.implement(
 
     if (!passedValidate) {
       if (!$defined(errText)) {
-        errText = col + " must contain at least one of the following: " + flatarr;
+        errText = val + " is not included in the list";
       }
 
       this.errors.push(errText);
@@ -96,29 +118,25 @@ JazzRecord.Record.implement(
         errText = col + " must be between " + min + " and " + max;
       }
       this.errors.push(errText);
-      return false;
-    }
-    else {
-      return true;
     }
   },
   validatesNumericalityOf: function(col, errText) {
     if (validatesIsInt(col) || validatesIsFloat(col)) {
       return;
     }
-    else {
-      if (!$defined(errText)) {
-        errText = col + " must be numeric";
-      }
-      this.errors.push(errText);
+    
+    if (!$defined(errText)) {
+      errText = this[col] + " is not a number";
     }
+    
+    this.errors.push(errText);
   },
   validatesPresenceOf: function(col, errText) {
     var val = this[col];
 
     if (!$defined(val) || val === "") {
       if (!$defined(errText)) {
-        errText = col + " must be defined";
+        errText = col + " can't be empty, null or blank";
       }
 
       this.errors.push(errText);
@@ -143,7 +161,7 @@ JazzRecord.Record.implement(
     }
 
     if (!$defined(errText)) {
-      errText = col + " must be string";
+      errText = val + " is not a string";
     }
 
     this.errors.push(errText);
@@ -156,7 +174,7 @@ JazzRecord.Record.implement(
     }
 
     if (!$defined(errText)) {
-      errText = col + " must be boolean";
+      errText = val + " is not boolean";
     }
 
     this.errors.push(errText);
@@ -169,7 +187,7 @@ JazzRecord.Record.implement(
     }
 
     if (!$defined(errText)) {
-      errText = col + " must be int";
+      errText = val + " is not a int";
     }
 
     this.errors.push(errText);
@@ -182,7 +200,7 @@ JazzRecord.Record.implement(
     }
 
     if (!$defined(errText)) {
-      errText = col + " must be boolean";
+      errText = col + " is not a float";
     }
 
     this.errors.push(errText);

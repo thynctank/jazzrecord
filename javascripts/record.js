@@ -53,26 +53,42 @@ JazzRecord.Record = new Class({
     var data = this.getData();
     
     if(!this.id) {
-      this.id = this.options.model.save(data);;
+            
+    if (this.isValid("oncreate")) {
+      this.id = this.options.model.save(data);
       this.fireEvent("create");
+     }
+     else {
+       return false;   
+     }
+     
     }
     else {
       // data.id = this.id;
       data.originalData = this.originalData;
 
-      if(this.isChanged()) {
-        data.id = this.id;
-        this.options.model.save(data);
-        this.reload();
+      if(this.isChanged() && this.isValid("onupdate")) {
+          data.id = this.id;
+          this.options.model.save(data);
+          this.reload();
         // overwrite original data so it is no longer "dirty"
-        $each(this.options.columns, function(colType, colName) {
-          this.originalData[colName] = this[colName];
-        }, this);
-
-        this.fireEvent("update");
+          $each(this.options.columns, function(colType, colName) {
+            this.originalData[colName] = this[colName];
+          }, this);
+          this.fireEvent("update");
+      }
+      else {
+        return false;
       }
     }
-    this.fireEvent("save");
+    
+    if (!this.isValid("onsave")) {
+      this.fireEvent("save");
+    }
+    else {
+      return false;
+    }
+    
   },
   revert: function() {
     $each(this.options.columns, function(colType, colName) {

@@ -236,7 +236,7 @@ JazzRecord.Record.implement({
       return;
 
     if (!$defined(errText)) {
-      errText = col + " is not a float";
+      errText = val + " is not a float";
     }
 
     this.errors.push(errText);

@@ -16,6 +16,9 @@ DAVID
 -----
 * migration.js - implementing last 3 methods (removeColumn, renameColumn, changeColumn) for
   sqlite-friendliness
+* Setup blog (WordPress or a pre-rolled Rails blog like Mephisto or something)
+* SEO site
+* Add sharethis-type links for delicious, digg, stumbleupon, facebook
 
 JESSE
 -----

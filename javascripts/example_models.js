@@ -12,10 +12,10 @@ var Person = new JazzRecord.Model({
   },
   events: {
     onUpdate: function() {
-      console.log("A person was updated");
+      puts("A person was updated");
     },
     onDestroy: function() {
-      console.log("A person was destroyed");
+      puts("A person was destroyed");
     }
   },
   

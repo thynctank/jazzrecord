@@ -87,12 +87,15 @@ JazzRecord.GearsAdapter = new Class({
       rows.push(row);
       this.result.next();
     }
+    this.result.close();
     return rows;
   },
   count: function(query) {
     puts(query);
     this.result = this.db.execute(query);
-    return this.result.field(0);
+    var number = this.result.field(0);
+    this.result.close();
+    return number;
   },
   save: function(query) {
     puts(query);

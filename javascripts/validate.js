@@ -87,7 +87,7 @@ JazzRecord.Record.implement({
   validatesFormatOf: function(col, regex, errText) {
     val = this[col];
     if (!val.match(regex)) {
-      if (!$defined(errText) {
+      if (!$defined(errText)) {
         errText = val + " does not match";
       }
       this.errors.push(errText);

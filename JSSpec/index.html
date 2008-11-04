@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+<title>JazzRecord JSSpec results</title>
+<link rel="stylesheet" type="text/css" href="JSSpec.css" />
+<script type="text/javascript" src="diff_match_patch.js"></script>
+<script type="text/javascript" src="../javascripts/mootools/mootools-core.js"></script>
+<script type="text/javascript" src="../javascripts/gears/gears_init.js"></script>
+<script type="text/javascript" src="../build/jazz_record.js"></script>
+<script type="text/javascript" src="../javascripts/example_models.js"></script>
+<script type="text/javascript" src="JSSpec.js"></script>
+<script type="text/javascript">// <![CDATA[
+
+// Use Gears, shut off debugging
+JazzRecord.adapter = new JazzRecord.GearsAdapter({dbFile: "test.db"});
+window.debug = false;
+
+describe("JazzRecord.migrate() with refresh turned on", {
+    before_each: function() {JazzRecord.migrate({refresh: true});},
+    "should load all declared models into memory": function() {
+        value_of(JazzRecord.models.getLength()).should_be(5);
+    },
+    "empty out each model": function() {
+        value_of(Person.count()).should_be(0);
+    }
+});
+
+describe("When creating/Destroying records", {
+  "Create should increment count": function() {
+    var prevCount = Person.count();
+    Person.create({name: "Nick", age:28});
+    value_of(Person.count()).should_be(prevCount + 1);
+  },
+  "Destroy should decrement count": function() {
+    var prevCount = Person.count();
+    var p = Person.first();
+    p.destroy();
+    value_of(Person.count()).should_be(prevCount - 1);
+  }
+});
+
+describe("Assigning a value to first-order property and saving", {
+  before_each: function() {
+    Person.create({name: "Nick", age:28});
+  },
+  after_each: function() {
+    Person.destroy(Person.first().id);
+  },
+  "isChanged should return true": function() {
+    var p = Person.first();
+    p.name = "Nicholas";
+    value_of(p.isChanged()).should_be_true();
+  },
+  "Saving and then running isChanged should return false": function() {
+    var p = Person.first();
+    p.name = "Nicholas";
+    p.save();
+    value_of(p.isChanged()).should_be_false();
+  }
+});
+
+// ]]></script>
+
+</head>
+<body>
+  <div>
+    JazzRecord JSSpec
+  </div>
+</body>
+</html>

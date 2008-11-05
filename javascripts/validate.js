@@ -63,7 +63,8 @@ JazzRecord.Record.implement({
     var confirmationVal = this[col + "_confirmation"];
 
     if (val !== confirmationVal || !$defined(confirmationVal) || confirmationVal == "") {
-      errText = $defined(errText) ? errText : "doesn't match confirmation";
+      errText = $defined(errText) ? errText : col + " doesn't match confirmation";
+      this.errors.push(errText);
     }
   },
   validatesExclusionOf: function(col, values, errText) {
@@ -72,11 +73,11 @@ JazzRecord.Record.implement({
     var passedValidate = true;
 
     $each(values, function(curValue) {
-      if (val.contains(curValue)) {
+      if (val.toUpperCase() === curValue.toUpperCase()) {
         passedValidate = false;
 
         if (!$defined(errText)) {
-          errText = curValue + " is reserved" + curValue;
+          errText = curValue + " is reserved";
         }
 
         this.errors.push(errText);
@@ -99,7 +100,7 @@ JazzRecord.Record.implement({
     var passedValidate = false;
 
     $each(values, function(curValue) {
-      if (val.contains(curValue)) {
+      if (val.toUpperCase() === curValue.toUpperCase()) {
         passedValidate = true;
       }
     });

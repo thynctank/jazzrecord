@@ -77,3 +77,17 @@ var Student = new JazzRecord.Model({
     home_id: "number"
   }
 });
+
+var Animal = new JazzRecord.Model({
+  table: "animals",
+  foreignKey: "animal_id",
+  columns: {
+    species: "text",
+    say: "text"
+  },
+  methods: {
+    speak: function() {
+      puts(this["say"]);
+    }
+  }
+});

@@ -23,6 +23,12 @@ var fixtures = {
     students: [
       {name: "Joe Bob", home_id: 1},
       {name: "Peggy Sue"}
+    ],
+    animals: [
+    {species: "tiger", say: "rawr!"},
+    {species: "bird", say: "bawk!!"},
+    {species: "cat", say: "meow!!"},
+    {species: "dog", say: "woof!"}
     ]
   },
   

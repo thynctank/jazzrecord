@@ -12,6 +12,7 @@ JazzRecord.Model = new Class({
     hasAndBelongsToMany: {},
     // events
     events: {},
+    methods: {},
     // validation
     validate: {
       atCreate: $empty,
@@ -23,6 +24,10 @@ JazzRecord.Model = new Class({
     this.setOptions(options);
     this.table = this.options.table;
     this.sql = "";
+    
+    $each(this.options.methods.model, function(method, name) {
+	this[name] = method;
+    });
     
     // add all-important master listing for this model/table relationship
     if(!JazzRecord.models.has(this.table))

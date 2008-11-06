@@ -26,6 +26,8 @@ UNASSIGNED
 * transaction handling
 * (maybe) convert recursive loading algorithms to intelligent join query builder?
 * TEST TEST TEST! (see http://mootools.net/blog/2007/10/20/whats-new-in-12-behaviour-driven-developmentyou-know-weve-been-telling-you-that-mootools-is-reliable-but-how-can-you-can-be-sure-that-it-will-work-for-your-project-without-just-taking-our-word/)
+* In Save Method, make sure all the column data is of the correct type, on top of validations to keep invalid data from being saved down.
+
 
 
 

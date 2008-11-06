@@ -85,11 +85,9 @@ var Animal = new JazzRecord.Model({
     species: "text",
     say: "text"
   },
-  methods: {
-    record: {
-      speak: function() {
-        puts(this["say"]);
-      }      
+  recordMethods: {
+    speak: function() {
+      puts(this["say"]);
     }
   }
 });

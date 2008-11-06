@@ -12,10 +12,9 @@ JazzRecord.Model = new Class({
     hasAndBelongsToMany: {},
     // events
     events: {},
-    methods: {
-      model: {},
-      record: {}
-    },
+    // custom finders/methods
+    modelMethods: {},
+    recordMethods: {},
     // validation
     validate: {
       atCreate: $empty,
@@ -28,7 +27,7 @@ JazzRecord.Model = new Class({
     this.table = this.options.table;
     this.sql = "";
     
-    $each(this.options.methods.model, function(method, name) {
+    $each(this.options.modelMethods, function(method, name) {
 	    this[name] = method;
     });
     

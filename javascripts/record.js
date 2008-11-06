@@ -30,7 +30,7 @@ JazzRecord.Record = new Class({
       }
     }, this);
     
-    $each(this.options.model.options.methods.record, function(method, name) {
+    $each(this.options.model.options.recordMethods, function(method, name) {
       this[name] = method;
     }, this);
     

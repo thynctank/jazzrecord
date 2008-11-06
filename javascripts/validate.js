@@ -156,7 +156,7 @@ JazzRecord.Record.implement({
     
     if (!passedValidation) {
       if (!$defined(errText)) {
-        errText = "impelement error messages for this later";
+        errText = "length out of bounds";
       }
       this.errors.push(errText);
     }

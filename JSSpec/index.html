@@ -19,23 +19,26 @@ window.debug = false;
 describe("JazzRecord.migrate() with refresh turned on", {
     before_each: function() {JazzRecord.migrate({refresh: true});},
     "should load all declared models into memory": function() {
-        value_of(JazzRecord.models.getLength()).should_be(5);
+        value_of(JazzRecord.models.getLength()).should_be(6);
     },
-    "empty out each model": function() {
+    "should empty out each model": function() {
         value_of(Person.count()).should_be(0);
     }
 });
 
 describe("When creating/Destroying records", {
+  before_each: function() {
+    prevCount = Person.count();
+  },
+  after_all: function() {
+    delete prevCount;
+  },
   "Create should increment count": function() {
-    var prevCount = Person.count();
     Person.create({name: "Nick", age:28});
     value_of(Person.count()).should_be(prevCount + 1);
   },
   "Destroy should decrement count": function() {
-    var prevCount = Person.count();
-    var p = Person.first();
-    p.destroy();
+    Person.first().destroy();
     value_of(Person.count()).should_be(prevCount - 1);
   }
 });
@@ -43,17 +46,19 @@ describe("When creating/Destroying records", {
 describe("Assigning a value to first-order property and saving", {
   before_each: function() {
     Person.create({name: "Nick", age:28});
+    p = Person.first();
   },
   after_each: function() {
     Person.destroy(Person.first().id);
   },
+  after_all: function() {
+    delete p;
+  },
   "isChanged should return true": function() {
-    var p = Person.first();
     p.name = "Nicholas";
     value_of(p.isChanged()).should_be_true();
   },
   "Saving and then running isChanged should return false": function() {
-    var p = Person.first();
     p.name = "Nicholas";
     p.save();
     value_of(p.isChanged()).should_be_false();

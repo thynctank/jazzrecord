@@ -19,11 +19,6 @@ DAVID
 
 JESSE
 -----
-* implement details of validation code per storage type, implementing custom validation
-  and common validations (max/min length for strings, email address)
-* implement Model/Record methods in methods.js and initialize code in model.js/record.js
-* Swap out existing Model.Options.validation object for one with two sub-methods of a validation object
-* Setup calls to isValid("create") and isValid("update") in Record.save(), removing existing call to isValid() and moving into sections right before firing associated events.
 
 UNASSIGNED
 ----------

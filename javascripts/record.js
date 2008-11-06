@@ -29,6 +29,11 @@ JazzRecord.Record = new Class({
         this[colName] = boolVal;
       }
     }, this);
+    
+    $each(this.options.model.options.methods.record, function(method, name) {
+      this[name] = method;
+    }, this);
+    
     if(this.options.data.id)
       this.id = this.options.data.id;
   },

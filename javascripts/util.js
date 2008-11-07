@@ -25,15 +25,18 @@ JazzRecord.Model.implement({
       switch(this.options.columns[field]) {
         case "string":
         case "text":
-          return "'" + (val || this[field]) + "'";
+          return "'" + val + "'";
         
-        case "number":
         case "int":
+          val = val.toInt();
+          return $type(val) === "number" ? val : 0;
+        case "number":
         case "float":
-          return val || this[field];
+          val = val.toFloat();
+          return $type(val) === "number" ? val : 0;
         
         case "bool":
-          if (val || this[field])
+          if(val)
             return 1;
           else
             return 0;

@@ -1,0 +1,36 @@
+Model
+  initialize
+    custom finder
+    mapping table creation
+  newRecord
+    events/validation passed on
+  create
+  all finders
+    all options
+  association loading of all types
+  save
+    sql strings should be written correctly for types
+  
+Record
+  loading AssociationLoaders
+  reload/revert
+  isValid
+  all validation
+    errors array
+    custom error messaging
+  saving
+    new records get ID assigned
+    associated records
+      all association types
+      linking/unlinking
+  all event handlers
+    declared
+    after the fact
+  destroying
+    lack of ID
+    
+Migration
+  automigration
+    reg tables
+    mapping tables created
+  manual migrations

@@ -5,7 +5,6 @@ NICK
 * association-saving/loading on save, association-unlinking on destroy
   * Linking/Unlinking associated records on hasMany (unlinking needs a cache of all indexes on init to compare to on save)
   * "" on HABTM (should prove easier)
-* Fix GearsAdapter so it can be unloaded/reloaded if necessary/Same in AirAdapter?
 * Implement proper conditions array handling: ["col1 = ? AND col2 = ?", col1_match, col2_match]
 * Implement group as option in Model.select()
 * Implement findBySql
@@ -14,11 +13,11 @@ NICK
 
 DAVID
 -----
-* migration.js - implementing last 3 methods (removeColumn, renameColumn, changeColumn) for
-  sqlite-friendliness
 
 JESSE
 -----
+* migration.js - implementing last 3 methods (removeColumn, renameColumn, changeColumn) for
+  sqlite-friendliness
 
 UNASSIGNED
 ----------

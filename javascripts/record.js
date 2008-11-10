@@ -77,14 +77,5 @@ JazzRecord.Record = new Class({
   updateAttribute: function(name, val) {
     this[name] = val;
     this.save();
-  },
-  toString: function() {
-    var outputTemplate = "#<Table: {modelTable} id: {id} {columnStuff}>";
-    var baseOptions = {modelTable: this.options.model.table, id: this.id};
-    baseOptions.columnStuff = "";
-    $each(this.options.columns, function(colType, colName) {
-      baseOptions.columnStuff += " " + colName + ": " + this[colName];
-    }, this);
-    return outputTemplate.substitute(baseOptions);
   }
 });

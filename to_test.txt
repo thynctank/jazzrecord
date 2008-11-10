@@ -1,15 +1,14 @@
 Model
-  initialize
-    custom finder
-    mapping table creation
-  newRecord
-    events/validation passed on
-  create
   all finders
     all options
   association loading of all types
   save
     sql strings should be written correctly for types
+  # initialize
+  #   custom finder
+  newRecord
+    events/validation passed on
+  create
   
 Record
   loading AssociationLoaders
@@ -30,7 +29,7 @@ Record
     lack of ID
     
 Migration
-  automigration
-    reg tables
-    mapping tables created
+  # automigration
+  #   reg tables
+  #   mapping tables created
   manual migrations

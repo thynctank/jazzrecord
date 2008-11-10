@@ -29,7 +29,7 @@ JazzRecord.Model = new Class({
     
     $each(this.options.modelMethods, function(method, name) {
 	    this[name] = method;
-    });
+    }, this);
     
     // add all-important master listing for this model/table relationship
     if(!JazzRecord.models.has(this.table))

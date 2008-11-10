@@ -8,7 +8,7 @@ NICK
 * Implement proper conditions array handling: ["col1 = ? AND col2 = ?", col1_match, col2_match]
 * Implement group as option in Model.select()
 * Implement findBySql
-* Implement update, updateAll on Model: Useful in migrations
+* Implement update, updateAll on Model or Migration
 * Implement add'l dirty object methods: http://ryandaigle.com/articles/2008/3/31/what-s-new-in-edge-rails-dirty-objects
 
 DAVID
@@ -24,14 +24,12 @@ UNASSIGNED
 * add createIndex/dropIndex methods in migrations.js (copy names from activerecord, natch)
 * transaction handling
 * (maybe) convert recursive loading algorithms to intelligent join query builder?
-* TEST TEST TEST! (see http://mootools.net/blog/2007/10/20/whats-new-in-12-behaviour-driven-developmentyou-know-weve-been-telling-you-that-mootools-is-reliable-but-how-can-you-can-be-sure-that-it-will-work-for-your-project-without-just-taking-our-word/)
-* In Save Method, make sure all the column data is of the correct type, on top of validations to keep invalid data from being saved down.
+* TEST TEST TEST!
+* Privatize all non-API methods by adding initial underscores to names, propagate this change across all calls to those methods
 
 
-
-
-Ideas:
-
+IDEAS
+-----
 Support HTML5 DB access
 -http://www.whatwg.org/specs/web-apps/current-work/#sql
 -http://www.w3.org/html/wg/html5/#sql

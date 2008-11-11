@@ -13,6 +13,14 @@
 <script type="text/javascript" src="../javascripts/example_models.js"></script>
 <script type="text/javascript" src="../javascripts/example_fixtures.js"></script>
 
+<script type="text/javascript" charset="utf-8">
+  function initJazz() {
+    JazzRecord.adapter = new JazzRecord.GearsAdapter({dbFile: "test.db"});
+    window.debug = false;
+    JazzRecord.migrate({refresh: true});
+  }
+</script>
+
 <script src="specs/migration.js" type="text/javascript" charset="utf-8"></script>
 <script src="specs/model.js" type="text/javascript" charset="utf-8"></script>
 

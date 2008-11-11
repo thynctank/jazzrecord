@@ -1,5 +1,7 @@
 describe("Adding new Models", {
   before_all: function() {
+    initJazz();
+    
     BlackBox = new JazzRecord.Model({
       table: "black_boxes",
       foreignKey: "black_box_id",

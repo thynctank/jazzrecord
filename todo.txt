@@ -3,8 +3,8 @@
 NICK
 ----
 * association-saving/loading on save, association-unlinking on destroy
-  * Linking/Unlinking associated records on hasMany (unlinking needs a cache of all indexes on init to compare to on save)
-  * "" on HABTM (should prove easier)
+* Linking/Unlinking associated records on hasMany (unlinking needs a cache of all indexes on init to compare to on save)
+* "" on HABTM (should prove easier)
 * Implement proper conditions array handling: ["col1 = ? AND col2 = ?", col1_match, col2_match]
 * Implement group as option in Model.select()
 * Implement findBySql

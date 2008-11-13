@@ -28,7 +28,7 @@ UNASSIGNED
 * (maybe) convert recursive loading algorithms to intelligent join query builder?
 * TEST TEST TEST!
 * Privatize all non-API methods by adding initial underscores to names, propagate this change across all calls to those methods
-
+* Figure out tagging format for official versions of JazzRecord
 
 IDEAS
 -----

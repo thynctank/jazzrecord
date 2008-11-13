@@ -8,7 +8,7 @@ NICK
 * Implement proper conditions array handling: ["col1 = ? AND col2 = ?", col1_match, col2_match]
 * Implement group as option in Model.select()
 * Implement findBySql
-* Implement update, updateAll on Model or Migration
+* Implement update, updateAll on Migration
 * Implement add'l dirty object methods: http://ryandaigle.com/articles/2008/3/31/what-s-new-in-edge-rails-dirty-objects
 * Massive recode to all vanilla JS
 * Mimic JStORM's SQL JOIN capabilities

@@ -11,7 +11,7 @@ NICK
 * Implement update, updateAll on Model or Migration
 * Implement add'l dirty object methods: http://ryandaigle.com/articles/2008/3/31/what-s-new-in-edge-rails-dirty-objects
 * Massive recode to all vanilla JS
-* Look into mimicking JStORM's SQL JOIN capabilities
+* Mimic JStORM's SQL JOIN capabilities
 
 DAVID
 -----

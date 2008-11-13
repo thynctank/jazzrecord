@@ -38,5 +38,3 @@ Support HTML5 DB access
 
 Yahoo BrowserPlus Support
 -http://browserplus.yahoo.com/services/  (PStore - DB ACCESS)
-
-

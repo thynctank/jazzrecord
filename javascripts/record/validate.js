@@ -25,7 +25,7 @@ JazzRecord.Record.implement({
         this.validatesAtSave();
         break;
       default:
-        throw("Invalid event passed to isValid(). Expecting 'save', 'create' or 'update'");
+        this.validatesAtSave();
     }
 
     if (this.errors.length !== 0) {

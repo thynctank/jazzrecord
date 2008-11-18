@@ -1,32 +1,25 @@
 Model
-  all finders
-    all options
-  association loading of all types
-  save
-    sql strings should be written correctly for types
+  # all finders
+    # all options
+    # association loading of all types
   # initialize
   #   custom finder
-  newRecord
-    events/validation passed on
-  create
+  # create
   
 Record
-  loading AssociationLoaders
-  reload/revert
+  # loading AssociationLoaders
+  # reload/revert
   isValid
   all validation
-    errors array
-    custom error messaging
+    # errors array
+    # custom error messaging
   saving
-    new records get ID assigned
+    # new records get ID assigned
     associated records
       all association types
       linking/unlinking
-  all event handlers
-    declared
-    after the fact
-  destroying
-    lack of ID
+  # destroying
+    # lack of ID
     
 Migration
   # automigration

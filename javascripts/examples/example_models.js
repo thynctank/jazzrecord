@@ -25,7 +25,7 @@ Person = new JazzRecord.Model({
       this.validatesIsFloat("income");
     },
     atSave: function() {
-      this.validatesIsInt("age");
+      this.validatesIsInt("age", "Ya caint be a non-numeric age, genius");
       this.validatesIsFloat("income");
     }
   }
@@ -91,7 +91,7 @@ Animal = new JazzRecord.Model({
   },
   recordMethods: {
     speak: function() {
-      puts(this["say"]);
+      return this["say"];
     }
   }
 });

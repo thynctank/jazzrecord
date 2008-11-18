@@ -185,7 +185,7 @@ JazzRecord.Record.implement({
     }
   },
   validatesUniquenessOf: function(col, val, errText) {
-    if (findBy(col, val).length > 0) {
+    if (findAllBy(col, val).length > 1) {
       if (!$defined(errText)) {
         errText = val + " is not unique";
       }
@@ -225,8 +225,9 @@ JazzRecord.Record.implement({
 
     if(!val || val.toInt() === val)
       return;
-
-    errText = val + " is not a int";
+    
+    if(!$defined(errText))
+      errText = val + " is not a int";
 
     this.errors.push(errText);
   },

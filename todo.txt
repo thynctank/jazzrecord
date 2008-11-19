@@ -2,16 +2,13 @@
 
 NICK
 ----
-* association-saving/loading on save, association-unlinking on destroy
 * Linking/Unlinking associated records on hasMany (unlinking needs a cache of all indexes on init to compare to on save)
 * "" on HABTM (should prove easier)
-* Implement proper conditions array handling: ["col1 = ? AND col2 = ?", col1_match, col2_match]
-* Implement group as option in Model.select()
-* Implement findBySql
-* Implement update, updateAll on Migration
-* Implement add'l dirty object methods: http://ryandaigle.com/articles/2008/3/31/what-s-new-in-edge-rails-dirty-objects
-* Massive recode to all vanilla JS
 * Mimic JStORM's SQL JOIN capabilities
+* transaction handling
+* Implement proper conditions array handling: ["col1 = ? AND col2 = ?", col1_match, col2_match] (Rails calls this bind variables)
+* Implement "group" as option in Model.select()
+* Implement add'l dirty object methods: http://ryandaigle.com/articles/2008/3/31/what-s-new-in-edge-rails-dirty-objects
 
 DAVID
 -----
@@ -20,13 +17,13 @@ JESSE
 -----
 * migration.js - implementing last 3 methods (removeColumn, renameColumn, changeColumn) for
   sqlite-friendliness
+* Implement update, updateAll on Migration
+* TEST Validation methods
 
 UNASSIGNED
 ----------
+* Massive recode to all vanilla JS
 * add createIndex/dropIndex methods in migrations.js (copy names from activerecord, natch)
-* transaction handling
-* (maybe) convert recursive loading algorithms to intelligent join query builder?
-* TEST TEST TEST!
 * Privatize all non-API methods by adding initial underscores to names, propagate this change across all calls to those methods
 * Figure out tagging format for official versions of JazzRecord
 
@@ -38,3 +35,5 @@ Support HTML5 DB access
 
 Yahoo BrowserPlus Support
 -http://browserplus.yahoo.com/services/  (PStore - DB ACCESS)
+
+Jaxer

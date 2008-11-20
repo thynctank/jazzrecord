@@ -48,7 +48,7 @@ describe("Record", {
   }
 });
 
-describe("Record validation", {
+describe("Validation", {
   before_all: function() {
     initJazz();
     JazzRecord.migrate({fixtures:fixtures, refresh:true});    

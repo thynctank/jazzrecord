@@ -25,10 +25,11 @@ var fixtures = {
       {name: "Peggy Sue"}
     ],
     animals: [
-    {species: "tiger", say: "rawr!"},
-    {species: "bird", say: "bawk!!"},
-    {species: "cat", say: "meow!!"},
-    {species: "dog", say: "woof!"}
+    {name: "Tigra", species: "tiger", say: "rawr!"},
+    {name: "Shere Khan", species: "tiger", say: "rawr!"},
+    {name: "Tweety", species: "bird", say: "bawk!!"},
+    {name: "Punkin", species: "cat", say: "meow!!"},
+    {name: "Akai", species: "dog", say: "woof!"}
     ]
   },
   

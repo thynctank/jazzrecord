@@ -81,6 +81,7 @@ Animal = new JazzRecord.Model({
   table: "animals",
   foreignKey: "animal_id",
   columns: {
+    name: "text",
     species: "text",
     say: "text"
   },

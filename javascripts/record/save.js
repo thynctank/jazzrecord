@@ -2,9 +2,9 @@ JazzRecord.Record.implement({
   save: function() {    
     $each(this.options.model.options.hasOne, function(assocTable, assoc) {
       var foreignKey = this.options.model.options.foreignKey;
-      // remove original association and replace w/ new one
       var assocModel = JazzRecord.models.get(assocTable);
       
+      // remove original association and replace w/ new one
       // if assocRec has changed there will be more than one record w/ this ID
       var oldRec = assocModel.findBy(foreignKey, this.id, 0);
       if(oldRec && oldRec.id !== this[assoc].id) {
@@ -16,13 +16,32 @@ JazzRecord.Record.implement({
       }
     }, this);
 
-    // $each(this.options.hasMany, function(assocTable, assoc) {
-    //   var foreignKey = this.options.foreignKey;
-    //   if(this[assoc] && this[assoc].length)
-    //     this[assoc].each(function(assocRec) {
-    //       assocRec.updateAttribute(foreignKey, this.id);
-    //     });
-    // }, this);
+    $each(this.options.model.options.hasMany, function(assocTable, assoc) {    
+      if(this[assoc] && this[assoc].length) {
+        var foreignKey = this.options.model.options.foreignKey;
+        var assocModel = JazzRecord.models.get(assocTable);
+
+        var originalRecordIDs = this[assoc + "OriginalRecordIDs"];
+        
+        // save all still-assigned records
+        this[assoc].each(function(record) {
+          record[foreignKey] = this.id;
+          record.save();
+          if(originalRecordIDs.contains(record.id))
+            originalRecordIDs.erase(record.id);
+        }, this);
+        
+        // remove association from no longer-assigned records
+        originalRecordIDs.each(function(id) {
+          assocModel.find(id).updateAttribute(foreignKey, null);
+        });
+        
+        // remap originalRecordIDs for new set
+        this[assoc + "OriginalRecordIDs"] = this[assoc].map(function(record) {
+          return record.id;
+        });
+      }
+    }, this);
 
     // $each(this.options.model.options.hasAndBelongsToMany, function(assocTable, association) {
     //   var mappingTable = [this.model.table, assocTable].sort().toString().replace(",", "_");

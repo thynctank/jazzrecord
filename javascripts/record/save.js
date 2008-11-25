@@ -1,7 +1,13 @@
 JazzRecord.Record.implement({
-  save: function() {    
+  save: function() {
+    var foreignKey = this.options.model.options.foreignKey;
+
+    $each(this.options.model.options.belongsTo, function(assocTable, assoc) {
+      // if old foreignKey was set and has been changed, reload
+      // if ID was not set but assoc is now set, set ID
+    });
+    
     $each(this.options.model.options.hasOne, function(assocTable, assoc) {
-      var foreignKey = this.options.model.options.foreignKey;
       var assocModel = JazzRecord.models.get(assocTable);
       
       // remove original association and replace w/ new one
@@ -18,7 +24,6 @@ JazzRecord.Record.implement({
 
     $each(this.options.model.options.hasMany, function(assocTable, assoc) {    
       if(this[assoc] && this[assoc].length) {
-        var foreignKey = this.options.model.options.foreignKey;
         var assocModel = JazzRecord.models.get(assocTable);
 
         var originalRecordIDs = this[assoc + "OriginalRecordIDs"];
@@ -43,11 +48,37 @@ JazzRecord.Record.implement({
       }
     }, this);
 
-    // $each(this.options.model.options.hasAndBelongsToMany, function(assocTable, association) {
-    //   var mappingTable = [this.model.table, assocTable].sort().toString().replace(",", "_");
-    //   var localKey = model.options.foreignKey;
-    //   var foreignKey = JazzRecord.models.get(assocTable).options.foreignKey;        
-    // }, this);      
+    $each(this.options.model.options.hasAndBelongsToMany, function(assocTable, assoc) {
+      if(this[assoc] && this[assoc].length) {
+        var mappingTable = [this.options.model.table, assocTable].sort().toString().replace(",", "_");
+        var assocModelKey = JazzRecord.models.get(assocTable).options.foreignKey;
+        var sql = "";
+        
+        // save all still-assigned records, add new mapping records
+        var originalRecordIDs = this[assoc + "OriginalRecordIDs"];
+        
+        this[assoc].each(function(record) {
+          record.save();
+          if(originalRecordIDs.contains(record.id))
+            originalRecordIDs.erase(record.id);
+          else {
+            sql = "INSERT INTO " + mappingTable + " (" + foreignKey + ", " + assocModelKey + ") VALUES(" + this.id + ", " + record.id + ")";
+            JazzRecord.adapter.run(sql);
+          }
+        }, this);
+        
+        // remove originalRecordIDs from no longer-assigned records
+        originalRecordIDs.each(function(id) {
+          sql = "DELETE FROM " + mappingTable + " WHERE " + foreignKey + "=" + this.id + " AND " + assocModelKey + "=" + id + ";";
+          JazzRecord.adapter.run(sql);
+        }, this);
+        
+        // remap originalRecordIDs for new set
+        this[assoc + "OriginalRecordIDs"] = this[assoc].map(function(record) {
+          return record.id;
+        });
+      }
+    }, this);
 
     // delete any associated objects if old foreignKey was set but has become unset, autolink if assigned an object    
     var data = this.getData();
@@ -60,7 +91,7 @@ JazzRecord.Record.implement({
       // data.id = this.id;
       data.originalData = this.originalData;
 
-      if(!this.isValid("update") || !this.isChanged()) {
+      if(!this.isValid("update")) {
         return false;
       }
 

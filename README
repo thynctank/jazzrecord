@@ -1,0 +1,3 @@
+JazzRecord is a simplified ActiveRecord clone for providing a JavaScript ORM layer. It currently supports Gears and Adobe AIR. Like ActiveRecord, Jazz is free and open-source software. And in being inspired by ActiveRecord, Jazz seeks to minimize its learning curve by mimicking ActiveRecord style and conventions.
+
+For more information, a demo and current documentation, visit http://www.jazzrecord.org

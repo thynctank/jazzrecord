@@ -4,7 +4,7 @@ def build_minified_script(output)
   new_js = ""
   
   script_names.each do |script_name|
-    compressor = IO.popen("java -jar yuicompressor-2.3.6.jar --type js -v --charset UTF-8", "w+")
+    compressor = IO.popen("java -jar build/yuicompressor-2.3.6.jar --type js -v --charset UTF-8", "w+")
     compressor.puts IO.read("javascripts/#{script_name}.js")
     compressor.close_write
     new_js += compressor.gets

@@ -2,8 +2,6 @@
 
 NICK
 ----
-* Linking/Unlinking associated records on hasMany (unlinking needs a cache of all indexes on init to compare to on save)
-* "" on HABTM (should prove easier)
 * Mimic JStORM's SQL JOIN capabilities
 * transaction handling
 * Implement proper conditions array handling: ["col1 = ? AND col2 = ?", col1_match, col2_match] (Rails calls this bind variables)

@@ -78,7 +78,7 @@ JazzRecord.Model.implement({
       }
       else if($type(options.id)=='array')
         options.conditions = "WHERE id IN (" + options.id + ")";
-    this.sql = this.sql.substitute(options).clean() + ";";
+    this.sql = this.sql.substitute(options).clean();
     
     return this.query(options);
   }

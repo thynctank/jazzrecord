@@ -2,9 +2,11 @@
 
 NICK
 ----
-* Mimic JStORM's SQL JOIN capabilities
+* Mimic JStORM's SQL JOIN capabilities - probably limit eager loading to one level of associations
 * Implement add'l dirty object methods: http://ryandaigle.com/articles/2008/3/31/what-s-new-in-edge-rails-dirty-objects
 * Test autolinking/unlinking
+* Test transactions
+* Test performance
 
 DAVID
 -----

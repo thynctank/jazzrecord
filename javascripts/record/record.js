@@ -72,9 +72,10 @@ JazzRecord.Record = new Class({
       depth = 0;
     if(this[association].unloaded) {
       this[association] = this[association].loader(depth);
-      this[association + "OriginalRecordIDs"] = this[association].map(function(rec) {
-        return rec.id;
-      });
+      if($type(this[association]) === "array")
+        this[association + "OriginalRecordIDs"] = this[association].map(function(rec) {
+          return rec.id;
+        });
     }
     return this[association];
   },

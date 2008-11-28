@@ -7,6 +7,7 @@ NICK
 * Test autolinking/unlinking
 * Test transactions
 * Test performance
+* Fix validatesAssociated
 
 DAVID
 -----

@@ -15,27 +15,30 @@ JazzRecord.Record = new Class({
     this.setOptions(options);
     this.errors = [];
     
-    this.originalData = {};
+    // only load originalData if record has been previously saved
+    if(this.options.data.id) {
+      this.id = this.options.data.id;
+      this.originalData = {};
+    }
     //copy over column data
     $each(this.options.columns, function(colType, colName) {
       this[colName] = null;
-      if(this.options.data[colName]) {
-        this[colName] = this.options.data[colName];
+      this[colName] = this.options.data[colName];
+      if(this.originalData)
         this.originalData[colName] = this.options.data[colName];        
-      }
       if(colType === "bool") {
         var boolVal = (this[colName] ? true : false);
-        this.originalData[colName] = boolVal;
+        if(this.originalData)
+          this.originalData[colName] = boolVal;
         this[colName] = boolVal;
       }
-    }, this);
+    }, this);      
+
     
     $each(this.options.model.options.recordMethods, function(method, name) {
       this[name] = method;
     }, this);
     
-    if(this.options.data.id)
-      this.id = this.options.data.id;
   },
   destroy: function() {
     if(!this.id)

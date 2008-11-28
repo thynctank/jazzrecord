@@ -19,7 +19,7 @@ JazzRecord.Model.implement({
       if(this.sql.contains("LIMIT"))
         return null;
       else
-        return data;
+        return [];
     }
     
     var records = [];

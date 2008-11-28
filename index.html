@@ -2,11 +2,11 @@
    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-      <!-- <script src="javascripts/dependencies/air/AIRAliases.js" type="text/javascript" charset="utf-8"></script>
-      <script src="javascripts/dependencies/air/AIRIntrospector.js" type="text/javascript" charset="utf-8"></script> -->
+      <script src="javascripts/dependencies/air/AIRAliases.js" type="text/javascript" charset="utf-8"></script>
+      <script src="javascripts/dependencies/air/AIRIntrospector.js" type="text/javascript" charset="utf-8"></script>
       <script src="javascripts/dependencies/mootools/mootools-core.js" type="text/javascript" charset="utf-8"></script>
       
-      <script src="javascripts/dependencies/gears/gears_init.js" type="text/javascript" charset="utf-8"></script>
+      <!-- // <script src="javascripts/dependencies/gears/gears_init.js" type="text/javascript" charset="utf-8"></script> -->
 
       <script src="javascripts/jazz_record.js" type="text/javascript" charset="utf-8"></script>
       <script src="javascripts/record/record.js" type="text/javascript" charset="utf-8"></script>
@@ -27,8 +27,8 @@
       <script src="javascripts/examples/example_fixtures.js" type="text/javascript" charset="utf-8"></script>
       
     <script type="text/javascript" charset="utf-8">
-      // JazzRecord.adapter = new JazzRecord.AirAdapter({dbFile: "test.db"});
-      JazzRecord.adapter = new JazzRecord.GearsAdapter({dbFile: "test.db"});
+      JazzRecord.adapter = new JazzRecord.AirAdapter({dbFile: "test.db"});
+      // JazzRecord.adapter = new JazzRecord.GearsAdapter({dbFile: "test.db"});
       JazzRecord.migrate({fixtures: fixtures, refresh: true});
     </script>
     

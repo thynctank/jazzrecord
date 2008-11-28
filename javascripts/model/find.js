@@ -52,7 +52,7 @@ JazzRecord.Model.implement({
     if(!options)
       options = {};
 
-    this.sql = "SELECT {select} FROM " + this.table + " {conditions} {order} {limit} {offset}";
+    this.sql = "SELECT {select} FROM " + this.table + " {conditions} {group} {order} {limit} {offset}";
     var defaultOptions = {select: "*"};
     
     options = $extend(defaultOptions, options);
@@ -65,19 +65,24 @@ JazzRecord.Model.implement({
       options.limit = "LIMIT " + options.limit;
     if($type(options.offset) == "number")
       options.offset = "OFFSET " + options.offset;
+    if(options.group)
+      options.group = "GROUP BY " + options.group;
+
     //add complex conditions handling as in AR
     if(options.conditions) {
       options.conditions = "WHERE " + options.conditions;
       if(options.id)
         options.conditions += " AND id=" + options.id;
     }
-    else if(options.id)
+    else if(options.id) {
       if($type(options.id)=='number') {
         options.conditions = "WHERE id=" + options.id;
         options.limit = "LIMIT 1";
       }
       else if($type(options.id)=='array')
         options.conditions = "WHERE id IN (" + options.id + ")";
+    }
+    
     this.sql = this.sql.substitute(options).clean();
     
     return this.query(options);

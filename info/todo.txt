@@ -8,6 +8,7 @@ NICK
 * Test transactions
 * Test performance
 * Fix validatesAssociated
+* Figure out how to run JSSpec in AIR
 
 DAVID
 -----

@@ -9,6 +9,7 @@ NICK
 * Test performance
 * Fix validatesAssociated
 * Figure out how to run JSSpec in AIR
+* Modify errors to store colnames as prop names (convert from array to obj literal)
 
 DAVID
 -----

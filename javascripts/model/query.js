@@ -19,7 +19,7 @@ JazzRecord.Model.implement({
       if(this.sql.contains("LIMIT"))
         return null;
       else
-        return data;
+        return [];
     }
     
     var records = [];
@@ -77,6 +77,8 @@ JazzRecord.Model.implement({
           else
             record[assoc] = loadBelongsTo(remainingDepth);
         }
+        else
+          record[assoc] = null;
       });
       
       $each(this.options.hasAndBelongsToMany, function(assocTable, assoc) {
@@ -108,6 +110,6 @@ JazzRecord.Model.implement({
     if(mainSql.contains("LIMIT 1"))
       return records[0];
     else
-      return records;
+      return records;      
   }
 });

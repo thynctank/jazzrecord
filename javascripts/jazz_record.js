@@ -107,6 +107,29 @@ JazzRecord.GearsAdapter = new Class({
 // Globals can be overridden in site-specific js
 JazzRecord.depth = 2;
 JazzRecord.models = new Hash();
+JazzRecord.run = function(sql) {
+  return JazzRecord.adapter.run(sql);
+};
+JazzRecord.count = function(sql) {
+  return JazzRecord.adapter.count(sql);
+};
+JazzRecord.save = function(sql) {
+  return JazzRecord.adapter.save(sql);
+};
+
+// Thanks to Uriel Katz and his JStORM lib (http://labs.urielkatz.com/wiki/JStORM) for this idea
+// Specify reason for rollback in thrown exception
+JazzRecord.runTransaction = function(func, bind) {
+  JazzRecord.run("BEGIN");
+  try {
+    func.apply(bind || this);
+  }
+  catch(e) {
+    JazzRecord.run("ROLLBACK");
+    throw(e);
+  }
+  JazzRecord.run("END");
+};
 // Provide one of the following lines in site-specific js prior to calling migrate()
   // JazzRecord.adapter = new JazzRecord.AirAdapter({dbFile: "test.db"});
   // JazzRecord.adapter = new JazzRecord.GearsAdapter({dbFile: "test.db"});

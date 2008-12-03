@@ -1,7 +1,7 @@
 JazzRecord.Model.implement({
   //insert or update
   save: function(record) {
-    this.sql = "{saveMode} {table} {set} {data} {conditions};";
+    this.sql = "{saveMode} {table} {set} {data} {conditions}";
     var defaultOptions = {saveMode: "INSERT INTO", table: this.table, data: this.columnNames() + this.columnValues(record)};
 
     var options = {};

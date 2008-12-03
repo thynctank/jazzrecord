@@ -15,3 +15,5 @@ We've also got a massive refactor around the corner where we'll be writing a ver
 ##More Info
 
 For more information, a demo and current documentation, visit [JazzRecord.org](http://www.jazzrecord.org)
+
+For regular updates on JazzRecord development, follow us on Twitter: [@jazzrecord](http://www.twitter.com/jazzrecord)

@@ -2,11 +2,6 @@ JazzRecord.Record.implement({
   save: function() {
     var foreignKey = this.options.model.options.foreignKey;
 
-    $each(this.options.model.options.belongsTo, function(assocTable, assoc) {
-      // if old foreignKey was set and has been changed, reload
-      // if ID was not set but assoc is now set, set ID
-    });
-    
     $each(this.options.model.options.hasOne, function(assocTable, assoc) {
       var assocModel = JazzRecord.models.get(assocTable);
       
@@ -88,9 +83,6 @@ JazzRecord.Record.implement({
       this.fireEvent("create");
     }
     else {
-      // data.id = this.id;
-      data.originalData = this.originalData;
-
       if(!this.isValid("update")) {
         return false;
       }

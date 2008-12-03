@@ -2,12 +2,15 @@
 
 NICK
 ----
-* Mimic JStORM's SQL JOIN capabilities
-* transaction handling
-* Implement proper conditions array handling: ["col1 = ? AND col2 = ?", col1_match, col2_match] (Rails calls this bind variables)
-* Implement "group" as option in Model.select()
+* Mimic JStORM's SQL JOIN capabilities - probably limit eager loading to one level of associations
 * Implement add'l dirty object methods: http://ryandaigle.com/articles/2008/3/31/what-s-new-in-edge-rails-dirty-objects
 * Add updateAttributes() method on Record, allow ID cols or association names both
+* Test autolinking/unlinking
+* Test transactions
+* Test performance
+* Fix validatesAssociated
+* Figure out how to run JSSpec in AIR
+* Modify errors to store colnames as prop names (convert from array to obj literal)
 
 DAVID
 -----

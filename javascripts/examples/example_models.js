@@ -20,13 +20,13 @@ Person = new JazzRecord.Model({
   },
   
   validate: {
-    atUpdate: function() {
+    atSave: function() {
+      this.validatesPresenceOf("age");
       this.validatesIsInt("age");
       this.validatesIsFloat("income");
     },
-    atSave: function() {
+    atCreate: function() {
       this.validatesIsInt("age", "Ya caint be a non-numeric age, genius");
-      this.validatesIsFloat("income");
     }
   }
 });

@@ -13,7 +13,7 @@ JazzRecord.Record = new Class({
   initialize: function(options) {
     this.id = null;
     this.setOptions(options);
-    this.errors = [];
+    this.errors = {};
     
     // only load originalData if record has been previously saved
     if(this.options.data.id) {

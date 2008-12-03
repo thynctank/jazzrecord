@@ -2,15 +2,15 @@
 
 NICK
 ----
-* Mimic JStORM's SQL JOIN capabilities - probably limit eager loading to one level of associations
-* Implement add'l dirty object methods: http://ryandaigle.com/articles/2008/3/31/what-s-new-in-edge-rails-dirty-objects
+* Fix/verify validatesAssociated, validatesExclusionOf, validatesInclusionOf, validatesLengthOf, validatesUniquenessOf
+* Add ability to pass an array of colnames to all validates methods
 * Add updateAttributes() method on Record, allow ID cols or association names both
 * Test autolinking/unlinking
 * Test transactions
 * Test performance
-* Fix validatesAssociated
+* Mimic JStORM's SQL JOIN capabilities - probably limit eager loading to one level of associations
+* Implement add'l dirty object methods: http://ryandaigle.com/articles/2008/3/31/what-s-new-in-edge-rails-dirty-objects
 * Figure out how to run JSSpec in AIR
-* Modify errors to store colnames as prop names (convert from array to obj literal)
 
 DAVID
 -----

@@ -7,6 +7,7 @@ NICK
 * Add updateAttributes() method on Record, allow ID cols or association names both
 * Test autolinking/unlinking
 * Test transactions
+* Test Validation methods
 * Test performance
 * Mimic JStORM's SQL JOIN capabilities - probably limit eager loading to one level of associations
 * Implement add'l dirty object methods: http://ryandaigle.com/articles/2008/3/31/what-s-new-in-edge-rails-dirty-objects
@@ -20,7 +21,6 @@ JESSE
 * migration.js - implementing last 3 methods (removeColumn, renameColumn, changeColumn) for
   sqlite-friendliness
 * Implement update, updateAll on Migration
-* TEST Validation methods
 
 UNASSIGNED
 ----------

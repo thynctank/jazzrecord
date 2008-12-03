@@ -2,9 +2,9 @@ var fixtures = {
   tables: {
     people: [
       {name: "Nick", age: 28, home_id: 1, has_vehicle: true},
-      {name: "Terri", home_id: 1, has_vehicle: true},
-      {name: "David"},
-      {name: "Karen"},
+      {name: "Terri", age: 32, home_id: 1, has_vehicle: true},
+      {name: "David", age: 23},
+      {name: "Karen", age: 30},
       {name: "Jesse", age: 24, income: 127.5, has_vehicle: true}
     ],
     homes: [

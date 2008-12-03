@@ -62,11 +62,16 @@ describe("Validation", {
   "Failing a validation and using custom error messaging": function() {
     p.age = "dead";
     value_of(p.isValid()).should_be_false();
-    value_of(p).should_have(1, "errors");
-    value_of(p.errors[0]).should_be("Ya caint be a non-numeric age, genius");
-    // Should not save
+    value_of(p.errors).should_include("age");
+    value_of(p.errors.age[0]).should_be("Ya caint be a non-numeric age, genius");
+    // should not save due to incorrect type
     value_of(p.save()).should_be_false();
-    value_of(p).should_have(1, "errors");
+    value_of(p.errors.age).should_have(2, "items");
+    // should not save due to left out value
+    delete p.age;
+    value_of(p.save()).should_be_false();
+    value_of(p.errors.age).should_have(1, "items");
+    value_of(p.errors.age[0]).should_be("age can't be empty, null or blank");
   }
 });
 

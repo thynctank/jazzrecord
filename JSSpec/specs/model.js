@@ -70,7 +70,13 @@ describe("Model", {
   },
   "Should not allow saving of invalid data": function() {
     var invalidBox = BlackBox.create({label: 2, number: "Not a Number"});
-    value_of(invalidBox).should_have(2, "errors");
+    value_of(invalidBox.id).should_be_null();
+    value_of(invalidBox.errors).should_include("label");
+    value_of(invalidBox.errors).should_include("number");
+  },
+  "Should allow saving of valid data": function() {
+    var validBox = BlackBox.create({label: "A box full of crap"});
+    value_of(validBox.id).should_not_be_null();
   }
 });
 describe("Finders", {

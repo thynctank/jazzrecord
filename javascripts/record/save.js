@@ -85,13 +85,13 @@ JazzRecord.Record.implement({
         this.fireEvent("create");
     }
     else {
+      data.id = this.id;
       if(this.isValid("update"))
         this.fireEvent("update");
     }
     
     if(this.isValid("save")) {
       if(this.isChanged()) {
-        data.id = this.id;
         this.options.model.save(data);
         this.reload();
         // overwrite original data so it is no longer "dirty"
@@ -100,7 +100,8 @@ JazzRecord.Record.implement({
         }, this);
       }
       else
-        this.id = this.options.model.save(data);;
+        this.id = this.options.model.save(data);
+        
 
       this.fireEvent("save");
       return true;

@@ -105,7 +105,7 @@ JazzRecord.GearsAdapter = new Class({
 });
 
 // Globals can be overridden in site-specific js
-JazzRecord.depth = 2;
+JazzRecord.depth = 1;
 JazzRecord.models = new Hash();
 JazzRecord.run = function(sql) {
   return JazzRecord.adapter.run(sql);

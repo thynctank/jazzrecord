@@ -99,7 +99,7 @@ JazzRecord.Record.implement({
           this.originalData[colName] = this[colName];
         }, this);
       }
-      else
+      else if(!this.id)
         this.id = this.options.model.save(data);
         
 

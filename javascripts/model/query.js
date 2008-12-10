@@ -83,14 +83,19 @@ JazzRecord.Model.implement({
       
       $each(this.options.hasAndBelongsToMany, function(assocTable, assoc) {
         var mappingTable = [this.table, assocTable].sort().toString().replace(",", "_");
-        var sql = "SELECT * FROM " + mappingTable + " WHERE " + this.options.foreignKey + "=" + record.id;
-        record[assoc] = JazzRecord.adapter.run(sql);
         var assocModel = JazzRecord.models.get(assocTable);
         var assocIdCol = assocModel.options.foreignKey;
         if(assocIdCol) {
           var loadHasAndBelongsToMany = function(depth) {
-            return assocModel.find({id: record[assoc][assocIdCol], depth: depth});
-          };
+            var sql = "SELECT * FROM " + mappingTable + " WHERE " + this.options.foreignKey + "=" + record.id;
+            // setup temporary array of mapping records
+            var mappingRecords = JazzRecord.adapter.run(sql);
+            var assocRecords = [];
+            $each(mappingRecords, function(mappingRecord) {
+              assocRecords.push(assocModel.first({id: mappingRecord[assocIdCol], depth: depth}));
+            }, this);
+            return assocRecords;
+          }.bind(this);
           if(options.depth < 1)
             record[assoc] = new AssociationLoader(loadHasAndBelongsToMany);
           else {

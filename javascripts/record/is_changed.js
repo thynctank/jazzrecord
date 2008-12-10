@@ -16,10 +16,12 @@ JazzRecord.Record.implement({
       if(!this.originalData)
         return;
       else {
-        if(this.originalData[assocIdCol] && !this[assoc])
+        if(this.originalData[assocIdCol] && !$defined(this[assoc]))
           delete this[assocIdCol];
-        else if(!this.originalData[assocIdCol] && this[assoc])
+        else if(!$defined(this.originalData[assocIdCol]) && this[assoc])
           this[assocIdCol] = this[assoc].id;
+        else if(!$defined(this.originalData[assocIdCol]) && !$defined(this[assoc]))
+          return;
         else if(!this.originalData[assocIdCol] && this[assocIdCol])
           return;
         else if(this.originalData[assocIdCol] != this[assoc].id)

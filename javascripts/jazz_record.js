@@ -104,6 +104,16 @@ JazzRecord.GearsAdapter = new Class({
   }
 });
 
+JazzRecord.TitaniumAdapter = new Class({
+  Extends: JazzRecord.GearsAdapter,
+  initialize: function(options) {
+    this.setOptions(options);
+    this.db = new ti.Database;
+    this.db.open(this.options.dbFile);
+    this.result = null;
+  }
+});
+
 // Globals can be overridden in site-specific js
 JazzRecord.depth = 1;
 JazzRecord.models = new Hash();

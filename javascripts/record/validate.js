@@ -66,23 +66,17 @@ JazzRecord.Record.implement({
       this.pushError(col, errText);
     }
   },
-  validatesExclusionOf: function(col, values, errText) {
-    // keyWordsArray Must be an array atm, implement string processing later
-    var val = this[col];
-    var passedValidate = true;
-
-    $each(values, function(curValue) {
-      if (val.toUpperCase() === curValue.toUpperCase()) {
-        passedValidate = false;
-
-        if (!$defined(errText)) {
-          errText = curValue + " is reserved";
-        }
-
-        this.pushError(col, errText);
-      }
-    }, this);
-    return passedValidate;
+  validatesExclusionOf: function(col, list, errText) {
+    if(this[col] && list.contains(this[col])) {
+      errText = $defined(errText) ? errText : (col + " is reserved");
+      this.pushError(col, errText);
+    }
+  },
+  validatesInclusionOf: function(col, list, errText) {
+    if(this[col] && !list.contains(this[col])) {
+      errText = $defined(errText) ? errText : (col + " is not included in the list");
+      this.pushError(col, errText);
+    }
   },
   validatesFormatOf: function(col, regex, errText) {
     val = this[col];
@@ -90,25 +84,6 @@ JazzRecord.Record.implement({
       errText = $defined(errText) ? errText : (col + " does not match expected format: " + regex.toString());
       this.pushError(col, errText);
     }  
-  },
-  validatesInclusionOf: function(col, values, errText) {
-    var val = this[col];
-    var passedValidate = false;
-
-    $each(values, function(curValue) {
-      if (val.toUpperCase() === curValue.toUpperCase()) {
-        passedValidate = true;
-      }
-    });
-
-    if (!passedValidate) {
-      if (!$defined(errText)) {
-        errText = val + " is not included in the list";
-      }
-
-      this.pushError(col, errText);
-    }
-    return passedValidate;
   },
   validatesLengthOf: function(col, options, errText) {
   /*
@@ -119,8 +94,9 @@ JazzRecord.Record.implement({
       allowEmpty: true or false
       tooShort: error message
       tooLong: error message
+      wrongLength: error message
   */
-    var defaultOptions = {minimum: 0, maximum: Infinity, allowEmpty: true, tooShort: col + " is too short", tooLong: col + " is too long"};
+    var defaultOptions = {minimum: 0, maximum: Infinity, allowEmpty: true, tooShort: col + " is too short", tooLong: col + " is too long", wrongLength: col + " is not the correct length"};
     options = $extend(defaultOptions, options);
     if(!$defined(this[col]) || this[col] && this[col].length && this[col].length >= options.minimum && this[col].length <= options.maximum) {
       if(!$defined(options.is) || (options.is && this[col].length === options.is))
@@ -130,6 +106,8 @@ JazzRecord.Record.implement({
       this.pushError(col, options.tooShort);
     if(this[col].length > options.maximum)
       this.pushError(col, options.tooLong);
+    if(options.is && this[col].length !== options.is)
+      this.pushError(col, options.wrongLength);
   },
   validatesNumericalityOf: function(col, errText) {
     var val = this[col];

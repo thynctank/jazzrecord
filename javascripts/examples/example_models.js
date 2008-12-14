@@ -6,6 +6,7 @@ Person = new JazzRecord.Model({
   columns: {
     name: "text",
     age: "number",
+    gender: "text",
     home_id: "number",
     income: "float",
     has_vehicle: "bool"
@@ -26,9 +27,11 @@ Person = new JazzRecord.Model({
       this.validatesPresenceOf("age");
       this.validatesIsInt("age");
       this.validatesIsFloat("income");
+      this.validatesInclusionOf("gender", ["m", "f"], "gender must be m or f");
+      this.validatesExclusionOf("age", [111], "we don't like eleventy-one year olds");
     },
     atCreate: function() {
-      this.validatesIsInt("age", "Ya caint be a non-numeric age, genius");
+      this.validatesIsInt("age", "ya caint be a non-numeric age, genius");
     }
   }
 });

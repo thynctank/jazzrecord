@@ -29,6 +29,7 @@ Person = new JazzRecord.Model({
       this.validatesIsFloat("income");
       this.validatesInclusionOf("gender", ["m", "f"], "gender must be m or f");
       this.validatesExclusionOf("age", [111], "we don't like eleventy-one year olds");
+      this.validatesAssociated("vehicle");
     },
     atCreate: function() {
       this.validatesIsInt("age", "ya caint be a non-numeric age, genius");
@@ -45,6 +46,11 @@ Home = new JazzRecord.Model({
     footage: "number",
     address: "text",
     vacant: "bool"
+  },
+  validate: {
+    atSave: function() {
+      this.validatesAssociated("people");
+    }
   }
 });
 
@@ -57,6 +63,11 @@ Vehicle = new JazzRecord.Model({
     model: "text",
     year: "number",
     person_id: "number"
+  },
+  validate: {
+    atSave: function() {
+      this.validatesPresenceOf("model");
+    }
   }
 });
 

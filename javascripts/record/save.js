@@ -4,20 +4,21 @@ JazzRecord.Record.implement({
 
     $each(this.options.model.options.hasOne, function(assocTable, assoc) {
       var assocModel = JazzRecord.models.get(assocTable);
-      
       // remove original association and replace w/ new one
       // if assocRec has changed there will be more than one record w/ this ID
-      var oldRec = assocModel.findBy(foreignKey, this.id, 0);
-      if(oldRec && oldRec.id !== this[assoc].id) {
-        delete oldRec[foreignKey];
-        oldRec.save();
+      if(this.id) {
+        var oldRec = assocModel.findBy(foreignKey, this.id, 0);
+        if(oldRec && oldRec.id !== this[assoc].id) {
+          delete oldRec[foreignKey];
+          oldRec.save();
+        }
       }
-      if(this[assoc]) {
+      if(this[assoc] && !this[assoc].unloaded) {
         this[assoc].updateAttribute(foreignKey, this.id);
       }
     }, this);
 
-    $each(this.options.model.options.hasMany, function(assocTable, assoc) {    
+    $each(this.options.model.options.hasMany, function(assocTable, assoc) {
       if(this[assoc] && this[assoc].length) {
         var assocModel = JazzRecord.models.get(assocTable);
 

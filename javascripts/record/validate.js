@@ -48,6 +48,7 @@ JazzRecord.Record.implement({
     }
     this.errors[col].push(errText);
   },
+
   validatesAcceptanceOf: function(col, errText) {
     var val = this[col];
     if(val && $chk(val) && $type(val) === "boolean")
@@ -132,31 +133,17 @@ JazzRecord.Record.implement({
       this.pushError(col, errText);
     }
   },
-  validatesAssociated: function(assocName, errText) {
-    // This still isn't working, I'm not sure what the issue is
-    var assocValid = true;
-    var assocModel = JazzRecord.models.get(this[assocName]);
-    var assocKey = assocModel.foreignKey;
-
-    // alternate paths depending on whether associated record is loaded or not
-    if (this[assocName].unloaded) {
-      if (!assocModel.find(this[assocKey])) {
-        assocValid = false;
+  validatesAssociated: function(assoc, errText) {
+    if(!$defined(this[assoc]) || (this[assoc] && this[assoc].unloaded))
+      return;
+    //handle single- or array-based associations
+    $splat(this[assoc]).each(function(item) {
+      if(!item.isValid()) {
+        errText = $defined(errText) ? errText : assoc + " is not valid";
+        this.pushError(assoc, errText);
+        return;
       }
-    }
-    else if (!this[assocName].id) {
-      assocValid = false;
-    }
-
-    if (!$defined(errText)) {
-      errText = assocName + " does not exist with ID " + this[assocKey];
-    }
-
-    if (!assocValid) {
-      this.pushError(col, errText);
-    }
-
-    return assocValid;
+    }, this);
   },
 
   // Generic Validations

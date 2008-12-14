@@ -1,30 +1,14 @@
-﻿/* AIRLocalizer.js - Revision: 1.0 */
-// Copyright 2007-2008. Adobe Systems Incorporated.
-// All rights reserved.
-//
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are met:
-//
-//   * Redistributions of source code must retain the above copyright notice,
-//     this list of conditions and the following disclaimer.
-//   * Redistributions in binary form must reproduce the above copyright notice,
-//     this list of conditions and the following disclaimer in the documentation
-//     and/or other materials provided with the distribution.
-//   * Neither the name of Adobe Systems Incorporated nor the names of its
-//     contributors may be used to endorse or promote products derived from this
-//     software without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-// POSSIBILITY OF SUCH DAMAGE.
+﻿/* AIRLocalizer.js - Revision: 1.5 */
+
+/*
+ADOBE SYSTEMS INCORPORATED
+Copyright 2007-2008 Adobe Systems Incorporated. All Rights Reserved.
+ 
+NOTICE:   Adobe permits you to modify and distribute this file only in accordance with
+the terms of Adobe AIR SDK license agreement.  You may have received this file from a
+source other than Adobe.  Nonetheless, you may modify or
+distribute this file only in accordance with such agreement. 
+*/
 
 
 // Using the function method to obfuscate inner globals to the main script, so that the 
@@ -32,10 +16,10 @@
 (function(){
 	/**
 	 * This is automatically replaced while building
-	 * @version "1.0"
+	 * @version "1.5"
 	 * @private	
 	 */
-	var version = "1.0";
+	var version = "1.5";
 	
 	
 	/**
@@ -724,6 +708,25 @@
 		},
 		
 		/**
+		 * Loads a bundle and returns its keys and values as an object.
+		 * @private
+		 * @param locale String The locale name where it should search the bundle
+		 * @param bundleName String The bundle name to be loaded
+		 * @return Object Returns null if the bundle is not found.
+		 */
+		getResourceBundle: function(locale, bundleName){
+			var bundle = this.loadBundle(locale, bundleName);
+			if(bundle==null) 
+				return null;
+			//make a copy of the bundle
+			var result = {};
+			for (var key in bundle.keys){
+				result [ key ] = bundle.keys [key];
+			}
+			return result;
+		},
+		
+		/**
 		 * Creates a new ResourceFile based on the fileName
 		 * @private
 		 * @param locale String The locale name where it should search the file
@@ -1135,6 +1138,17 @@
 			return result;
 		},
 		
+		//
+		// * Returns the keys found in a bundle
+		// 
+		// @param locale String The locale name where it should search the bundle
+		// @param bundleName String The bundle name to be loaded
+		// 
+		// * Returns null if the bundle is not found.
+		//
+		getResourceBundle: function(locale, bundleName){
+			return this._private.getResourceBundle(locale, bundleName);
+		},
 
 		// * If “locale” argument is provided, it returns the contents of the file 
 		// 		“{bundlesDirectory}/{locale}/{resourceFileName}”. Otherwise, the locale 

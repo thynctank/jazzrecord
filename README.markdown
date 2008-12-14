@@ -2,7 +2,7 @@
 
 JazzRecord is a simplified ActiveRecord clone for providing a JavaScript ORM layer. It currently supports [Gears](http://gears.google.com), [Adobe AIR](http://www.adobe.com/products/air/), and [Titanium PR1](http://titaniumapp.com/). Like ActiveRecord, Jazz is free and open-source software. And in being inspired by ActiveRecord, Jazz seeks to minimize its learning curve by mimicking ActiveRecord style and conventions.
 
-JazzRecord is almost feature-complete, and most of it has been tested thoroughly across all major browsers using a test suite called JSSpec. AIR-side testing will be implemented shortly.
+JazzRecord is almost feature-complete, and most of it has been tested thoroughly across all major browsers using a test suite called [JSSpec](http://jania.pe.kr/aw/moin.cgi/JSSpec). AIR-side testing will be implemented shortly.
 
 ##Current Development
 

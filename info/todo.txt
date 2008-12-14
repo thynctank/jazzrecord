@@ -2,11 +2,10 @@
 
 NICK
 ----
-* Fix/verify validatesAssociated
 * Avoid so many unnecessary hits to db
 * Add ability to pass multiple colnames to all validates methods
 * Add updateAttributes() method on Record, allow ID cols or association names both in object literal
-* Test that saving existing record does not incremement counts of own model.count or directly-associated model.counts (dupe record bug)
+* Test that saving existing record does not increment counts of own model.count or directly-associated model.counts (dupe record bug)
 * Test autolinking/unlinking
 * Test transactions
 * Test Validation methods

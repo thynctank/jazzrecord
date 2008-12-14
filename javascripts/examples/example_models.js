@@ -21,6 +21,8 @@ Person = new JazzRecord.Model({
   
   validate: {
     atSave: function() {
+      this.validatesUniquenessOf("name");
+      this.validatesLengthOf("name", {minimum: 4});
       this.validatesPresenceOf("age");
       this.validatesIsInt("age");
       this.validatesIsFloat("income");

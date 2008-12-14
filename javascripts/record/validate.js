@@ -113,50 +113,23 @@ JazzRecord.Record.implement({
   validatesLengthOf: function(col, options, errText) {
   /*
    Supported options:
- 
       minimum: length
       maximum: length
-      is: length
-      exactly: length
-      allow_nil: true or false
+      is: exact length
+      allowEmpty: true or false
+      tooShort: error message
+      tooLong: error message
   */
-    var passedValidation = true;
-    
-    var val = this[col];
-    var defaultOptions = {};
+    var defaultOptions = {minimum: 0, maximum: Infinity, allowEmpty: true, tooShort: col + " is too short", tooLong: col + " is too long"};
     options = $extend(defaultOptions, options);
-
-    if ($defined(options.minimum)) {
-      if (val.length < options.minimum) {
-         passedValidation = false;
-      }
+    if(!$defined(this[col]) || this[col] && this[col].length && this[col].length >= options.minimum && this[col].length <= options.maximum) {
+      if(!$defined(options.is) || (options.is && this[col].length === options.is))
+        return;
     }
-    
-    if ($defined(options.maximum)) {
-      if (val.length > options.maximum) {
-         passedValidation = false;
-      }
-    }
-    
-    if ($defined(options.is) || $defined(options.exactly)) {
-      if (val.length !== options.is || val.length !== options.exactly) {
-        passedValidation = false;
-      }
-    }
-        
-    if ($defined(options.allow_nil)) {
-      if (val !== options.allow_nill) {
-        passedValidation = false;       
-      }
-    }
-    
-    if (!passedValidation) {
-      if (!$defined(errText)) {
-        errText = "length out of bounds";
-      }
-      this.pushError(col, errText);
-    }
-
+    if(this[col].length < options.minimum)
+      this.pushError(col, options.tooShort);
+    if(this[col].length > options.maximum)
+      this.pushError(col, options.tooLong);
   },
   validatesNumericalityOf: function(col, errText) {
     var val = this[col];
@@ -173,11 +146,39 @@ JazzRecord.Record.implement({
       this.pushError(col, errText);
     }
   },
-  validatesUniquenessOf: function(col, val, errText) {
-    if(findAllBy(col, val).length > 1) {
+  validatesUniquenessOf: function(col, errText) {
+    var val = this[col];
+    var acceptableCount = this.id ? 1 : 0;
+    if(this.options.model.findAllBy(col, val).length > acceptableCount) {
       errText = $defined(errText) ? errText : (col + " is not unique");
       this.pushError(col, errText);
     }
+  },
+  validatesAssociated: function(assocName, errText) {
+    // This still isn't working, I'm not sure what the issue is
+    var assocValid = true;
+    var assocModel = JazzRecord.models.get(this[assocName]);
+    var assocKey = assocModel.foreignKey;
+
+    // alternate paths depending on whether associated record is loaded or not
+    if (this[assocName].unloaded) {
+      if (!assocModel.find(this[assocKey])) {
+        assocValid = false;
+      }
+    }
+    else if (!this[assocName].id) {
+      assocValid = false;
+    }
+
+    if (!$defined(errText)) {
+      errText = assocName + " does not exist with ID " + this[assocKey];
+    }
+
+    if (!assocValid) {
+      this.pushError(col, errText);
+    }
+
+    return assocValid;
   },
 
   // Generic Validations
@@ -214,31 +215,5 @@ JazzRecord.Record.implement({
         errText = $defined(errText) ? errText : (col + " is not an float");
         this.pushError(col, errText);      
       }    
-  },
-  validatesAssociated: function(assocName, errText) {
-    // This still isn't working, I'm not sure what the issue is
-    var assocValid = true;
-    var assocModel = JazzRecord.models.get(this[assocName]);
-    var assocKey = assocModel.foreignKey;
-
-    // alternate paths depending on whether associated record is loaded or not
-    if (this[assocName].unloaded) {
-      if (!assocModel.find(this[assocKey])) {
-        assocValid = false;
-      }
-    }
-    else if (!this[assocName].id) {
-      assocValid = false;
-    }
-
-    if (!$defined(errText)) {
-      errText = assocName + " does not exist with ID " + this[assocKey];
-    }
-
-    if (!assocValid) {
-      this.pushError(col, errText);
-    }
-
-    return assocValid;
   }
 });

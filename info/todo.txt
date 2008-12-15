@@ -2,14 +2,14 @@
 
 NICK
 ----
-* Add ability to pass multiple colnames to all validates methods
-* Add updateAttributes() method on Record, allow ID cols or association names both in object literal
-* Test autolinking/unlinking
-* Test transactions
 * Test Validation methods
+* Test autolinking/unlinking
+* Add ability to pass multiple colnames to all validates methods
+* Test transactions
 * Test performance
-* Mimic JStORM's SQL JOIN capabilities?
+* Add updateAttributes() method on Record, allow ID cols or association names both in object literal
 * Implement add'l dirty object methods: http://ryandaigle.com/articles/2008/3/31/what-s-new-in-edge-rails-dirty-objects
+* Mimic JStORM's SQL JOIN capabilities?
 * Run JSSpec in AIR/Titanium
 
 DAVID

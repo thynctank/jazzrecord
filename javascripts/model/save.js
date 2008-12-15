@@ -14,7 +14,7 @@ JazzRecord.Model.implement({
       options.data = "";
       $each(this.options.columns, function(colType, colName) {
         // implement association logic
-        options.data += colName + " = " + this.typeValue(colName, record[colName]) + ", ";
+        options.data += colName + "=" + this.typeValue(colName, record[colName]) + ", ";
       }, this);
       options.data = options.data.slice(0, -2);
     }

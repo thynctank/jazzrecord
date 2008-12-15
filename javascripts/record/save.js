@@ -3,18 +3,13 @@ JazzRecord.Record.implement({
     var foreignKey = this.options.model.options.foreignKey;
 
     $each(this.options.model.options.hasOne, function(assocTable, assoc) {
-      var assocModel = JazzRecord.models.get(assocTable);
       // remove original association and replace w/ new one
-      // if assocRec has changed there will be more than one record w/ this ID
-      if(this.id) {
-        var oldRec = assocModel.findBy(foreignKey, this.id, 0);
-        if(oldRec && oldRec.id !== this[assoc].id) {
-          delete oldRec[foreignKey];
-          oldRec.save();
-        }
-      }
-      if(this[assoc] && !this[assoc].unloaded) {
+      if(this[assoc] && this[assoc + "OriginalRecordID"] !== this[assoc].id) {
+        var assocModel = JazzRecord.models.get(assocTable);
+        var oldRecord = assocModel.first({id: this[assoc + "OriginalRecordID"], depth:0});
+        oldRecord.updateAttribute(foreignKey, null);
         this[assoc].updateAttribute(foreignKey, this.id);
+        this[assoc + "OriginalRecordID"] = this[assoc].id;
       }
     }, this);
 
@@ -87,7 +82,7 @@ JazzRecord.Record.implement({
     }
     else {
       data.id = this.id;
-      if(this.isValid("update"))
+      if(this.isValid("update") && this.isChanged())
         this.fireEvent("update");
     }
     

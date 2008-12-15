@@ -45,8 +45,10 @@ JazzRecord.Model.implement({
         };
         if(options.depth < 1)
           record[assoc] = new AssociationLoader(loadHasOne);
-        else
+        else {
           record[assoc] = loadHasOne(remainingDepth);
+          record[assoc + "OriginalRecordID"] = record[assoc].id;
+        }
       }, this);
       
       $each(this.options.hasMany, function(assocTable, assoc) {

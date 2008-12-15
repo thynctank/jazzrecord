@@ -2,17 +2,15 @@
 
 NICK
 ----
-* Avoid so many unnecessary hits to db
 * Add ability to pass multiple colnames to all validates methods
 * Add updateAttributes() method on Record, allow ID cols or association names both in object literal
-* Test that saving existing record does not increment counts of own model.count or directly-associated model.counts (dupe record bug)
 * Test autolinking/unlinking
 * Test transactions
 * Test Validation methods
 * Test performance
-* Mimic JStORM's SQL JOIN capabilities - probably limit eager loading to one level of associations
+* Mimic JStORM's SQL JOIN capabilities?
 * Implement add'l dirty object methods: http://ryandaigle.com/articles/2008/3/31/what-s-new-in-edge-rails-dirty-objects
-* Figure out how to run JSSpec in AIR
+* Run JSSpec in AIR/Titanium
 
 DAVID
 -----

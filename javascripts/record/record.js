@@ -79,6 +79,8 @@ JazzRecord.Record = new Class({
         this[association + "OriginalRecordIDs"] = this[association].map(function(rec) {
           return rec.id;
         });
+      else
+        this[association + "OriginalRecordID"] = this[association].id;
     }
     return this[association];
   },

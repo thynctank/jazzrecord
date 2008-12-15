@@ -128,7 +128,7 @@ JazzRecord.Record.implement({
   validatesUniquenessOf: function(col, errText) {
     var val = this[col];
     var acceptableCount = this.id ? 1 : 0;
-    if(this.options.model.findAllBy(col, val).length > acceptableCount) {
+    if(this.options.model.findAllBy(col, val, 0).length > acceptableCount) {
       errText = $defined(errText) ? errText : (col + " is not unique");
       this.pushError(col, errText);
     }

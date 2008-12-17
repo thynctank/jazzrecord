@@ -59,15 +59,6 @@ describe("Model", {
   "Loading associated records": function() {
     value_of(BlackBox.last().content.description).should_be("Box Contents 3");
   },
-  "Updating associated record data on save of primary": function() {
-    var firstBox = BlackBox.first();
-    firstBox.label = "Closet Box";
-    var secretText = "a deep dark secret";
-    firstBox.content.description = secretText;
-    firstBox.save();
-    
-    value_of(BlackBox.find(1).content.description).should_be(secretText);
-  },
   "Should not allow saving of invalid data": function() {
     var invalidBox = BlackBox.create({label: 2, number: "Not a Number"});
     value_of(invalidBox.id).should_be_null();

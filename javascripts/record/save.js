@@ -4,11 +4,15 @@ JazzRecord.Record.implement({
 
     $each(this.options.model.options.hasOne, function(assocTable, assoc) {
       // remove original association and replace w/ new one
-      if(this[assoc] && this[assoc + "OriginalRecordID"] !== this[assoc].id) {
-        var assocModel = JazzRecord.models.get(assocTable);
-        var oldRecord = assocModel.first({id: this[assoc + "OriginalRecordID"], depth:0});
-        oldRecord.updateAttribute(foreignKey, null);
-        this[assoc].updateAttribute(foreignKey, this.id);
+      if(this[assoc]) {
+        if(!$defined(this[assoc + "OriginalRecordID"]))
+          this[assoc].updateAttribute(foreignKey, this.id);
+        else if(this[assoc + "OriginalRecordID"] !== this[assoc].id) {
+          var assocModel = JazzRecord.models.get(assocTable);
+          var oldRecord = assocModel.first({id: this[assoc + "OriginalRecordID"], depth:0});
+          oldRecord.updateAttribute(foreignKey, null);
+          this[assoc].updateAttribute(foreignKey, this.id);
+        }
         this[assoc + "OriginalRecordID"] = this[assoc].id;
       }
     }, this);

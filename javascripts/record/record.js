@@ -44,8 +44,23 @@ JazzRecord.Record = new Class({
     if(!this.id)
       throw("Unsaved record cannot be destroyed");
     else {
-      this.fireEvent("destroy");
       this.options.model.destroy(this.id);
+      // unlink any hasMany and hasOne records from this record
+      $each(this.options.model.options.hasMany, function(assocTable, assoc) {
+        this.load(assoc);
+        this[assoc].each(function(record) {
+          record.updateAttribute(this.options.model.options.foreignKey, null);
+        }, this);
+        this[assoc + "OriginalRecordIDs"] = [];
+      }, this);
+      
+      $each(this.options.model.options.hasOne, function(assocTable, assoc) {
+        this.load(assoc);
+        this[assoc].updateAttribute(this.options.model.options.foreignKey, null);
+        this[assoc + "OriginalRecordID"] = null;
+      }, this);
+      
+      this.fireEvent("destroy");
       this.id = null;
     }
   },

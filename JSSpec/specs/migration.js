@@ -8,10 +8,10 @@ describe("Automigration", {
   },
   "Loading Fixtures with Refresh": function() {
     JazzRecord.migrate({fixtures: fixtures, refresh:true});
-    value_of(Person.count()).should_be(5);
+    value_of(Vehicle.count()).should_be(2);
   },
   "Loading Fixtures without Refresh": function() {
     JazzRecord.migrate({fixtures:fixtures});
-    value_of(Person.count()).should_be(10);
+    value_of(Vehicle.count()).should_be(4);
   }
 });

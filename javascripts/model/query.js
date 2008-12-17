@@ -47,7 +47,8 @@ JazzRecord.Model.implement({
           record[assoc] = new AssociationLoader(loadHasOne);
         else {
           record[assoc] = loadHasOne(remainingDepth);
-          record[assoc + "OriginalRecordID"] = record[assoc].id;
+          if(record[assoc])
+            record[assoc + "OriginalRecordID"] = record[assoc].id;
         }
       }, this);
       

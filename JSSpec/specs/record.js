@@ -63,7 +63,7 @@ describe("Validation", {
     p.age = "dead";
     value_of(p.isValid()).should_be_false();
     value_of(p.errors).should_include("age");
-    value_of(p.errors.age[0]).should_be("Ya caint be a non-numeric age, genius");
+    value_of(p.errors.age[0]).should_be("ya caint be a non-numeric age, genius");
     // should not save due to incorrect type
     value_of(p.save()).should_be_false();
     value_of(p.errors.age).should_have(2, "items");

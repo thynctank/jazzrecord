@@ -75,10 +75,8 @@ JazzRecord.Record.implement({
       }
     }, this);
 
-    // delete any associated objects if old foreignKey was set but has become unset, autolink if assigned an object    
-    var data = this.getData();
     // reset errors per call to save
-    this.errors = {};    
+    this.errors = {};
     // new records
     if(!this.id) {
       if(this.isValid("create"))
@@ -92,18 +90,18 @@ JazzRecord.Record.implement({
     
     if(this.isValid("save")) {
       if(this.isChanged()) {
-        this.options.model.save(data);
+        this.fireEvent("save");
+        this.options.model.save(this.getData());
         this.reload();
         // overwrite original data so it is no longer "dirty"
         $each(this.options.columns, function(colType, colName) {
           this.originalData[colName] = this[colName];
         }, this);
       }
-      else if(!this.id)
-        this.id = this.options.model.save(data);
-        
-
-      this.fireEvent("save");
+      else if(!this.id) {
+        this.fireEvent("save");
+        this.id = this.options.model.save(this.getData());
+      }
       return true;
     }
     return false;

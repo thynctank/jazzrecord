@@ -83,7 +83,6 @@ JazzRecord.Record.implement({
         this.fireEvent("create");
     }
     else {
-      data.id = this.id;
       if(this.isValid("update") && this.isChanged())
         this.fireEvent("update");
     }
@@ -91,7 +90,9 @@ JazzRecord.Record.implement({
     if(this.isValid("save")) {
       if(this.isChanged()) {
         this.fireEvent("save");
-        this.options.model.save(this.getData());
+        var data = this.getData();
+        data.id = this.id;
+        this.options.model.save(data);
         this.reload();
         // overwrite original data so it is no longer "dirty"
         $each(this.options.columns, function(colType, colName) {

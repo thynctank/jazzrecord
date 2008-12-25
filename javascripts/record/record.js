@@ -56,6 +56,8 @@ JazzRecord.Record = new Class({
       
       $each(this.options.model.options.hasOne, function(assocTable, assoc) {
         this.load(assoc);
+        if(!this[assoc])
+          return;
         this[assoc].updateAttribute(this.options.model.options.foreignKey, null);
         this[assoc + "OriginalRecordID"] = null;
       }, this);
@@ -88,13 +90,13 @@ JazzRecord.Record = new Class({
   load: function(association, depth) {
     if(!depth)
       depth = 0;
-    if(this[association].unloaded) {
+    if(this[association] && this[association].unloaded) {
       this[association] = this[association].loader(depth);
       if($type(this[association]) === "array")
         this[association + "OriginalRecordIDs"] = this[association].map(function(rec) {
           return rec.id;
         });
-      else
+      else if(this[association] && this[association].id)
         this[association + "OriginalRecordID"] = this[association].id;
     }
     return this[association];

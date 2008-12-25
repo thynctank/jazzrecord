@@ -20,7 +20,7 @@ JazzRecord.Record.implement({
     $each(this.options.model.options.hasMany, function(assocTable, assoc) {
       if(this[assoc] && this[assoc].length) {
         var assocModel = JazzRecord.models.get(assocTable);
-
+        
         var originalRecordIDs = this[assoc + "OriginalRecordIDs"];
         
         // save all still-assigned records

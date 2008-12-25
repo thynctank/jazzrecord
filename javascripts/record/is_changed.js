@@ -13,7 +13,7 @@ JazzRecord.Record.implement({
       // if ID was not set but assoc is now set, set ID
       // if ID was not set but is now set, leave be
       // if ID was set and has been changed, reload
-      if(!this.originalData)
+      if(!this.originalData || this.originalData[assocIdCol] == this[assocIdCol])
         return;
       else {
         if(this.originalData[assocIdCol] && !$defined(this[assoc]))

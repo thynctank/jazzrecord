@@ -10,14 +10,18 @@
 
 <script type="text/javascript" src="../javascripts/dependencies/mootools/mootools-core.js"></script>
 <script type="text/javascript" src="../javascripts/dependencies/gears/gears_init.js"></script>
-<script type="text/javascript" src="../build/jazz_record.js"></script>
+
+<script src="../build/jazz_record.js" type="text/javascript" charset="utf-8"></script>
+
 <script type="text/javascript" src="../javascripts/examples/example_models.js"></script>
 <script type="text/javascript" src="../javascripts/examples/example_fixtures.js"></script>
 
 <script type="text/javascript" charset="utf-8">
+// needs to set adapter, turn off debug, reset depth and clear db
   function initJazz() {
     JazzRecord.adapter = new JazzRecord.GearsAdapter({dbFile: "test.db"});
     window.debug = false;
+    JazzRecord.depth = 1;
     JazzRecord.migrate({refresh: true});
   }
 </script>

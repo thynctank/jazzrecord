@@ -5,6 +5,12 @@ JazzRecord.Record.implement({
     $each(this.options.model.options.hasOne, function(assocTable, assoc) {
       // remove original association and replace w/ new one
       if(this[assoc]) {
+        // if unloaded (perhaps due to depth loading?) try loading. If empty after load, bail
+        if(this[assoc].unloaded) {
+          this.load(assoc);
+          if(!this[assoc])
+            return;
+        }
         if(!$defined(this[assoc + "OriginalRecordID"]))
           this[assoc].updateAttribute(foreignKey, this.id);
         else if(this[assoc + "OriginalRecordID"] !== this[assoc].id) {

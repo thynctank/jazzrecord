@@ -6,14 +6,14 @@ JazzRecord is almost feature-complete, and most of it has been tested thoroughly
 
 ##Current Development
 
-Currently underway is work to complete the feature set of JazzRecord, which consists of... finishing off validations, getting manual migrations working, completing callback support, rich dirty records support, implementing add'l finder options, and adding support for encrypted local databases for AIR 1.5.
+Currently underway is work to complete the feature set of JazzRecord, which consists of... getting manual migrations working, rich dirty records support, implementing a few add'l finder options, and adding support for encrypted local databases for AIR 1.5+.
 
-Last bit that needs doing is modifying how records are grabbed out of the db, as JazzRecord could use a speed boost.
-
-We've also got a massive refactor around the corner where we'll be writing a version of JazzRecord minus the MooTools dependency. We're unsure yet whether we'll be maintaining the moo version after that or not, but we're very excited about the possibilities this might open up.
+JazzRecord is now MooTools free, and works with any other JavaScript library. We're _very_ excited about the possibilities this might open up.
 
 ##More Info
 
-For more information, a demo and current documentation, visit [JazzRecord.org](http://www.jazzrecord.org)
+For more information, a demo and the most recent documentation, visit [JazzRecord.org](http://www.jazzrecord.org)
 
 For regular updates on JazzRecord development, follow us on Twitter: [@jazzrecord](http://www.twitter.com/jazzrecord)
+
+To contact Nick Carter regarding bugs or for questions, email me at <thynctank@thynctank.com>

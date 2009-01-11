@@ -1,45 +1,52 @@
 //represents model data in memory, necessary to separate "class" methods from "instance" methods
-JazzRecord.Record = new Class({
-  Implements: [Options, Events],
-  options: {
+JazzRecord.Record = function(options) {
+  var defaults = {
     model: null,
     columns: {},
-    data: {}
-    // onCreate: function(){},
-    // onUpdate: function(){},
-    // onSave: function(){},
-    // onDestroy: function(){},
-  },
-  initialize: function(options) {
-    this.id = null;
-    this.setOptions(options);
-    this.errors = {};
-    
-    // only load originalData if record has been previously saved
-    if(this.options.data.id) {
-      this.id = this.options.data.id;
-      this.originalData = {};
-    }
-    //copy over column data
-    JazzRecord.each(this.options.columns, function(colType, colName) {
-      this[colName] = null;
-      this[colName] = this.options.data[colName];
-      if(this.originalData)
-        this.originalData[colName] = this.options.data[colName];
-      if(colType === "bool") {
-        var boolVal = (this[colName] ? true : false);
-        if(this.originalData)
-          this.originalData[colName] = boolVal;
-        this[colName] = boolVal;
-      }
-    }, this);
+    data: {},
+    onCreate: function(){},
+    onUpdate: function(){},
+    onSave: function(){},
+    onDestroy: function(){}
+  };
 
-    
-    JazzRecord.each(this.options.model.options.recordMethods, function(method, name) {
-      this[name] = method;
-    }, this);
-    
-  },
+  this.id = null;
+  JazzRecord.setOptions.call(this, options, defaults);  
+  this.errors = {};
+  
+  // copy over event handlers (maintains Moo-like behavior)
+  this.onCreate = this.options.onCreate;
+  this.onUpdate = this.options.onUpdate;
+  this.onSave = this.options.onSave;
+  this.onDestroy = this.options.onDestroy;
+  
+  // only load originalData if record has been previously saved
+  if(this.options.data.id) {
+    this.id = this.options.data.id;
+    this.originalData = {};
+  }
+  //copy over column data
+  JazzRecord.each(this.options.columns, function(colType, colName) {
+    this[colName] = null;
+    this[colName] = this.options.data[colName];
+    if(this.originalData)
+      this.originalData[colName] = this.options.data[colName];
+    if(colType === "bool") {
+      var boolVal = (this[colName] ? true : false);
+      if(this.originalData)
+        this.originalData[colName] = boolVal;
+      this[colName] = boolVal;
+    }
+  }, this);
+
+  
+  JazzRecord.each(this.options.model.options.recordMethods, function(method, name) {
+    this[name] = method;
+  }, this);
+  
+};
+
+JazzRecord.Record.prototype = {
   destroy: function() {
     if(!this.id)
       throw("Unsaved record cannot be destroyed");
@@ -105,4 +112,4 @@ JazzRecord.Record = new Class({
     this[name] = val;
     this.save();
   }
-});
+};

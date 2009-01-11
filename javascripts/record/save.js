@@ -2,10 +2,10 @@ JazzRecord.Record.implement({
   save: function() {
     var foreignKey = this.options.model.options.foreignKey;
 
-    $each(this.options.model.options.hasOne, function(assocTable, assoc) {
+    JazzRecord.each(this.options.model.options.hasOne, function(assocTable, assoc) {
       // remove original association and replace w/ new one
       if(this[assoc]) {
-        if(!$defined(this[assoc + "OriginalRecordID"]))
+        if(!JazzRecord.isDefined(this[assoc + "OriginalRecordID"]))
           this[assoc].updateAttribute(foreignKey, this.id);
         else if(this[assoc + "OriginalRecordID"] !== this[assoc].id) {
           var assocModel = JazzRecord.models.get(assocTable);
@@ -17,7 +17,7 @@ JazzRecord.Record.implement({
       }
     }, this);
 
-    $each(this.options.model.options.hasMany, function(assocTable, assoc) {
+    JazzRecord.each(this.options.model.options.hasMany, function(assocTable, assoc) {
       if(this[assoc] && this[assoc].length) {
         var assocModel = JazzRecord.models.get(assocTable);
         
@@ -43,7 +43,7 @@ JazzRecord.Record.implement({
       }
     }, this);
 
-    $each(this.options.model.options.hasAndBelongsToMany, function(assocTable, assoc) {
+    JazzRecord.each(this.options.model.options.hasAndBelongsToMany, function(assocTable, assoc) {
       if(this[assoc] && this[assoc].length) {
         var mappingTable = [this.options.model.table, assocTable].sort().toString().replace(",", "_");
         var assocModelKey = JazzRecord.models.get(assocTable).options.foreignKey;
@@ -95,7 +95,7 @@ JazzRecord.Record.implement({
         this.options.model.save(data);
         this.reload();
         // overwrite original data so it is no longer "dirty"
-        $each(this.options.columns, function(colType, colName) {
+        JazzRecord.each(this.options.columns, function(colType, colName) {
           this.originalData[colName] = this[colName];
         }, this);
       }

@@ -1,6 +1,5 @@
-JazzRecord.Model = new Class({
-  Implements: Options,
-  options: {
+JazzRecord.Model = function(options) {
+  var defaults = {
     // required data
     table: "",
     columns: {},
@@ -17,30 +16,33 @@ JazzRecord.Model = new Class({
     recordMethods: {},
     // validation
     validate: {
-      atCreate: $empty,
-      atUpdate: $empty,
-      atSave:   $empty
+      atCreate: function(){},
+      atUpdate: function(){},
+      atSave:   function(){}
     }
-  },
-  initialize: function(options) {
-    this.setOptions(options);
-    this.table = this.options.table;
-    this.sql = "";
-    
-    $each(this.options.modelMethods, function(method, name) {
-	    this[name] = method;
-    }, this);
-    
-    // add all-important master listing for this model/table relationship
-    if(!JazzRecord.models.has(this.table))
-      JazzRecord.models.set(this.table, this);
-  },
+  };
+
+  JazzRecord.setOptions.call(this, options, defaults);
+
+  this.table = this.options.table;
+  this.sql = "";
+  
+  JazzRecord.each(this.options.modelMethods, function(method, name) {
+    this[name] = method;
+  }, this);
+  
+  // add all-important master listing for this model/table relationship
+  if(!JazzRecord.models.has(this.table))
+    JazzRecord.models.set(this.table, this);
+};
+
+JazzRecord.Model.prototype = {
   //equivalent to Model.new in ActiveRecord
   newRecord: function(options) {
     if(!options)
       options = {};
     var data = {};
-    $each(this.options.columns, function(colVal, colName) {
+    JazzRecord.each(this.options.columns, function(colVal, colName) {
       data[colName] = options[colName] || null;
     });
 
@@ -50,7 +52,7 @@ JazzRecord.Model = new Class({
       data: data
     };
     
-    $each(this.options.events, function(eventHandler, eventName) {
+    JazzRecord.each(this.options.events, function(eventHandler, eventName) {
       recordOptions[eventName] = eventHandler;
     });
 
@@ -61,4 +63,4 @@ JazzRecord.Model = new Class({
     record.save();
     return record;
   }
-});
+};

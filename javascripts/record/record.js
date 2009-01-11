@@ -5,10 +5,10 @@ JazzRecord.Record = new Class({
     model: null,
     columns: {},
     data: {}
-    // onCreate: $empty,
-    // onUpdate: $empty,
-    // onSave: $empty,
-    // onDestroy: $empty,
+    // onCreate: function(){},
+    // onUpdate: function(){},
+    // onSave: function(){},
+    // onDestroy: function(){},
   },
   initialize: function(options) {
     this.id = null;
@@ -25,14 +25,14 @@ JazzRecord.Record = new Class({
       this[colName] = null;
       this[colName] = this.options.data[colName];
       if(this.originalData)
-        this.originalData[colName] = this.options.data[colName];        
+        this.originalData[colName] = this.options.data[colName];
       if(colType === "bool") {
         var boolVal = (this[colName] ? true : false);
         if(this.originalData)
           this.originalData[colName] = boolVal;
         this[colName] = boolVal;
       }
-    }, this);      
+    }, this);
 
     
     JazzRecord.each(this.options.model.options.recordMethods, function(method, name) {

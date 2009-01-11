@@ -33,8 +33,9 @@ JazzRecord.Record.prototype.save = function() {
       JazzRecord.each(this[assoc], function(record) {
         record[foreignKey] = this.id;
         record.save();
-        if(originalRecordIDs.contains(record.id))
-          originalRecordIDs.erase(record.id);
+        var wasInOriginal = false;
+        if(JazzRecord.arrayContainsVal(originalRecordIDs, record.id))
+          JazzRecord.removeFromArray(originalRecordIDs, record.id);
       }, this);
       
       // remove association from no longer-assigned records

@@ -125,7 +125,7 @@ JazzRecord.Record.prototype.validatesNumericalityOf = function(col, errText) {
   var val = this[col];
   if(val && $chk(val) && JazzRecord.getType(val) !== "number") {
     errText = JazzRecord.isDefined(errText) ? errText : (col + " is not a number"); 
-    this.pushError(col, errText);      
+    this.pushError(col, errText);
   }
 };
 

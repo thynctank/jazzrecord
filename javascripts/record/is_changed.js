@@ -12,7 +12,7 @@ JazzRecord.Record.prototype.isChanged = function() {
     // if ID was not set but assoc is now set, set ID
     // if ID was not set but is now set, leave be
     // if ID was set and has been changed, reload
-    if(!this.originalData || this.originalData[assocIdCol] === this[assocIdCol] && this[assoc].id === this[assocIdCol])
+    if(!this.originalData || this.originalData[assocIdCol] === this[assocIdCol])
       return;
     else {
       if(this.originalData[assocIdCol] && !JazzRecord.isDefined(this[assoc]))

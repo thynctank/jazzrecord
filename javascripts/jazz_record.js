@@ -16,7 +16,7 @@ var JazzRecord = {
   },
   
   isDefined: function(obj) {
-    return !(typeof obj === "undefined");
+    return !(typeof obj === "undefined" || obj === null);
   },
 
   // only needs to know basic types and differentiate arrays from other objects
@@ -112,6 +112,34 @@ var JazzRecord = {
     for(var opt in this.parent.options) {
       this.options[opt] = this.options[opt] || this.parent.options[opt];
     }
+  },
+  
+  indexOfValInArray: function(arr, val) {
+    var index = -1;
+    if(arr.indexOf)
+      index = arr.indexOf(val);
+    else {
+      for(var i = 0, l = arr.length; i < l; i++) {
+        if(arr[i] === val) {
+          index = i;
+          break;
+        }
+      }
+    }
+    return index;
+  },
+
+  // check arr for an instance of val
+  arrayContainsVal: function(arr, val) {
+    if(JazzRecord.indexOfValInArray(arr, val) > -1)
+      return true;
+    else
+      return false;
+  },
+  
+  removeFromArray: function(arr, val) {
+    var index = JazzRecord.indexOfValInArray(arr, val);
+    arr.splice(index, 1);
   }
 };
 

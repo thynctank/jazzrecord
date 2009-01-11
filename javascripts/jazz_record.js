@@ -1,3 +1,4 @@
+// Portions of the code in this particular file are inspired or nicked straight from MooTools (http://www.mootools.net)
 var JazzRecord = {
   each: function(collection, iterator, bind) {
     switch(JazzRecord.getType(collection)) {
@@ -22,8 +23,8 @@ var JazzRecord = {
   getType: function(obj) {
     if(obj && typeof obj === "object" && obj.length && typeof obj.length === "number" && obj.sort && typeof obj.sort === "function")
       return "array";
-    else if(obj === null)
-      return "null";
+    else if(typeof obj === "undefined" || obj === null || obj === NaN)
+      return false;
     else
       return typeof obj;
   },
@@ -73,6 +74,12 @@ var JazzRecord = {
     }
     return mergedObject;
   },
+
+  shallowMerge: function(origObj, mergeObj) {
+    for(var prop in mergeObj)
+      origObj[prop] = mergeObj[prop];
+    return origObj;
+  },
   
   setOptions: function(options, defaults) {
     if(!options)
@@ -83,6 +90,15 @@ var JazzRecord = {
     for(var opt in defaults) {
       this.options[opt] = mergedOptions[opt];
     }
+  },
+  
+  // mimic's MooTools' String.substitute() followed by String.clean()
+  replaceAndClean: function(str, options) {
+    for(opt in options) {
+      str = str.replace("{" + opt + "}", options[opt]);
+    }    
+    str = str.replace(/{\w+}/g, "");
+    return str.replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "");
   },
   
   extend: function(baseClass, options) {
@@ -99,9 +115,82 @@ var JazzRecord = {
   }
 };
 
+JazzRecord.Hash = function(obj) {
+  this.data = obj || {};
+};
+
+// used to compare contents of original data and current data in isChanged
+JazzRecord.Hash.toQueryString = function(obj) {
+  var queryStringComponents = [];
+  JazzRecord.each(this.data, function(val, key) {
+    if(obj)
+      key = obj + "[" + key + "]";
+    var result;
+    switch(JazzRecord.getType(val)) {
+      case "object":
+        result = JazzRecord.Hash.toQueryString(val, key);
+        break;
+      case "array":
+        var queryString = {};
+        JazzRecord.each(val, function(arrayVal, i) {
+          queryString[i] = arrayVal;
+        });
+        result = JazzRecord.Hash.toQueryString(queryString, key);
+        break;
+      default:
+        result = key + "=" + encodeURIComponent(val);
+    }
+    if(val)
+      queryStringComponents.push(result);
+  });
+  return queryStringComponents.join("&");
+};
+
+JazzRecord.Hash.prototype = {
+  has: function(key) {
+    if(this.data.hasOwnProperty(key))
+      return true;
+    else
+      return false;
+  },
+  set: function(key, value) {
+    this.data[key] = value;
+  },
+  get: function(key) {
+    return this.data[key];
+  },
+  getLength: function() {
+    var length = 0;
+    for(i in this.data) {
+       if(this.data.hasOwnProperty(i))
+        length++;
+    }
+    return length;
+  },
+  each: function(iterator, bind) {
+    JazzRecord.each(this.data, iterator, bind);
+  },
+  toQueryString: JazzRecord.Hash.toQueryString,
+  getValues: function() {
+    var keys = [];
+    this.each(function(val) {
+      keys.push(val);
+    });
+    return keys;
+  },
+  getKeys: function() {
+    var values = [];
+    this.each(function(val, key) {
+      values.push(key);
+    });
+    return values;
+  }
+};
+
+JazzRecord.models = new JazzRecord.Hash();
+
 // Globals can be overridden in site-specific js
 JazzRecord.depth = 1;
-JazzRecord.models = new Hash();
 JazzRecord.run = function(sql) {
   return JazzRecord.adapter.run(sql);
 };

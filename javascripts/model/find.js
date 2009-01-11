@@ -37,12 +37,12 @@ JazzRecord.Model.prototype.all = function(options) {
 };
 
 JazzRecord.Model.prototype.first = function(options) {
-  options = $extend({limit: 1}, options);
+  options = JazzRecord.shallowMerge({limit: 1}, options);
   return this.select(options);
 };
 
 JazzRecord.Model.prototype.last = function(options) {
-  options = $extend({limit: 1, order: "id"}, options);
+  options = JazzRecord.shallowMerge({limit: 1, order: "id"}, options);
   options.order += " DESC";
   return this.select(options);
 };
@@ -61,7 +61,7 @@ JazzRecord.Model.prototype.select = function(options) {
   this.sql = "SELECT {select} FROM " + this.table + " {conditions} {group} {order} {limit} {offset}";
   var defaultOptions = {select: "*"};
   
-  options = $extend(defaultOptions, options);
+  options = JazzRecord.shallowMerge(defaultOptions, options);
   
   if(!options.select == "*" && !options.select.contains("id"))
     options.select = "id, " + options.select;      
@@ -89,7 +89,7 @@ JazzRecord.Model.prototype.select = function(options) {
       options.conditions = "WHERE id IN (" + options.id + ")";
   }
   
-  this.sql = this.sql.substitute(options).clean();
+  this.sql = JazzRecord.replaceAndClean(this.sql, options);
   
   return this.query(options);
 };

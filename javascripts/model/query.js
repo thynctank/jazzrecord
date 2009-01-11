@@ -15,7 +15,7 @@ JazzRecord.Model.prototype.query = function(options) {
   var data = JazzRecord.adapter.run(mainSql);
   
   if(!data || data.length === 0) {
-    if(this.sql.contains("LIMIT"))
+    if(this.sql.indexOf("LIMIT") > -1)
       return null;
     else
       return [];
@@ -84,20 +84,21 @@ JazzRecord.Model.prototype.query = function(options) {
     });
     
     JazzRecord.each(this.options.hasAndBelongsToMany, function(assocTable, assoc) {
+      var context = this;
       var mappingTable = [this.table, assocTable].sort().toString().replace(",", "_");
       var assocModel = JazzRecord.models.get(assocTable);
       var assocIdCol = assocModel.options.foreignKey;
       if(assocIdCol) {
         var loadHasAndBelongsToMany = function(depth) {
-          var sql = "SELECT * FROM " + mappingTable + " WHERE " + this.options.foreignKey + "=" + record.id;
+          var sql = "SELECT * FROM " + mappingTable + " WHERE " + context.options.foreignKey + "=" + record.id;
           // setup temporary array of mapping records
           var mappingRecords = JazzRecord.adapter.run(sql);
           var assocRecords = [];
           JazzRecord.each(mappingRecords, function(mappingRecord) {
             assocRecords.push(assocModel.first({id: mappingRecord[assocIdCol], depth: depth}));
-          }, this);
+          }, context);
           return assocRecords;
-        }.bind(this);
+        };
         if(options.depth < 1)
           record[assoc] = new JazzRecord.AssociationLoader(loadHasAndBelongsToMany);
         else {
@@ -114,7 +115,7 @@ JazzRecord.Model.prototype.query = function(options) {
     records.push(record);
   }, this);
   
-  if(mainSql.contains("LIMIT 1"))
+  if(mainSql.indexOf("LIMIT 1") > -1)
     return records[0];
   else
     return records;

@@ -1,5 +1,5 @@
 def build_minified_script(output)
-  script_names = %w(jazz_record record/record record/is_changed record/save model/model association_loader model/util record/validate model/query model/save model/destroy model/find migration)
+  script_names = %w(jazz_record adapters record/record record/is_changed record/save model/model association_loader model/util record/validate model/query model/save model/destroy model/find migration)
   
   new_js = ""
   

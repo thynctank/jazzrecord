@@ -29,11 +29,11 @@ JazzRecord.Model.prototype.typeValue = function(field, val) {
         return "'" + val + "'";
       
       case "int":
-        val = val.toInt();
+        val = parseInt(val);
         return JazzRecord.getType(val) === "number" ? val : 0;
       case "number":
       case "float":
-        val = val.toFloat();
+        val = parseFloat(val);
         return JazzRecord.getType(val) === "number" ? val : 0;
       
       case "bool":

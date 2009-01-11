@@ -152,9 +152,9 @@ JazzRecord.loadFixtures = function(fixtures) {
 
   JazzRecord.each(fixtures.mappingTables, function(tableData, tableName) {
     JazzRecord.each(tableData, function(colData) {
-      var dataHash = $H(colData);
+      var dataHash = new JazzRecord.Hash(colData);
       var sql = "INSERT INTO " + tableName + " (" + dataHash.getKeys().toString() + ") VALUES(" + dataHash.getValues().toString() + ")";
-      JazzRecord.adapter.run(sql);      
+      JazzRecord.adapter.run(sql);
     });
   });
 };

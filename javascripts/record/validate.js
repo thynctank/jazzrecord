@@ -34,7 +34,7 @@ JazzRecord.Record.prototype.isValid = function(timing) {
       }
   }
 
-  if ($H(this.errors).toQueryString() === "") {
+  if(new JazzRecord.Hash(this.errors).toQueryString() === "") {
     return true;
   }
   else {
@@ -70,14 +70,14 @@ JazzRecord.Record.prototype.validatesConfirmationOf = function(col, errText) {
 };
 
 JazzRecord.Record.prototype.validatesExclusionOf = function(col, list, errText) {
-  if(this[col] && list.contains(this[col])) {
+  if(this[col] && list.indexOf(this[col]) > -1) {
     errText = JazzRecord.isDefined(errText) ? errText : (col + " is reserved");
     this.pushError(col, errText);
   }
 };
 
 JazzRecord.Record.prototype.validatesInclusionOf = function(col, list, errText) {
-  if(this[col] && !list.contains(this[col])) {
+  if(this[col] && !list.indexOf(this[col]) > -1) {
     errText = JazzRecord.isDefined(errText) ? errText : (col + " is not included in the list");
     this.pushError(col, errText);
   }
@@ -103,7 +103,7 @@ JazzRecord.Record.prototype.validatesLengthOf = function(col, options, errText) 
     wrongLength: error message
 */
   var defaultOptions = {minimum: 0, maximum: Infinity, allowEmpty: true, tooShort: col + " is too short", tooLong: col + " is too long", wrongLength: col + " is not the correct length"};
-  options = $extend(defaultOptions, options);
+  options = JazzRecord.shallowMerge(defaultOptions, options);
   if(!JazzRecord.isDefined(this[col]) || this[col] && this[col].length && this[col].length >= options.minimum && this[col].length <= options.maximum) {
     if(!JazzRecord.isDefined(options.is) || (options.is && this[col].length === options.is))
       return;
@@ -146,7 +146,12 @@ JazzRecord.Record.prototype.validatesAssociated = function(assoc, errText) {
   if(!JazzRecord.isDefined(this[assoc]) || (this[assoc] && this[assoc].unloaded))
     return;
   //handle single- or array-based associations
-  $splat(this[assoc]).each(function(item) {
+  var assocArray = [];
+  if(JazzRecord.getType(this[assoc]) === "array")
+    assocArray = this[assoc];
+  else
+    assocArray = [this[assoc]];
+  JazzRecord.each(assocArray, function(item) {
     if(!item.isValid()) {
       errText = JazzRecord.isDefined(errText) ? errText : assoc + " is not valid";
       this.pushError(assoc, errText);
@@ -178,7 +183,7 @@ JazzRecord.Record.prototype.validatesIsInt = function(col, errText) {
   var val = this[col];
 
   if(JazzRecord.getType(val))
-    if(JazzRecord.getType(val) !== "number" || val.toInt() !== val) {
+    if(JazzRecord.getType(val) !== "number" || parseInt(val) !== val) {
       errText = JazzRecord.isDefined(errText) ? errText : (col + " is not an integer");
       this.pushError(col, errText);      
     }    
@@ -188,7 +193,7 @@ JazzRecord.Record.prototype.validatesIsFloat = function(col, errText) {
   var val = this[col];
   
   if(JazzRecord.getType(val))
-    if(JazzRecord.getType(val) !== "number" || val.toFloat() !== val) {
+    if(JazzRecord.getType(val) !== "number" || parseFloat(val) !== val) {
       errText = JazzRecord.isDefined(errText) ? errText : (col + " is not an float");
       this.pushError(col, errText);      
     }    

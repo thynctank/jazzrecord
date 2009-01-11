@@ -11,7 +11,7 @@ JazzRecord.Record = function(options) {
   };
 
   this.id = null;
-  JazzRecord.setOptions.call(this, options, defaults);  
+  JazzRecord.setOptions.call(this, options, defaults);
   this.errors = {};
   
   // copy over event handlers (maintains Moo-like behavior)
@@ -69,7 +69,7 @@ JazzRecord.Record.prototype = {
         this[assoc + "OriginalRecordID"] = null;
       }, this);
       
-      this.fireEvent("destroy");
+      this.onDestroy();
       this.id = null;
     }
   },
@@ -90,7 +90,7 @@ JazzRecord.Record.prototype = {
       throw("Unsaved record cannot be reloaded");
     else {
       var results = this.options.model.find(this.id);
-      $extend(this, results);
+      JazzRecord.shallowMerge(this, results);
     }
   },
   // for loading as-yet unloaded association data

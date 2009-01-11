@@ -11,8 +11,8 @@ describe("Model", {
         number: "number"
       },
       modelMethods: {
-        "findMiddleBox": function() {
-          var middleNumber = (this.count()/2).round();
+        findMiddleBox: function() {
+          var middleNumber = Math.round(this.count()/2);
           return this.find(middleNumber);
         }
       },
@@ -43,7 +43,7 @@ describe("Model", {
   "Querying user-provided models": function() {
     value_of(BlackBox.count()).should_be(0);
     
-    (3).times(function(i) {
+    JazzRecord.each([0,1,2], function(i) {
       var boxNum = i + 1;
       var b = BlackBox.create({label: "Box " + boxNum, number: boxNum});
       b.content = BoxContent.create({description: "Box Contents " + boxNum});
@@ -66,7 +66,7 @@ describe("Model", {
     value_of(invalidBox.errors).should_include("number");
   },
   "Should allow saving of valid data": function() {
-    var validBox = BlackBox.create({label: "A box full of crap"});
+    var validBox = BlackBox.create({label: "A box full of crap", number: 30});
     value_of(validBox.id).should_not_be_null();
   }
 });
@@ -86,7 +86,8 @@ describe("Finders", {
   },
   "all": function() {
     value_of(Person.all()).should_have(5, "items");
-    value_of(Person.all().getLast().name).should_be("Jesse");
+    var people = Person.all();
+    value_of(people[people.length - 1].name).should_be("Jesse");
     // custom orders
     value_of(Person.all({order: "name desc"})[0].name).should_be("Terri");
     value_of(Person.all({order: "name asc"})[0].name).should_be("David");

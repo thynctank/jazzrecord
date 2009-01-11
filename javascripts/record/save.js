@@ -23,7 +23,7 @@ JazzRecord.Record.prototype.save = function() {
       var originalRecordIDs = this[assoc + "OriginalRecordIDs"];
       
       // save all still-assigned records
-      this[assoc].each(function(record) {
+      JazzRecord.each(this[assoc], function(record) {
         record[foreignKey] = this.id;
         record.save();
         if(originalRecordIDs.contains(record.id))
@@ -31,7 +31,7 @@ JazzRecord.Record.prototype.save = function() {
       }, this);
       
       // remove association from no longer-assigned records
-      originalRecordIDs.each(function(id) {
+      JazzRecord.each(originalRecordIDs, function(id) {
         assocModel.find(id).updateAttribute(foreignKey, null);
       });
       
@@ -51,7 +51,7 @@ JazzRecord.Record.prototype.save = function() {
       // save all still-assigned records, add new mapping records
       var originalRecordIDs = this[assoc + "OriginalRecordIDs"];
       
-      this[assoc].each(function(record) {
+      JazzRecord.each(this[assoc], function(record) {
         record.save();
         if(originalRecordIDs.contains(record.id))
           originalRecordIDs.erase(record.id);
@@ -62,7 +62,7 @@ JazzRecord.Record.prototype.save = function() {
       }, this);
       
       // remove originalRecordIDs from no longer-assigned records
-      originalRecordIDs.each(function(id) {
+      JazzRecord.each(originalRecordIDs, function(id) {
         sql = "DELETE FROM " + mappingTable + " WHERE " + foreignKey + "=" + this.id + " AND " + assocModelKey + "=" + id + ";";
         JazzRecord.adapter.run(sql);
       }, this);

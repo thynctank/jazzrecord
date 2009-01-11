@@ -18,8 +18,8 @@ JazzRecord.Model.prototype.save = function(record) {
     options.data = options.data.slice(0, -2);
   }
   
-  options = $extend(defaultOptions, options);
+  options = JazzRecord.shallowMerge(defaultOptions, options);
   
-  this.sql = this.sql.substitute(options).clean();
+  this.sql = JazzRecord.replaceAndClean(this.sql, options);
   return JazzRecord.adapter.save(this.sql);
 };

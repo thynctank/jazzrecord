@@ -4,7 +4,7 @@ JazzRecord.Record.implement({
     if(!this.id)
       return false;
   
-    $each(this.options.model.options.belongsTo, function(assocTable, assoc) {
+    JazzRecord.each(this.options.model.options.belongsTo, function(assocTable, assoc) {
       var assocModel = JazzRecord.models.get(assocTable);
       var assocIdCol = assocModel.options.foreignKey;
       
@@ -16,11 +16,11 @@ JazzRecord.Record.implement({
       if(!this.originalData || this.originalData[assocIdCol] == this[assocIdCol])
         return;
       else {
-        if(this.originalData[assocIdCol] && !$defined(this[assoc]))
+        if(this.originalData[assocIdCol] && !JazzRecord.isDefined(this[assoc]))
           delete this[assocIdCol];
-        else if(!$defined(this.originalData[assocIdCol]) && this[assoc])
+        else if(!JazzRecord.isDefined(this.originalData[assocIdCol]) && this[assoc])
           this[assocIdCol] = this[assoc].id;
-        else if(!$defined(this.originalData[assocIdCol]) && !$defined(this[assoc]))
+        else if(!JazzRecord.isDefined(this.originalData[assocIdCol]) && !JazzRecord.isDefined(this[assoc]))
           return;
         else if(!this.originalData[assocIdCol] && this[assocIdCol])
           return;

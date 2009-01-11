@@ -33,8 +33,13 @@ JazzRecord.Record.prototype.isValid = function(timing) {
         this.validatesAtSave();
       }
   }
+  
+  var errorPropCount = 0;
+  for(prop in this.errors) {
+    errorPropCount++;
+  }
 
-  if(new JazzRecord.Hash(this.errors).toQueryString() === "") {
+  if(errorPropCount === 0) {
     return true;
   }
   else {

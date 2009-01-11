@@ -34,6 +34,24 @@ describe("Record", {
     p = Person.first();
     value_of(p.name).should_be("Terri");
   },
+  "Destroying a record with hasOne association and depth set to 0 should not cause exception": function() {
+    JazzRecord.depth = 0;
+    JazzRecord.migrate({fixtures:fixtures, refresh: true});
+    p = Person.first();
+    value_of(p.name).should_be("Nick");
+    p.destroy();
+    value_of(Person.count()).should_be(4);
+  },
+  "Destroying a record with hasOne association, depth set to 0, and destroying the associated record first should not cause exception": function() {
+    JazzRecord.depth = 0;
+    JazzRecord.migrate({fixtures:fixtures, refresh: true});
+    p = Person.first();
+    value_of(p.name).should_be("Nick");
+    v = Vehicle.first();
+    v.destroy();
+    p.destroy();
+    value_of(Person.count()).should_be(4);
+  },
   "updateAttribute updates and saves record": function() {
     value_of(p.name).should_be("Terri");
     p.updateAttribute("name", "Tabitha");
@@ -41,10 +59,34 @@ describe("Record", {
     value_of(p.name).should_be("Tabitha");
   },
   "Creating a new record and saving sets ID": function() {
-    var p = Person.newRecord({name: "Winston", age: 33});
+    p = Person.newRecord({name: "Winston", age: 33});
     value_of(p.id).should_be_null();
     p.save();
     value_of(p.id).should_not_be_null();
+  },
+  "Calling save() several times with depth 0 and with hasOne relationship should not raise error exception": function() {
+    JazzRecord.depth = 0;
+    p = Person.newRecord({name: 'Person Test'});
+    p.save();
+    p.name = "Person Test1";
+    p.save();
+    p.name = "Person Test2";
+    p.save();
+    p.name = "Person Test3";
+    p.save();
+    value_of(p.name).should_be('Person Test3');
+  },
+  'Calling save() after fetching records should not raise error exception': function() {
+    JazzRecord.depth = 0;
+    p = Person.last();
+    p.name = "Person Test 1";
+    p.save();
+    p.name = "Person Test 1-1";
+    p.save();
+    p.name = "Person Test 1-1-1";
+    p.save();
+    p.name = "Person Test 1";
+    p.save();
   }
 });
 
@@ -105,6 +147,13 @@ describe("AssociationLoader", {
     value_of(h.people.unloaded).should_be_undefined();
     value_of(h).should_have(2, "people");
     value_of(h.people[0].name).should_be("Nick");
+  },
+  "Retreiving a record and calling save() after load() of unloaded association should not cause exception": function() {
+    h = Home.first({depth: 0});
+    h.address = "123 Test St";
+    h.load("people");
+    h.save();
+    value_of(h.address).should_be('123 Test St');
   },
   "Loading hasAndBelongsToMany": function() {
     var s = Student.first({depth: 0});

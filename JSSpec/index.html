@@ -15,9 +15,11 @@
 <script type="text/javascript" src="../javascripts/examples/example_fixtures.js"></script>
 
 <script type="text/javascript" charset="utf-8">
+// needs to set adapter, turn off debug, reset depth and clear db
   function initJazz() {
     JazzRecord.adapter = new JazzRecord.GearsAdapter({dbFile: "test.db"});
     window.debug = false;
+    JazzRecord.depth = 1;
     JazzRecord.migrate({refresh: true});
   }
 </script>

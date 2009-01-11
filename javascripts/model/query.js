@@ -1,10 +1,10 @@
 JazzRecord.Model.implement({
   query: function(options) {
-    if(!$defined(options))
+    if(!JazzRecord.isDefined(options))
       options = {};
     // run query on SQLite
     // bail if beyond recursion depth
-    if(!$defined(options.depth))
+    if(!JazzRecord.isDefined(options.depth))
       options.depth = JazzRecord.depth;
       
     var remainingDepth = options.depth - 1;
@@ -24,27 +24,27 @@ JazzRecord.Model.implement({
     
     var records = [];
     
-    $each(data, function(rowData) {
+    JazzRecord.each(data, function(rowData) {
       var recordOptions = {
         model: this,
         columns: this.options.columns,
         data: rowData
       };
 
-      $each(this.options.events, function(eventHandler, eventName) {
+      JazzRecord.each(this.options.events, function(eventHandler, eventName) {
         recordOptions[eventName] = eventHandler;
       });
       
       var record = new JazzRecord.Record(recordOptions);
       
-      $each(this.options.hasOne, function(assocTable, assoc) {
+      JazzRecord.each(this.options.hasOne, function(assocTable, assoc) {
         var assocModel = JazzRecord.models.get(assocTable);
         var foreignKey = this.options.foreignKey;
         var loadHasOne = function(depth) {
           return assocModel.findBy(foreignKey, rowData.id, depth);
         };
         if(options.depth < 1)
-          record[assoc] = new AssociationLoader(loadHasOne);
+          record[assoc] = new JazzRecord.AssociationLoader(loadHasOne);
         else {
           record[assoc] = loadHasOne(remainingDepth);
           if(record[assoc])
@@ -52,14 +52,14 @@ JazzRecord.Model.implement({
         }
       }, this);
       
-      $each(this.options.hasMany, function(assocTable, assoc) {
+      JazzRecord.each(this.options.hasMany, function(assocTable, assoc) {
         var assocModel = JazzRecord.models.get(assocTable);
         var foreignKey = this.options.foreignKey;
         var loadHasMany = function(depth) {
           return assocModel.findAllBy(foreignKey, rowData.id, depth);
         };
         if(options.depth < 1)
-          record[assoc] = new AssociationLoader(loadHasMany);
+          record[assoc] = new JazzRecord.AssociationLoader(loadHasMany);
         else {
           record[assoc] = loadHasMany(remainingDepth);
           record[assoc + "OriginalRecordIDs"] = record[assoc].map(function(rec) {
@@ -68,7 +68,7 @@ JazzRecord.Model.implement({
         }
       }, this);
       
-      $each(this.options.belongsTo, function(assocTable, assoc) {
+      JazzRecord.each(this.options.belongsTo, function(assocTable, assoc) {
         var assocModel = JazzRecord.models.get(assocTable);
         var assocIdCol = assocModel.options.foreignKey;
         if(record[assocIdCol]) {
@@ -76,7 +76,7 @@ JazzRecord.Model.implement({
             return assocModel.first({id: record[assocIdCol], depth: depth});
           };
           if(options.depth < 1)
-            record[assoc] = new AssociationLoader(loadBelongsTo);
+            record[assoc] = new JazzRecord.AssociationLoader(loadBelongsTo);
           else
             record[assoc] = loadBelongsTo(remainingDepth);
         }
@@ -84,7 +84,7 @@ JazzRecord.Model.implement({
           record[assoc] = null;
       });
       
-      $each(this.options.hasAndBelongsToMany, function(assocTable, assoc) {
+      JazzRecord.each(this.options.hasAndBelongsToMany, function(assocTable, assoc) {
         var mappingTable = [this.table, assocTable].sort().toString().replace(",", "_");
         var assocModel = JazzRecord.models.get(assocTable);
         var assocIdCol = assocModel.options.foreignKey;
@@ -94,13 +94,13 @@ JazzRecord.Model.implement({
             // setup temporary array of mapping records
             var mappingRecords = JazzRecord.adapter.run(sql);
             var assocRecords = [];
-            $each(mappingRecords, function(mappingRecord) {
+            JazzRecord.each(mappingRecords, function(mappingRecord) {
               assocRecords.push(assocModel.first({id: mappingRecord[assocIdCol], depth: depth}));
             }, this);
             return assocRecords;
           }.bind(this);
           if(options.depth < 1)
-            record[assoc] = new AssociationLoader(loadHasAndBelongsToMany);
+            record[assoc] = new JazzRecord.AssociationLoader(loadHasAndBelongsToMany);
           else {
             record[assoc] = loadHasAndBelongsToMany(remainingDepth);
             record[assoc + "OriginalRecordIDs"] = record[assoc].map(function(rec) {

@@ -13,10 +13,10 @@ Person = new JazzRecord.Model({
   },
   events: {
     onUpdate: function() {
-      puts("A person was updated");
+      JazzRecord.puts("A person was updated");
     },
     onDestroy: function() {
-      puts("A person was destroyed");
+      JazzRecord.puts("A person was destroyed");
     }
   },
   

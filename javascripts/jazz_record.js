@@ -1,81 +1,142 @@
-//firebug/air debug function, kill w/ global var named prod
-function puts(str) {
-  if($defined(window.debug) && window.debug == false)
-    return;
-  if(window.console && console.log) {
-    switch($type(str)) {
-      case "object":
-        console.dir(str);
+var JazzRecord = {
+  each: function(collection, iterator, bind) {
+    switch(JazzRecord.getType(collection)) {
+      case "array": 
+        for(var i = 0, l = collection.length; i < l; i++)
+          iterator.call(bind, collection[i], i);
         break;
-      default:
-        console.log(str );
+      case "object":
+        for(var property in collection) {
+          if(collection.hasOwnProperty(property))
+            iterator.call(bind, collection[property], property);
+        }
+        break;
     }
-  }
-  if(Browser.Features.air && air) {
-    if (air.Introspector && air.Introspector.Console) {
-      switch($type(str)) {
-        case "string":
-          air.Introspector.Console.log(str);
-          break;
+  },
+  
+  isDefined: function(obj) {
+    return !(typeof obj === "undefined");
+  },
+
+  // only needs to know basic types and differentiate arrays from other objects
+  getType: function(obj) {
+    if(typeof obj === "object" && obj.length && typeof obj.length === "number" && obj.sort && typeof obj.sort === "function")
+        return "array";
+    else
+      return typeof obj;
+  },
+  
+  //firebug/air debug function, kill by setting window.debug = false
+  puts: function(obj) {
+    if(JazzRecord.isDefined(window.debug) && window.debug == false)
+      return;
+    if(console && console.log) {
+      switch(JazzRecord.getType(obj)) {
         case "object":
-          air.Introspector.Console.dump(str);
+          console.dir(obj);
           break;
+        default:
+          console.log(obj);
       }
     }
-    else
-      air.trace(str);
+    if(typeof air !== "undefined") {
+      if (air.Introspector && air.Introspector.Console) {
+        switch(JazzRecord.getType(obj)) {
+          case "string":
+            air.Introspector.Console.log(obj);
+            break;
+          case "object":
+            air.Introspector.Console.dump(obj);
+            break;
+        }
+      }
+      else
+        air.trace(obj);
+    }
+  },
+  
+  setOptions: function(options, defaults) {
+    if(!options)
+      options = {};
+    if(!this.options)
+      this.options = {};
+    for(var opt in defaults) {
+      this.options[opt] = options[opt] || defaults[opt];
+    }
+  },
+  
+  extend: function(baseClass, options) {
+    if(!this.options)
+      this.options = {};
+    this.parent = new baseClass(options);
+    for(var prop in this.parent) {
+      this[prop] = this[prop] || this.parent[prop];
+    }
+    // copy base options over
+    for(var opt in this.parent.options) {
+      this.options[opt] = this.options[opt] || this.parent.options[opt];
+    }
   }
-}
+};
 
+JazzRecord.Adapter = function() {
+  this.run = this.count = this.save = function(query) {
+    JazzRecord.puts(query);
+  };
+};
 
-var JazzRecord = {};
-
-JazzRecord.AirAdapter = new Class({
-  Implements: Options,
-  options: {
+JazzRecord.AirAdapter = function(options) {
+  var defaults = {
     dbFile: "jazz_record.db"
-  },
-  initialize: function(options) {
-    this.setOptions(options);
-    this.connection = new air.SQLConnection();
-    this.dbFile = air.File.applicationDirectory.resolvePath(this.options.dbFile);
-    this.connection.open(this.dbFile, air.SQLMode.CREATE);
-    this.statement = new air.SQLStatement();
-    this.statement.sqlConnection = this.connection;
-  },
+  };
+  JazzRecord.setOptions.call(this, options, defaults);
+  JazzRecord.extend.call(this, JazzRecord.Adapter);
+
+  this.connection = new air.SQLConnection();
+  this.dbFile = air.File.applicationDirectory.resolvePath(this.options.dbFile);
+  this.connection.open(this.dbFile, air.SQLMode.CREATE);
+  this.statement = new air.SQLStatement();
+  this.statement.sqlConnection = this.connection;
+};
+
+JazzRecord.AirAdapter.prototype = {
   run: function(query) {
-    puts(query);
+    this.parent.run(query);
     this.statement.text = query;
     this.statement.execute();
     var result = this.statement.getResult();
     return result.data;
   },
+  
   count: function(query) {
-    puts(query);
+    this.parent.count(query);
     query = query.toUpperCase();
     return this.run(query)[0]["COUNT(*)"];
   },
+  
   save: function(query) {
-    puts(query);
+    this.parent.save(query);
     this.statement.text = query;
     this.statement.execute();
     return this.statement.getResult().lastInsertRowID;
   }
-});
+};
 
-JazzRecord.GearsAdapter = new Class({
-  Implements: Options,
-  options: {
+JazzRecord.GearsAdapter = function(options) {
+  var defaults = {
     dbFile: "jazz_record.db"
-  },
-  initialize: function(options) {
-    this.setOptions(options);
-    this.db = google.gears.factory.create("beta.database");
-    this.db.open(this.options.dbFile);
-    this.result = null;
-  },
+  };
+  JazzRecord.setOptions.call(this, options, defaults);
+  JazzRecord.extend.call(this, JazzRecord.Adapter);
+
+  this.db = google.gears.factory.create("beta.database");
+  this.db.open(this.options.dbFile);
+  this.result = null;  
+};
+
+JazzRecord.GearsAdapter.prototype = {
   run: function(query) {
-    puts(query);
+    this.parent.run(query);
     this.result = this.db.execute(query);
     var rows = [];
     while(this.result.isValidRow()) {
@@ -90,29 +151,28 @@ JazzRecord.GearsAdapter = new Class({
     this.result.close();
     return rows;
   },
+  
   count: function(query) {
-    puts(query);
+    this.parent.count(query);
     this.result = this.db.execute(query);
     var number = this.result.field(0);
     this.result.close();
     return number;
   },
+  
   save: function(query) {
-    puts(query);
+    this.parent.save(query);
     this.db.execute(query);
     return this.db.lastInsertRowId;
   }
-});
+};
 
-JazzRecord.TitaniumAdapter = new Class({
-  Extends: JazzRecord.GearsAdapter,
-  initialize: function(options) {
-    this.setOptions(options);
-    this.db = new ti.Database;
-    this.db.open(this.options.dbFile);
-    this.result = null;
-  }
-});
+JazzRecord.TitaniumAdapter = function(options) {
+  JazzRecord.extend.call(this, JazzRecord.GearsAdapter, options);
+  this.db = new ti.Database;
+  this.db.open(this.options.dbFile);
+  this.result = null;
+};
 
 // Globals can be overridden in site-specific js
 JazzRecord.depth = 1;

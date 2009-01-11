@@ -23,7 +23,6 @@ JESSE
 
 UNASSIGNED
 ----------
-* Massive recode to all vanilla JS
 * add createIndex/dropIndex methods in migrations.js (copy names from activerecord, natch)
 * Privatize all non-API methods by adding initial underscores to names, propagate this change across all calls to those methods
 * Figure out tagging format for official versions of JazzRecord

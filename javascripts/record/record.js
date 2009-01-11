@@ -21,7 +21,7 @@ JazzRecord.Record = new Class({
       this.originalData = {};
     }
     //copy over column data
-    $each(this.options.columns, function(colType, colName) {
+    JazzRecord.each(this.options.columns, function(colType, colName) {
       this[colName] = null;
       this[colName] = this.options.data[colName];
       if(this.originalData)
@@ -35,7 +35,7 @@ JazzRecord.Record = new Class({
     }, this);      
 
     
-    $each(this.options.model.options.recordMethods, function(method, name) {
+    JazzRecord.each(this.options.model.options.recordMethods, function(method, name) {
       this[name] = method;
     }, this);
     
@@ -46,7 +46,7 @@ JazzRecord.Record = new Class({
     else {
       this.options.model.destroy(this.id);
       // unlink any hasMany and hasOne records from this record
-      $each(this.options.model.options.hasMany, function(assocTable, assoc) {
+      JazzRecord.each(this.options.model.options.hasMany, function(assocTable, assoc) {
         this.load(assoc);
         this[assoc].each(function(record) {
           record.updateAttribute(this.options.model.options.foreignKey, null);
@@ -54,7 +54,7 @@ JazzRecord.Record = new Class({
         this[assoc + "OriginalRecordIDs"] = [];
       }, this);
       
-      $each(this.options.model.options.hasOne, function(assocTable, assoc) {
+      JazzRecord.each(this.options.model.options.hasOne, function(assocTable, assoc) {
         this.load(assoc);
         if(!this[assoc])
           return;
@@ -68,13 +68,13 @@ JazzRecord.Record = new Class({
   },
   getData : function() {
     var data = {};      
-    $each(this.options.columns, function(colType, colName) {
+    JazzRecord.each(this.options.columns, function(colType, colName) {
       data[colName] = this[colName];
     }, this);
     return data;
   },
   revert: function() {
-    $each(this.options.columns, function(colType, colName) {
+    JazzRecord.each(this.options.columns, function(colType, colName) {
       this[colName] = this.originalData[colName];
     }, this);
   },
@@ -92,7 +92,7 @@ JazzRecord.Record = new Class({
       depth = 0;
     if(this[association] && this[association].unloaded) {
       this[association] = this[association].loader(depth);
-      if($type(this[association]) === "array")
+      if(JazzRecord.getType(this[association]) === "array")
         this[association + "OriginalRecordIDs"] = this[association].map(function(rec) {
           return rec.id;
         });

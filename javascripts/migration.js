@@ -15,13 +15,13 @@ JazzRecord.Migration = {
     JazzRecord.adapter.run(sql);
   },
   createTable: function(name, columns) {
-    if(!($defined(name) && $defined(columns))) {
+    if(!(JazzRecord.isDefined(name) && JazzRecord.isDefined(columns))) {
       return;
     }
     var sql = "CREATE TABLE IF NOT EXISTS " + name;
     if(columns) {
       sql += "(";
-      $each(columns, function(colType, colName) {
+      JazzRecord.each(columns, function(colType, colName) {
         sql += (colName + " " + colType.toUpperCase() + ", ");
       });
       sql = sql.substr(0, sql.length - 2);
@@ -48,7 +48,7 @@ JazzRecord.Migration = {
       return;
     var tempTableName = "temp_"+tableName;
     var tempColumns = [];
-    $each(JazzRecord.models[tableName].options.columns, function(tempColumnType, tempColumnName) {
+    JazzRecord.each(JazzRecord.models[tableName].options.columns, function(tempColumnType, tempColumnName) {
       //alert(tempColumnName+columnName);
       if(tempColumnName != columnName) {
         tempColumns.push({tempColumnName: tempColumnName});
@@ -78,7 +78,7 @@ JazzRecord.migrate = function(options) {
       targetIndex = options.version;
     
     if(targetIndex == startIndex) {
-      puts("Up to date");  
+      JazzRecord.puts("Up to date");
       return;
     }
     
@@ -108,7 +108,7 @@ JazzRecord.migrate = function(options) {
       this.models.each(function(model) {
          model.dropTable();
        
-         $each(model.options.hasAndBelongsToMany, function(assocTable) {
+         JazzRecord.each(model.options.hasAndBelongsToMany, function(assocTable) {
            var mappingTable = [model.table, assocTable].sort().toString().replace(",", "_");
            var sql = "DROP TABLE IF EXISTS " + mappingTable;
            JazzRecord.adapter.run(sql);
@@ -117,13 +117,13 @@ JazzRecord.migrate = function(options) {
       
     this.models.each(function(model) {
       var sql = "CREATE TABLE IF NOT EXISTS " + model.table + "(id INTEGER PRIMARY KEY AUTOINCREMENT";
-      $each(model.options.columns, function(colType, colName) {
+      JazzRecord.each(model.options.columns, function(colType, colName) {
         sql += (", " + colName + " " + colType.toUpperCase());
       });
       sql += ")";
       JazzRecord.adapter.run(sql);
       
-      $each(model.options.hasAndBelongsToMany, function(assocTable, association) {
+      JazzRecord.each(model.options.hasAndBelongsToMany, function(assocTable, association) {
         var mappingTable = [model.table, assocTable].sort().toString().replace(",", "_");
         var localKey = model.options.foreignKey;
         var foreignKey = JazzRecord.models.get(assocTable).options.foreignKey;
@@ -141,8 +141,8 @@ JazzRecord.migrate = function(options) {
 };
 
 JazzRecord.loadFixtures = function(fixtures) {
-  $each(fixtures.tables, function(tableData, tableName) {
-    $each(tableData, function(record) {
+  JazzRecord.each(fixtures.tables, function(tableData, tableName) {
+    JazzRecord.each(tableData, function(record) {
       JazzRecord.models.get(tableName).create(record);
     });
   });
@@ -150,8 +150,8 @@ JazzRecord.loadFixtures = function(fixtures) {
   if(!fixtures.mappingTables)
     return;
 
-  $each(fixtures.mappingTables, function(tableData, tableName) {
-    $each(tableData, function(colData) {
+  JazzRecord.each(fixtures.mappingTables, function(tableData, tableName) {
+    JazzRecord.each(tableData, function(colData) {
       var dataHash = $H(colData);
       var sql = "INSERT INTO " + tableName + " (" + dataHash.getKeys().toString() + ") VALUES(" + dataHash.getValues().toString() + ")";
       JazzRecord.adapter.run(sql);      

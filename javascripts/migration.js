@@ -109,7 +109,7 @@ JazzRecord.migrate = function(options) {
          model.dropTable();
        
          JazzRecord.each(model.options.hasAndBelongsToMany, function(assocTable) {
-           var mappingTable = [model.table, assocTable].sort().toString().replace(",", "_");
+           var mappingTable = [model.table, assocTable].sort().join("_");
            var sql = "DROP TABLE IF EXISTS " + mappingTable;
            JazzRecord.adapter.run(sql);
          });

@@ -61,9 +61,11 @@ JazzRecord.Model.prototype.query = function(options) {
         record[assoc] = new JazzRecord.AssociationLoader(loadHasMany);
       else {
         record[assoc] = loadHasMany(remainingDepth);
-        record[assoc + "OriginalRecordIDs"] = record[assoc].map(function(rec) {
-          return rec.id;
+        var currentOriginalRecordIDs = [];
+        JazzRecord.each(record[assoc], function(rec) {
+          currentOriginalRecordIDs.push(rec.id);
         });
+        record[assoc + "OriginalRecordIDs"] = currentOriginalRecordIDs;
       }
     }, this);
     
@@ -103,9 +105,11 @@ JazzRecord.Model.prototype.query = function(options) {
           record[assoc] = new JazzRecord.AssociationLoader(loadHasAndBelongsToMany);
         else {
           record[assoc] = loadHasAndBelongsToMany(remainingDepth);
-          record[assoc + "OriginalRecordIDs"] = record[assoc].map(function(rec) {
-            return rec.id;
+          var currentOriginalRecordIDs = [];
+          JazzRecord.each(record[assoc], function(rec) {
+            currentOriginalRecordIDs.push(rec.id);
           });
+          record[assoc + "OriginalRecordIDs"] = currentOriginalRecordIDs;
         }
       }
     }, this);

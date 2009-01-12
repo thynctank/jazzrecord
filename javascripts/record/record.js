@@ -99,10 +99,13 @@ JazzRecord.Record.prototype = {
       depth = 0;
     if(this[association] && this[association].unloaded) {
       this[association] = this[association].loader(depth);
-      if(JazzRecord.getType(this[association]) === "array")
-        this[association + "OriginalRecordIDs"] = this[association].map(function(rec) {
-          return rec.id;
+      if(JazzRecord.getType(this[association]) === "array") {
+        var currentOriginalRecordIDs = [];
+        JazzRecord.each(this[association], function(rec) {
+          currentOriginalRecordIDs.push(rec.id);
         });
+        this[association + "OriginalRecordIDs"] = currentOriginalRecordIDs;        
+      }
       else if(this[association] && this[association].id)
         this[association + "OriginalRecordID"] = this[association].id;
     }

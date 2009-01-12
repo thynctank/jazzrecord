@@ -21,7 +21,7 @@ var JazzRecord = {
 
   // only needs to know basic types and differentiate arrays from other objects
   getType: function(obj) {
-    if(obj && typeof obj === "object" && obj.length && typeof obj.length === "number" && obj.sort && typeof obj.sort === "function")
+    if(obj && typeof obj === "object" && JazzRecord.isDefined(obj.length) && typeof obj.length === "number" && obj.sort && typeof obj.sort === "function")
       return "array";
     else if(typeof obj === "undefined" || obj === null || obj === NaN)
       return false;
@@ -31,9 +31,9 @@ var JazzRecord = {
   
   //firebug/air debug function, kill by setting window.debug = false
   puts: function(obj) {
-    if(JazzRecord.isDefined(window.debug) && window.debug == false)
+    if(typeof window !== "undefined" && JazzRecord.isDefined(window.debug) && window.debug == false)
       return;
-    if(console && console.log) {
+    if(typeof console !== "undefined" && console.log) {
       switch(JazzRecord.getType(obj)) {
         case "object":
           console.dir(obj);
@@ -114,7 +114,7 @@ var JazzRecord = {
     }
   },
   
-  indexOfValInArray: function(arr, val) {
+  indexOf: function(arr, val) {
     var index = -1;
     if(arr.indexOf)
       index = arr.indexOf(val);
@@ -131,14 +131,14 @@ var JazzRecord = {
 
   // check arr for an instance of val
   arrayContainsVal: function(arr, val) {
-    if(JazzRecord.indexOfValInArray(arr, val) > -1)
+    if(JazzRecord.indexOf(arr, val) > -1)
       return true;
     else
       return false;
   },
   
   removeFromArray: function(arr, val) {
-    var index = JazzRecord.indexOfValInArray(arr, val);
+    var index = JazzRecord.indexOf(arr, val);
     arr.splice(index, 1);
   }
 };

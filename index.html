@@ -27,7 +27,6 @@
       <script src="javascripts/examples/example_fixtures.js" type="text/javascript" charset="utf-8"></script>
       
     <script type="text/javascript" charset="utf-8">
-      // JazzRecord.adapter = new JazzRecord.AirAdapter({dbFile: "test.db"});
       JazzRecord.adapter = new JazzRecord.GearsAdapter({dbFile: "test.db"});
       JazzRecord.migrate({fixtures: fixtures, refresh: true});
     </script>

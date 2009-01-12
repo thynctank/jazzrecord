@@ -50,7 +50,7 @@ JazzRecord.GearsAdapter = function(options) {
 
   this.db = google.gears.factory.create("beta.database");
   this.db.open(this.options.dbFile);
-  this.result = null;  
+  this.result = null;
 };
 
 JazzRecord.GearsAdapter.prototype = {

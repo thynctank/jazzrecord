@@ -44,15 +44,17 @@ JazzRecord.Record.prototype.save = function() {
       });
       
       // remap originalRecordIDs for new set
-      this[assoc + "OriginalRecordIDs"] = this[assoc].map(function(record) {
-        return record.id;
+      var currentOriginalRecordIDs = [];
+      JazzRecord.each(this[assoc], function(record) {
+        currentOriginalRecordIDs.push(record.id);
       });
+      this[assoc + "OriginalRecordIDs"] = currentOriginalRecordIDs;
     }
   }, this);
 
   JazzRecord.each(this.options.model.options.hasAndBelongsToMany, function(assocTable, assoc) {
     if(this[assoc] && this[assoc].length) {
-      var mappingTable = [this.options.model.table, assocTable].sort().toString().replace(",", "_");
+      var mappingTable = [this.options.model.table, assocTable].sort().join("_");
       var assocModelKey = JazzRecord.models.get(assocTable).options.foreignKey;
       var sql = "";
       
@@ -61,8 +63,8 @@ JazzRecord.Record.prototype.save = function() {
       
       JazzRecord.each(this[assoc], function(record) {
         record.save();
-        if(originalRecordIDs.contains(record.id))
-          originalRecordIDs.erase(record.id);
+        if(JazzRecord.arrayContainsVal(originalRecordIDs, record.id))
+          JazzRecord.removeFromArray(originalRecordIDs, record.id);
         else {
           sql = "INSERT INTO " + mappingTable + " (" + foreignKey + ", " + assocModelKey + ") VALUES(" + this.id + ", " + record.id + ")";
           JazzRecord.adapter.run(sql);
@@ -76,9 +78,11 @@ JazzRecord.Record.prototype.save = function() {
       }, this);
       
       // remap originalRecordIDs for new set
-      this[assoc + "OriginalRecordIDs"] = this[assoc].map(function(record) {
-        return record.id;
+      var currentOriginalRecordIDs = [];
+      JazzRecord.each(this[assoc], function(record) {
+        currentOriginalRecordIDs.pus(record.id);
       });
+      this[assoc + "OriginalRecordIDs"] = currentOriginalRecordIDs;
     }
   }, this);
 

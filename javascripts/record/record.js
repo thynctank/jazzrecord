@@ -84,6 +84,13 @@ JazzRecord.Record.prototype = {
     JazzRecord.each(this.options.columns, function(colType, colName) {
       this[colName] = this.originalData[colName];
     }, this);
+    JazzRecord.each(this.options.model.options.belongsTo, function(assocTable, assoc) {
+      var assocModel = JazzRecord.models.get(assocTable);
+      var assocIdCol = assocModel.options.foreignKey;
+      // reload any associations which are already loaded and have incorrect (not the old) data
+      if(this[assoc] && !this[assoc].unloaded && this[assoc].id !== this[assocIdCol])
+        this[assoc] = assocModel.find({id: this[assocIdCol], depth: 0});
+    }, this);
   },
   reload: function() {
     if(!this.id)

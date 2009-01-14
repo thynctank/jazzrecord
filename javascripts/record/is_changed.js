@@ -6,25 +6,35 @@ JazzRecord.Record.prototype.isChanged = function() {
   JazzRecord.each(this.options.model.options.belongsTo, function(assocTable, assoc) {
     var assocModel = JazzRecord.models.get(assocTable);
     var assocIdCol = assocModel.options.foreignKey;
+
+    // 3 things to check status/existance of
+    // originalData and originalData[assocIdCol] - existance at all
+    // this[assocIdCol] - deleted/changed from originalData
+    // this[assoc] - loaded or not, .id changed
     
-    // if no originalData, leave be
-    // if ID was set but assoc is now null, delete ID
-    // if ID was not set but assoc is now set, set ID
-    // if ID was not set but is now set, leave be
-    // if ID was set and has been changed, reload
-    if(!this.originalData || this.originalData[assocIdCol] === this[assocIdCol])
-      return;
+    if(!this.originalData)
+      return false;
+    
+    if(this[assoc]) {
+      // if unloaded, obviously assoc hasn't changed, just worry about assocIdCol
+      if(this[assoc].unloaded) {
+        if(this[assocIdCol] !== this.originalData[assocIdCol])
+          return true;
+      }
+      else {
+        if(this[assoc].id !== this.originalData[assocIdCol]) {
+          this[assocIdCol] = this[assoc].id;
+          return true;
+        }
+        if(this[assocIdCol] !== this.originalData[assocIdCol])
+          return true;
+      }
+    }
     else {
-      if(this.originalData[assocIdCol] && !JazzRecord.isDefined(this[assoc]))
-        delete this[assocIdCol];
-      else if(!JazzRecord.isDefined(this.originalData[assocIdCol]) && this[assoc])
-        this[assocIdCol] = this[assoc].id;
-      else if(!JazzRecord.isDefined(this.originalData[assocIdCol]) && !JazzRecord.isDefined(this[assoc]))
-        return;
-      else if(!this.originalData[assocIdCol] && this[assocIdCol])
-        return;
-      else if(this.originalData[assocIdCol] != this[assoc].id)
-        this[assocIdCol] = this[assoc].id;
+      if(this.originalData[assocIdCol]) {
+        this[assocIdCol] = null;
+        return true;
+      }
     }
   }, this);
 

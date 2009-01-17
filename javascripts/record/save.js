@@ -80,9 +80,13 @@ JazzRecord.Record.prototype.save = function() {
       // remap originalRecordIDs for new set
       var currentOriginalRecordIDs = [];
       JazzRecord.each(this[assoc], function(record) {
-        currentOriginalRecordIDs.pus(record.id);
+        currentOriginalRecordIDs.push(record.id);
       });
       this[assoc + "OriginalRecordIDs"] = currentOriginalRecordIDs;
+    }
+    else {
+      this[assoc] = [];
+      this[assoc + "OriginalRecordIDs"] = [];
     }
   }, this);
 

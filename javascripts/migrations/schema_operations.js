@@ -1,14 +1,18 @@
-JazzRecord.setupSchema = function() {
-  this.createTable("schema_migrations", {version: "text"});
-  if(JazzRecord.count("SELECT COUNT(*) FROM schema_migrations") == 0) {
+JazzRecord.setupSchema = function(force) {
+  JazzRecord.createTable("schema_migrations", {version: "text"});
+  if(JazzRecord.count("SELECT COUNT(*) FROM schema_migrations") === 0) {
     var sql = "INSERT INTO schema_migrations (version) VALUES(0)";
+    JazzRecord.run(sql);
+  }
+  if(force && JazzRecord.count("SELECT COUNT(*) FROM schema_migrations") === 1) {
+    var sql = "UPDATE schema_migrations set version = 0";
     JazzRecord.run(sql);
   }
 };
 
 JazzRecord.currentSchemaVersion = function() {
   var sql = "SELECT version FROM schema_migrations LIMIT 1";
-  return JazzRecord.run(sql)[0].version;
+  return parseInt(JazzRecord.run(sql)[0].version);
 };
 
 JazzRecord.updateSchemaVersion = function(number) {

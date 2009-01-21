@@ -31,7 +31,7 @@
       // JazzRecord.adapter = new JazzRecord.AirAdapter({dbFile: "test.db"});
       // JazzRecord.adapter = new JazzRecord.TitaniumAdapter({dbFile: "test.db"});
       JazzRecord.adapter = new JazzRecord.GearsAdapter({dbFile: "test.db"});
-      JazzRecord.migrate({migrations: migrations, fixtures: fixtures, refresh: true});
+      JazzRecord.migrate({migrations: migrations});
     </script>
     
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />

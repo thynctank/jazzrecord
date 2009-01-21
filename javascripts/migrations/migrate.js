@@ -10,40 +10,47 @@ JazzRecord.migrate = function(options) {
   // test for apparently-valid obj literal based on migration 1 being present
   if(migrations[1] && JazzRecord.getType(migrations[1]) === "object") {
     JazzRecord.setupSchema();
-    var startIndex = JazzRecord.currentSchemaVersion();
-    var targetIndex = Infinity;
+    var startVersion = JazzRecord.currentSchemaVersion();
+    var targetVersion = Infinity;
 
     // did user specify a migration number?
     if(options.version)
-      targetIndex = options.version;
-    
+      targetVersion = options.version;
+
     // schema is already up to date
-    if(targetIndex === startIndex) {
+    if(targetVersion === startVersion) {
       JazzRecord.puts("Up to date");
       return;
     }
     else {
       // actually handle a migrations object
-      var i = startIndex;
-      while(migrations[i]) {
+      var i = startVersion;
+
+      do {
         // migrate up
-        if(i < targetIndex) {
-          migrations[i].up();
+        if(i < targetVersion) {
           i += 1;
+          if(migrations[i])
+            migrations[i].up();
+          else
+            break;
         }
         // migrate down
         else {
           migrations[i].down();
           i -= 1;
         }
-      }
+
+        JazzRecord.updateSchemaVersion(i);
+      } while(migrations[i])
+      
     }
   }
   else {
     //developer can choose not to use migrations while in dev mode
     
     // Drop tables
-    if(options.refresh)
+    if(options.refresh) {
       this.models.each(function(model) {
          model.dropTable();
        
@@ -53,6 +60,8 @@ JazzRecord.migrate = function(options) {
            JazzRecord.run(sql);
          });
       });
+      JazzRecord.setupSchema(true);
+    }
       
     this.models.each(function(model) {
       var sql = "CREATE TABLE IF NOT EXISTS " + model.table + "(id INTEGER PRIMARY KEY AUTOINCREMENT";

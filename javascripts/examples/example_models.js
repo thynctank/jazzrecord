@@ -1,4 +1,4 @@
-Person = new JazzRecord.Model({
+var Person = new JazzRecord.Model({
   table: "people",
   foreignKey: "person_id",
   belongsTo: { home: "homes"},
@@ -37,7 +37,7 @@ Person = new JazzRecord.Model({
   }
 });
 
-Home = new JazzRecord.Model({
+var Home = new JazzRecord.Model({
   table: "homes",
   foreignKey: "home_id",
   hasMany: { people: "people", students: "students"},
@@ -54,7 +54,7 @@ Home = new JazzRecord.Model({
   }
 });
 
-Vehicle = new JazzRecord.Model({
+var Vehicle = new JazzRecord.Model({
   table: "vehicles",
   foreignKey: "vehicle_id",
   belongsTo: { owner: "people"},
@@ -71,7 +71,7 @@ Vehicle = new JazzRecord.Model({
   }
 });
 
-HighSchoolClass = new JazzRecord.Model({
+var HighSchoolClass = new JazzRecord.Model({
   table: "high_school_classes",
   foreignKey: "high_school_class_id",
   hasAndBelongsToMany: { students: "students"},
@@ -81,7 +81,7 @@ HighSchoolClass = new JazzRecord.Model({
   }
 });
 
-Student = new JazzRecord.Model({
+var Student = new JazzRecord.Model({
   table: "students",
   foreignKey: "student_id",
   belongsTo: { home: "homes"},
@@ -93,7 +93,7 @@ Student = new JazzRecord.Model({
   }
 });
 
-Animal = new JazzRecord.Model({
+var Animal = new JazzRecord.Model({
   table: "animals",
   foreignKey: "animal_id",
   columns: {

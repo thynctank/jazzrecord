@@ -24,61 +24,77 @@ JazzRecord.Record.prototype.save = function() {
   }, this);
 
   JazzRecord.each(this.options.model.options.hasMany, function(assocTable, assoc) {
-    if(this[assoc] && this[assoc].length) {
-      var assocModel = JazzRecord.models.get(assocTable);
+    if(this[assoc]) {
+      if(this[assoc].length) {
+        var assocModel = JazzRecord.models.get(assocTable);
       
-      var originalRecordIDs = this[assoc + "OriginalRecordIDs"];
+        var originalRecordIDs = this[assoc + "OriginalRecordIDs"];
       
-      // save all still-assigned records
-      JazzRecord.each(this[assoc], function(record) {
-        record[foreignKey] = this.id;
-        record.save();
-        var wasInOriginal = false;
-        if(JazzRecord.arrayContainsVal(originalRecordIDs, record.id))
-          JazzRecord.removeFromArray(originalRecordIDs, record.id);
-      }, this);
+        // save all still-assigned records
+        JazzRecord.each(this[assoc], function(record) {
+          record[foreignKey] = this.id;
+          record.save();
+          var wasInOriginal = false;
+          if(JazzRecord.arrayContainsVal(originalRecordIDs, record.id))
+            JazzRecord.removeFromArray(originalRecordIDs, record.id);
+        }, this);
       
-      // remove association from no longer-assigned records
-      JazzRecord.each(originalRecordIDs, function(id) {
-        assocModel.find(id).updateAttribute(foreignKey, null);
-      });
+        // remove association from no longer-assigned records
+        JazzRecord.each(originalRecordIDs, function(id) {
+          assocModel.find(id).updateAttribute(foreignKey, null);
+        });
       
-      // remap originalRecordIDs for new set
-      this[assoc + "OriginalRecordIDs"] = this[assoc].map(function(record) {
-        return record.id;
-      });
+        // remap originalRecordIDs for new set
+        var currentOriginalRecordIDs = [];
+        JazzRecord.each(this[assoc], function(record) {
+          currentOriginalRecordIDs.push(record.id);
+        });
+        this[assoc + "OriginalRecordIDs"] = currentOriginalRecordIDs;
+      }
+    }
+    else {
+      this[assoc] = [];
+      this[assoc + "OriginalRecordIDs"] = [];
     }
   }, this);
 
   JazzRecord.each(this.options.model.options.hasAndBelongsToMany, function(assocTable, assoc) {
-    if(this[assoc] && this[assoc].length) {
-      var mappingTable = [this.options.model.table, assocTable].sort().toString().replace(",", "_");
-      var assocModelKey = JazzRecord.models.get(assocTable).options.foreignKey;
-      var sql = "";
+    if(this[assoc]) {
+      if(this[assoc].length) {
+        var mappingTable = [this.options.model.table, assocTable].sort().join("_");
+        var assocModelKey = JazzRecord.models.get(assocTable).options.foreignKey;
+        var sql = "";
       
-      // save all still-assigned records, add new mapping records
-      var originalRecordIDs = this[assoc + "OriginalRecordIDs"];
+        // save all still-assigned records, add new mapping records
+        var originalRecordIDs = this[assoc + "OriginalRecordIDs"];
       
-      JazzRecord.each(this[assoc], function(record) {
-        record.save();
-        if(originalRecordIDs.contains(record.id))
-          originalRecordIDs.erase(record.id);
-        else {
-          sql = "INSERT INTO " + mappingTable + " (" + foreignKey + ", " + assocModelKey + ") VALUES(" + this.id + ", " + record.id + ")";
+        JazzRecord.each(this[assoc], function(record) {
+          record.save();
+          if(JazzRecord.arrayContainsVal(originalRecordIDs, record.id))
+            JazzRecord.removeFromArray(originalRecordIDs, record.id);
+          else {
+            sql = "INSERT INTO " + mappingTable + " (" + foreignKey + ", " + assocModelKey + ") VALUES(" + this.id + ", " + record.id + ")";
+            JazzRecord.adapter.run(sql);
+          }
+        }, this);
+      
+        // remove originalRecordIDs from no longer-assigned records
+        JazzRecord.each(originalRecordIDs, function(id) {
+          sql = "DELETE FROM " + mappingTable + " WHERE " + foreignKey + "=" + this.id + " AND " + assocModelKey + "=" + id + ";";
           JazzRecord.adapter.run(sql);
-        }
-      }, this);
+        }, this);
       
-      // remove originalRecordIDs from no longer-assigned records
-      JazzRecord.each(originalRecordIDs, function(id) {
-        sql = "DELETE FROM " + mappingTable + " WHERE " + foreignKey + "=" + this.id + " AND " + assocModelKey + "=" + id + ";";
-        JazzRecord.adapter.run(sql);
-      }, this);
-      
-      // remap originalRecordIDs for new set
-      this[assoc + "OriginalRecordIDs"] = this[assoc].map(function(record) {
-        return record.id;
-      });
+        // remap originalRecordIDs for new set
+        var currentOriginalRecordIDs = [];
+        JazzRecord.each(this[assoc], function(record) {
+          currentOriginalRecordIDs.push(record.id);
+        });
+        this[assoc + "OriginalRecordIDs"] = currentOriginalRecordIDs;
+      }
+    }
+    else {
+      this[assoc] = [];
+      this[assoc + "OriginalRecordIDs"] = [];
     }
   }, this);
 

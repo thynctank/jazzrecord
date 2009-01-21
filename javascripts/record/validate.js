@@ -75,14 +75,14 @@ JazzRecord.Record.prototype.validatesConfirmationOf = function(col, errText) {
 };
 
 JazzRecord.Record.prototype.validatesExclusionOf = function(col, list, errText) {
-  if(this[col] && list.indexOf(this[col]) > -1) {
+  if(this[col] && JazzRecord.indexOf(list, this[col]) > -1) {
     errText = JazzRecord.isDefined(errText) ? errText : (col + " is reserved");
     this.pushError(col, errText);
   }
 };
 
 JazzRecord.Record.prototype.validatesInclusionOf = function(col, list, errText) {
-  if(this[col] && !list.indexOf(this[col]) > -1) {
+  if(this[col] && !JazzRecord.indexOf(list, this[col]) > -1) {
     errText = JazzRecord.isDefined(errText) ? errText : (col + " is not included in the list");
     this.pushError(col, errText);
   }
@@ -188,9 +188,9 @@ JazzRecord.Record.prototype.validatesIsInt = function(col, errText) {
   var val = this[col];
 
   if(JazzRecord.getType(val))
-    if(JazzRecord.getType(val) !== "number" || parseInt(val) !== val) {
+    if(JazzRecord.getType(val) !== "number" || parseInt(val, 10) !== val) {
       errText = JazzRecord.isDefined(errText) ? errText : (col + " is not an integer");
-      this.pushError(col, errText);      
+      this.pushError(col, errText);
     }    
 };
 

@@ -84,6 +84,13 @@ JazzRecord.Record.prototype = {
     JazzRecord.each(this.options.columns, function(colType, colName) {
       this[colName] = this.originalData[colName];
     }, this);
+    JazzRecord.each(this.options.model.options.belongsTo, function(assocTable, assoc) {
+      var assocModel = JazzRecord.models.get(assocTable);
+      var assocIdCol = assocModel.options.foreignKey;
+      // reload any associations which are already loaded and have incorrect (not the old) data
+      if(this[assoc] && !this[assoc].unloaded && this[assoc].id !== this[assocIdCol])
+        this[assoc] = assocModel.find({id: this[assocIdCol], depth: 0});
+    }, this);
   },
   reload: function() {
     if(!this.id)
@@ -99,10 +106,13 @@ JazzRecord.Record.prototype = {
       depth = 0;
     if(this[association] && this[association].unloaded) {
       this[association] = this[association].loader(depth);
-      if(JazzRecord.getType(this[association]) === "array")
-        this[association + "OriginalRecordIDs"] = this[association].map(function(rec) {
-          return rec.id;
+      if(JazzRecord.getType(this[association]) === "array") {
+        var currentOriginalRecordIDs = [];
+        JazzRecord.each(this[association], function(rec) {
+          currentOriginalRecordIDs.push(rec.id);
         });
+        this[association + "OriginalRecordIDs"] = currentOriginalRecordIDs;        
+      }
       else if(this[association] && this[association].id)
         this[association + "OriginalRecordID"] = this[association].id;
     }

@@ -28,7 +28,7 @@ JazzRecord.createTable = function(name, columns) {
   if(columns) {
     sql += "(";
     JazzRecord.each(columns, function(colType, colName) {
-      sql += (colName + " " + colType.toUpperCase() + ", ");
+      sql += (colName + " " + colType.toString().toUpperCase() + ", ");
     });
     sql = sql.substr(0, sql.length - 2);
     sql += ")";
@@ -51,26 +51,31 @@ JazzRecord.addColumn = function(tableName, columnName, dataType) {
   JazzRecord.run(sql);
 };
 
-//last three operations will need temp table copy due to sqlite limitations
 JazzRecord.removeColumn = function(tableName, columnName) {
-  tableName = JazzRecord.models[tableName].table;
-  if(!tableName || !JazzRecord.models[tableName].options.columns[columnName])
-    return;
-  var tempTableName = "temp_"+tableName;
-  var tempColumns = [];
-  JazzRecord.each(JazzRecord.models[tableName].options.columns, function(tempColumnType, tempColumnName) {
-    //alert(tempColumnName+columnName);
-    if(tempColumnName != columnName) {
-      tempColumns.push({tempColumnName: tempColumnName});
-    }
-  });
-  alert(tempColumns.toSource());
-  JazzRecord.createTable(tempTableName, tempColumns);
-  // Insert each record into the temp table
-  JazzRecord.dropTable(tableName);
-  JazzRecord.renameTable(tempTableName, tableName);
-  JazzRecord.dropTable(tempTableName);
+   modelobj = JazzRecord.models.get(tableName);
+   tmpCols = {};
+   JazzRecord.each(modelobj.options.columns, function(colType, colName) {
+      if (colName !== columnName) {
+         tmpCols[colName] = colType;
+      }
+   });
+   JazzRecord.dropTable(tableName);
+   JazzRecord.createTable(tableName, tmpCols);
 };
 
-JazzRecord.renameColumn = function(oldName, newName) {};
+JazzRecord.renameColumn = function(tableName, columnName, newColumnName) {
+   modelobj = JazzRecord.models.get(tableName);
+   tmpCols = {};
+   JazzRecord.each(modelobj.options.columns, function(colType, colName) {
+      if (colName !== columnName) {
+         tmpCols[colName] = colType;
+      } 
+      else if (colName === columnName) {
+         tmpCols[newColumnName] = colType;
+      }
+   });
+   JazzRecord.dropTable(tableName);
+   JazzRecord.createTable(tableName, tmpCols);
+
+};
 JazzRecord.changeColumn = function(tableName, columnName, type) {};

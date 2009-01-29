@@ -83,7 +83,7 @@ JazzRecord.migrate = function(options) {
   }
     
   // handle fixture data, if passed in fixtures erase all old data
-  if(options && options.refresh)
+  if(options && options.refresh && JazzRecord.fixtures)
     JazzRecord.loadFixtures();
 };
 

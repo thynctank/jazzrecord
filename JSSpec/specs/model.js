@@ -7,6 +7,7 @@ describe("Model", {
       foreignKey: "black_box_id",
       hasOne: {content: "box_contents"},
       columns: {
+        id: "number",
         label: "string",
         number: "number"
       },
@@ -28,6 +29,7 @@ describe("Model", {
       table: "box_contents",
       belongsTo: {box: "black_boxes"},
       columns: {
+        id: "number",
         description: "string",
         black_box_id: "number"
       }
@@ -39,7 +41,7 @@ describe("Model", {
   after_all: function() {
     delete BlackBox;
     delete BoxContent;
-    JazzRecord.migrate({refresh: true, fixtures: fixtures});
+    initJazz();
   },
   "Querying user-provided models": function() {
     value_of(BlackBox.count()).should_be(0);
@@ -52,7 +54,7 @@ describe("Model", {
     });
     
     value_of(BlackBox.count()).should_be(3);
-    value_of(BlackBox.find(1).getData()).should_be({label: "Box 1", number: 1});
+    value_of(BlackBox.find(1).getData()).should_be({id: 1, label: "Box 1", number: 1});
   },
   "Custom query using modelMethods" : function() {
     value_of(BlackBox.findMiddleBox().getData().label).should_be("Box 2");
@@ -74,7 +76,7 @@ describe("Model", {
 describe("Finders", {
   before_all: function() {
     initJazz();
-    JazzRecord.migrate({fixtures:fixtures, refresh:true});
+    JazzRecord.migrate({refresh:true});
   },
   
   // test for ID or array, custom select, custom order, limit, offset, conditions
@@ -135,7 +137,7 @@ describe("Finders", {
 describe("Finder association loading", {
   before_all: function() {
     initJazz();
-    JazzRecord.migrate({fixtures:fixtures, refresh:true});
+    JazzRecord.migrate({refresh:true});
   },
   "Loading a hasOne association": function() {
     value_of(Person.first().vehicle.model).should_be("Forenza");

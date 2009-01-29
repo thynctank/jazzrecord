@@ -17,9 +17,9 @@
 
 <script type="text/javascript" charset="utf-8">
 // needs to set adapter, turn off debug, reset depth and clear db
+  JazzRecord.adapter = new JazzRecord.GearsAdapter({dbFile: "test.db"});
+  window.debug = false;
   function initJazz() {
-    JazzRecord.adapter = new JazzRecord.GearsAdapter({dbFile: "test.db"});
-    window.debug = false;
     JazzRecord.migrations = migrations;
     JazzRecord.fixtures = fixtures;
     JazzRecord.migrate({refresh: true});

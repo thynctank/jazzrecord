@@ -55,30 +55,28 @@ JazzRecord.addColumn = function(tableName, columnName, dataType) {
 };
 
 JazzRecord.removeColumn = function(tableName, columnName) {
-   modelobj = JazzRecord.models.get(tableName);
+   modelObj = JazzRecord.models.get(tableName);
    tmpCols = {};
-   JazzRecord.each(modelobj.options.columns, function(colType, colName) {
+   JazzRecord.each(modelObj.options.columns, function(colType, colName) {
       if (colName !== columnName) {
          tmpCols[colName] = colType;
       }
    });
-   JazzRecord.dropTable(tableName);
-   JazzRecord.createTable(tableName, tmpCols);
+
+// Retrieve all of our data.
+recordObjects = JazzRecord.run('SELECT * FROM ' + tableName);
+
+// Recreate the table
+JazzRecord.dropTable(tableName);
+JazzRecord.createTable(tableName, tmpCols);
+
+// Repopulate the tables data
+JazzRecord.each(recordObjects, function(recordObj) {
+   delete recordObj[columnName];
+   modelObj.create(recordObj);
+});
+ 
 };
 
-JazzRecord.renameColumn = function(tableName, columnName, newColumnName) {
-   modelobj = JazzRecord.models.get(tableName);
-   tmpCols = {};
-   JazzRecord.each(modelobj.options.columns, function(colType, colName) {
-      if (colName !== columnName) {
-         tmpCols[colName] = colType;
-      } 
-      else if (colName === columnName) {
-         tmpCols[newColumnName] = colType;
-      }
-   });
-   JazzRecord.dropTable(tableName);
-   JazzRecord.createTable(tableName, tmpCols);
-
-};
+JazzRecord.renameColumn = function(tableName, columnName, newColumnName) {};
 JazzRecord.changeColumn = function(tableName, columnName, type) {};

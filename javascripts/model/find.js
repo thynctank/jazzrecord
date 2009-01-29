@@ -90,6 +90,5 @@ JazzRecord.Model.prototype.select = function(options) {
   }
   
   this.sql = JazzRecord.replaceAndClean(this.sql, options);
-  
   return this.query(options);
 };

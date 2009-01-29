@@ -12,7 +12,7 @@ JazzRecord.setupSchema = function(force) {
 
 JazzRecord.currentSchemaVersion = function() {
   var sql = "SELECT version FROM schema_migrations LIMIT 1";
-  return parseInt(JazzRecord.run(sql)[0].version);
+  return parseInt(JazzRecord.run(sql)[0].version, 10);
 };
 
 JazzRecord.updateSchemaVersion = function(number) {
@@ -28,7 +28,10 @@ JazzRecord.createTable = function(name, columns) {
   if(columns) {
     sql += "(";
     JazzRecord.each(columns, function(colType, colName) {
-      sql += (colName + " " + colType.toString().toUpperCase() + ", ");
+      if(colName === "id")
+        sql += "id INTEGER PRIMARY KEY AUTOINCREMENT, ";
+      else
+        sql += (colName + " " + colType.toString().toUpperCase() + ", ");
     });
     sql = sql.substr(0, sql.length - 2);
     sql += ")";

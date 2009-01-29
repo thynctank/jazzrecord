@@ -1,12 +1,26 @@
 // Primary method for initializing JazzRecord via manual or automigration
 JazzRecord.migrate = function(options) {
-  if(!options)
-    options = {};
+  if(JazzRecord.getType(options) === "object") {
+    // Drop tables
+    if(options.refresh) {
+      this.models.each(function(model) {
+         model.dropTable();
+       
+         JazzRecord.each(model.options.hasAndBelongsToMany, function(assocTable) {
+           var mappingTable = [model.table, assocTable].sort().toString().replace(",", "_");
+           var sql = "DROP TABLE IF EXISTS " + mappingTable;
+           JazzRecord.run(sql);
+         });
+      });
+      JazzRecord.setupSchema(true);
+    }
+  }
 
-  var migrations = {};
-  if(options.migrations)
-    migrations = options.migrations;
-    
+  if(JazzRecord.migrations)
+    migrations = JazzRecord.migrations;
+  else
+    return;
+
   // test for apparently-valid obj literal based on migration 1 being present
   if(migrations[1] && JazzRecord.getType(migrations[1]) === "object") {
     JazzRecord.setupSchema();
@@ -14,8 +28,10 @@ JazzRecord.migrate = function(options) {
     var targetVersion = Infinity;
 
     // did user specify a migration number?
-    if(options.version)
-      targetVersion = options.version;
+    if(JazzRecord.getType(options) === "object" && options.number)
+      targetVersion = options.number;
+    else if(JazzRecord.getType(options) === "number")
+      targetVersion = options;
 
     // schema is already up to date
     if(targetVersion === startVersion) {
@@ -30,7 +46,7 @@ JazzRecord.migrate = function(options) {
         // migrate up
         if(i < targetVersion) {
           i += 1;
-          if(migrations[i])
+          if(JazzRecord.isDefined(migrations[i]))
             migrations[i].up();
           else
             break;
@@ -40,33 +56,18 @@ JazzRecord.migrate = function(options) {
           migrations[i].down();
           i -= 1;
         }
-
         JazzRecord.updateSchemaVersion(i);
       } while(migrations[i])
-      
+
     }
   }
   else {
-    //developer can choose not to use migrations while in dev mode
-    
-    // Drop tables
-    if(options.refresh) {
-      this.models.each(function(model) {
-         model.dropTable();
-       
-         JazzRecord.each(model.options.hasAndBelongsToMany, function(assocTable) {
-           var mappingTable = [model.table, assocTable].sort().toString().replace(",", "_");
-           var sql = "DROP TABLE IF EXISTS " + mappingTable;
-           JazzRecord.run(sql);
-         });
-      });
-      JazzRecord.setupSchema(true);
-    }
-      
-    this.models.each(function(model) {
+    //developer can choose to use automigrations while in dev mode
+    JazzRecord.models.each(function(model) {
       var sql = "CREATE TABLE IF NOT EXISTS " + model.table + "(id INTEGER PRIMARY KEY AUTOINCREMENT";
       JazzRecord.each(model.options.columns, function(colType, colName) {
-        sql += (", " + colName + " " + colType.toUpperCase());
+        if(colName !== "id")
+          sql += (", " + colName + " " + colType.toUpperCase());
       });
       sql += ")";
       JazzRecord.run(sql);
@@ -81,14 +82,14 @@ JazzRecord.migrate = function(options) {
       });
     });
   }
-  
-  // handle fixture data, if passed in fixtures erase all old data
-  if(options.fixtures)
-    this.loadFixtures(options.fixtures);
     
+  // handle fixture data, if passed in fixtures erase all old data
+  if(JazzRecord.fixtures)
+    JazzRecord.loadFixtures();
 };
 
-JazzRecord.loadFixtures = function(fixtures) {
+JazzRecord.loadFixtures = function() {
+  var fixtures = JazzRecord.fixtures;
   JazzRecord.each(fixtures.tables, function(tableData, tableName) {
     JazzRecord.each(tableData, function(record) {
       JazzRecord.models.get(tableName).create(record);

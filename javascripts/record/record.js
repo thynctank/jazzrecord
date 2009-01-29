@@ -24,7 +24,17 @@ JazzRecord.Record = function(options) {
   if(this.options.data.id) {
     this.id = this.options.data.id;
     this.originalData = {};
+    
+    this.isNew = function() {
+      return false;
+    };
   }
+  else {
+    this.isNew = function() {
+      return true;
+    };
+  }
+  
   //copy over column data
   JazzRecord.each(this.options.columns, function(colType, colName) {
     this[colName] = null;
@@ -71,6 +81,9 @@ JazzRecord.Record.prototype = {
       
       this.onDestroy();
       this.id = null;
+      this.isNew = function() {
+        return true;
+      };
     }
   },
   getData : function() {

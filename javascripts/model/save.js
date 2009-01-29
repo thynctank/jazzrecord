@@ -4,17 +4,16 @@ JazzRecord.Model.prototype.save = function(record) {
   var defaultOptions = {saveMode: "INSERT INTO", table: this.table, data: this.columnNames() + this.columnValues(record)};
 
   var options = {};
-  if(record.id) {
-    options.id = record.id;
+  if(record.originalData) {
     options.saveMode = "UPDATE";
     options.set = "SET";
-    options.conditions = "WHERE id=" + record.id;
+    options.conditions = "WHERE id=" + record.originalData.id;
     
     options.data = "";
     JazzRecord.each(this.options.columns, function(colType, colName) {
-      // implement association logic
       options.data += colName + "=" + this.typeValue(colName, record[colName]) + ", ";
     }, this);
+    
     options.data = options.data.slice(0, -2);
   }
   

@@ -63,19 +63,15 @@ JazzRecord.removeColumn = function(tableName, columnName) {
       }
    });
 
-// Retrieve all of our data.
 recordObjects = JazzRecord.run('SELECT * FROM ' + tableName);
 
-// Recreate the table
 JazzRecord.dropTable(tableName);
 JazzRecord.createTable(tableName, tmpCols);
 
-// Repopulate the tables data
 JazzRecord.each(recordObjects, function(recordObj) {
    delete recordObj[columnName];
    modelObj.create(recordObj);
 });
- 
 };
 
 JazzRecord.renameColumn = function(tableName, columnName, newColumnName) {};

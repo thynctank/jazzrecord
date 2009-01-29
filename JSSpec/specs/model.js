@@ -33,6 +33,7 @@ describe("Model", {
       }
     });
     
+    JazzRecord.migrations = null;
     JazzRecord.migrate({refresh: true});
   },
   after_all: function() {

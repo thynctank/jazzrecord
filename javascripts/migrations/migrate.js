@@ -16,10 +16,9 @@ JazzRecord.migrate = function(options) {
     }
   }
 
+  var migrations = {};
   if(JazzRecord.migrations)
     migrations = JazzRecord.migrations;
-  else
-    return;
 
   // test for apparently-valid obj literal based on migration 1 being present
   if(migrations[1] && JazzRecord.getType(migrations[1]) === "object") {
@@ -44,7 +43,7 @@ JazzRecord.migrate = function(options) {
 
       do {
         // migrate up
-        if(i < targetVersion) {
+        if(i <= targetVersion) {
           i += 1;
           if(JazzRecord.isDefined(migrations[i]))
             migrations[i].up();
@@ -84,7 +83,7 @@ JazzRecord.migrate = function(options) {
   }
     
   // handle fixture data, if passed in fixtures erase all old data
-  if(JazzRecord.fixtures)
+  if(options && options.refresh)
     JazzRecord.loadFixtures();
 };
 

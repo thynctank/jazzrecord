@@ -12,6 +12,7 @@
 <script src="../build/jazz_record.js" type="text/javascript" charset="utf-8"></script>
 
 <script type="text/javascript" src="../javascripts/examples/example_models.js"></script>
+<script type="text/javascript" src="../javascripts/examples/example_migrations.js"></script>
 <script type="text/javascript" src="../javascripts/examples/example_fixtures.js"></script>
 
 <script type="text/javascript" charset="utf-8">
@@ -19,7 +20,8 @@
   function initJazz() {
     JazzRecord.adapter = new JazzRecord.GearsAdapter({dbFile: "test.db"});
     window.debug = false;
-    JazzRecord.depth = 1;
+    JazzRecord.migrations = migrations;
+    JazzRecord.fixtures = fixtures;
     JazzRecord.migrate({refresh: true});
   }
 </script>

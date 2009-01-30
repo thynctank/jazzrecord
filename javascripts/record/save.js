@@ -126,6 +126,10 @@ JazzRecord.Record.prototype.save = function() {
       this.onSave();
       this.id = this.options.model.save(data);
     }
+    
+    this.isNew = function() {
+      return false;
+    };    
     return true;
   }
   return false;

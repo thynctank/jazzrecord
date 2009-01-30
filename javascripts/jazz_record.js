@@ -29,9 +29,10 @@ var JazzRecord = {
       return typeof obj;
   },
   
-  //firebug/air debug function, kill by setting window.debug = false
+  debug: true,
+  //firebug/air debug function, kill by setting JazzRecord.debug = false
   puts: function(obj) {
-    if(typeof window !== "undefined" && JazzRecord.isDefined(window.debug) && window.debug == false)
+    if(JazzRecord.debug === false)
       return;
     if(typeof console !== "undefined" && console.log) {
       switch(JazzRecord.getType(obj)) {

@@ -54,74 +54,70 @@ JazzRecord.addColumn = function(tableName, columnName, dataType) {
   JazzRecord.run(sql);
 };
 
-var modifyColumn = function(tableName, columnName, options) {
+JazzRecord.modifyColumn = function(tableName, columnName, options) {
   if (!options) {
     throw("MIGRATION_EXCEPTION: Not a valid column modification");
   }
     
-  modelObj = JazzRecord.models.get(tableName);
-  tmpCols = {};
+  var modelObj = JazzRecord.models.get(tableName);
+  var tmpCols = {};
      
-  switch(options["modification"]) {
-    case "remove":
-      JazzRecord.each(modelObj.options.columns, function(colType, colName) {
+  JazzRecord.each(modelObj.options.columns, function(colType, colName) {
+    switch(options["modification"]) {
+      case "remove":
         if (colName !== columnName)
             tmpCols[colName] = colType;
-      });
-    break;
+        break;
     
-    case "rename":
-      JazzRecord.each(modelObj.options.columns, function(colType, colName) {
-        if (colName !== columnName)
+      case "rename":
+        if (colName !== columnName) {
           tmpCols[colName] = colType;
-        else 
+        }
+        else {
           tmpCols[options["newName"]] = colType;
-      });
-    break;
+        }
+        break;
     
-    case "change":
-      JazzRecord.each(modelObj.options.columns, function(colType, colName) {
-        if (colName !== columnName) 
+      case "change":
+        if (colName !== columnName) {
           tmpCols[colName] = colType;
-        else
+        }
+        else {
           tmpCols[colName] = options["newType"];
-      });
-    break;
+        }
+        break;
     
-    default:
-      throw("MIGRATION_EXCEPTION: Not a valid column modification");
-  }
+      default:
+        throw("MIGRATION_EXCEPTION: Not a valid column modification");
+    }
+  });
 
-  recordObjects = JazzRecord.run('SELECT * FROM ' + tableName);
+  var recordObjects = JazzRecord.run('SELECT * FROM ' + tableName);
   JazzRecord.dropTable(tableName);
   JazzRecord.createTable(tableName, tmpCols);
 
-  switch(options["modification"]) {
-    case "remove":
-      JazzRecord.each(recordObjects, function(recordObj) {
+  JazzRecord.each(recordObjects, function(recordObj) {
+    switch(options["modification"]) {
+      case "remove":
         delete recordObj[columnName];
         modelObj.create(recordObj);
-      });
-    break;
+        break;
     
-    case "rename":
-      JazzRecord.each(recordObjects, function(recordObj) {
+      case "rename":
         recordObj[options["newName"]] = recordObj[columnName];
         delete recordObj[columnName];
         modelObj.create(recordObj);
-      });
-    break;
+        break;
     
-    case "change":
-      JazzRecord.each(recordObjects, function(recordObj) {
+      case "change":
         modelObj.create(recordObj);
-      });
-    break;
+        break;
     
-    default:
-      throw("MIGRATION_EXCEPTION: Not a valid column modification");
-  }
-}
+      default:
+        throw("MIGRATION_EXCEPTION: Not a valid column modification");
+    }
+  });
+};
 
 JazzRecord.removeColumn = function(tableName, columnName) {
   JazzRecord.runTransaction(function() {

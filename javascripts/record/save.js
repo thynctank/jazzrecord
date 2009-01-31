@@ -101,7 +101,7 @@ JazzRecord.Record.prototype.save = function() {
   // reset errors per call to save
   this.errors = {};
   // new records
-  if(!this.id) {
+  if(this.isNew()) {
     if(this.isValid("create"))
       this.onCreate();
   }
@@ -114,7 +114,7 @@ JazzRecord.Record.prototype.save = function() {
     var data = this.getData();
     if(this.isChanged()) {
       this.onSave();
-      data.originalData = this.originalData;
+      data.originalData = this.originalData ? this.originalData : {id: this.id};
       this.options.model.save(data);
       this.reload();
       // overwrite original data so it is no longer "dirty"
@@ -129,7 +129,7 @@ JazzRecord.Record.prototype.save = function() {
     
     this.isNew = function() {
       return false;
-    };    
+    };
     return true;
   }
   return false;

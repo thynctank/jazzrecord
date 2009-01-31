@@ -29,7 +29,7 @@ var JazzRecord = {
       return typeof obj;
   },
   
-  debug: true,
+  debug: false,
   //firebug/air debug function, kill by setting JazzRecord.debug = false
   puts: function(obj) {
     if(JazzRecord.debug === false)

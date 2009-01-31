@@ -35,7 +35,6 @@ describe("Model", {
       }
     });
 
-    JazzRecord.debug = true;
     JazzRecord.migrations = null;
     JazzRecord.fixtures = null;
     JazzRecord.migrate({refresh: true});

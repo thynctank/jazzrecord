@@ -34,14 +34,15 @@ describe("Model", {
         black_box_id: "number"
       }
     });
-    
+
     JazzRecord.migrations = null;
+    JazzRecord.fixtures = null;
     JazzRecord.migrate({refresh: true});
   },
   after_all: function() {
+    initJazz();
     delete BlackBox;
     delete BoxContent;
-    initJazz();
   },
   "Querying user-provided models": function() {
     value_of(BlackBox.count()).should_be(0);

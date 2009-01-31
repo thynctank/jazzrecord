@@ -124,7 +124,7 @@ JazzRecord.Record.prototype = {
         JazzRecord.each(this[association], function(rec) {
           currentOriginalRecordIDs.push(rec.id);
         });
-        this[association + "OriginalRecordIDs"] = currentOriginalRecordIDs;        
+        this[association + "OriginalRecordIDs"] = currentOriginalRecordIDs;
       }
       else if(this[association] && this[association].id)
         this[association + "OriginalRecordID"] = this[association].id;

@@ -2,6 +2,7 @@
 
 NICK
 ----
+* Abstract util.js methods to standalone so they migration insertions are not tied to model
 * Test Validation methods
 * Test autolinking/unlinking
 * Add ability to pass multiple colnames to all validates methods
@@ -9,24 +10,21 @@ NICK
 * Test performance
 * Add updateAttributes() method on Record, allow ID cols or association names both in object literal
 * Implement add'l dirty object methods: http://ryandaigle.com/articles/2008/3/31/what-s-new-in-edge-rails-dirty-objects
-* Mimic JStORM's SQL JOIN capabilities?
-* Run JSSpec in AIR/Titanium
 
 DAVID
 -----
 
 JESSE
 -----
-* migration.js - implementing last 3 methods (removeColumn, renameColumn, changeColumn) for
-  sqlite-friendliness
-* Implement update, updateAll on Migration
+* Test migrations
+* add update, updateAll on Model
+* add createIndex/dropIndex methods in schema_operations.js (copy names from activerecord, natch)
 
 UNASSIGNED
 ----------
-* add createIndex/dropIndex methods in migrations.js (copy names from activerecord, natch)
+* Run JSSpec in AIR/Titanium
 * Privatize all non-API methods by adding initial underscores to names, propagate this change across all calls to those methods
-* Figure out tagging format for official versions of JazzRecord
-* Make AIRAdaptor optionally work with encrypted local database
+* Make AIRAdapter optionally work with encrypted local database
 
 IDEAS
 -----

@@ -22,14 +22,14 @@ JazzRecord.Model.prototype.findBy = function(field, value, depth) {
   if(!this.options.columns[field])
     throw("Column " + field + " Does Not Exist in Table " + this.table);
   else
-    return this.select({conditions: field + "=" + this.typeValue(field, value), limit: 1, depth: depth});
+    return this.select({conditions: field + "=" + JazzRecord.typeValue(this.options.columns, field, value), limit: 1, depth: depth});
 };
 
 JazzRecord.Model.prototype.findAllBy = function(field, value, depth) {
   if(!this.options.columns[field])
     throw("Column " + field + " Does Not Exist in Table " + this.table);
   else
-    return this.select({conditions: field + "=" + this.typeValue(field, value), depth: depth});
+    return this.select({conditions: field + "=" + JazzRecord.typeValue(this.options.columns, field, value), depth: depth});
 };
 
 JazzRecord.Model.prototype.all = function(options) {

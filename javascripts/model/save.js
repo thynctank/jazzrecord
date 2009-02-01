@@ -1,7 +1,7 @@
 //insert or update
-JazzRecord.Model.prototype.save = function(record) {
+JazzRecord.save = function(table, cols, record) {
   this.sql = "{saveMode} {table} {set} {data} {conditions}";
-  var defaultOptions = {saveMode: "INSERT INTO", table: this.table, data: this.columnNames() + this.columnValues(record)};
+  var defaultOptions = {saveMode: "INSERT INTO", table: table, data: JazzRecord.columnNames(cols) + JazzRecord.columnValues(cols, record)};
 
   var options = {};
   if(record.originalData) {
@@ -10,8 +10,8 @@ JazzRecord.Model.prototype.save = function(record) {
     options.conditions = "WHERE id=" + record.originalData.id;
     
     options.data = "";
-    JazzRecord.each(this.options.columns, function(colType, colName) {
-      options.data += colName + "=" + this.typeValue(colName, record[colName]) + ", ";
+    JazzRecord.each(cols, function(colType, colName) {
+      options.data += colName + "=" + JazzRecord.typeValue(cols, colName, record[colName]) + ", ";
     }, this);
     
     options.data = options.data.slice(0, -2);
@@ -21,4 +21,8 @@ JazzRecord.Model.prototype.save = function(record) {
   
   this.sql = JazzRecord.replaceAndClean(this.sql, options);
   return JazzRecord.adapter.save(this.sql);
+};
+
+JazzRecord.Model.prototype.save = function(record) {
+  JazzRecord.save(this.table, this.options.columns, record);
 };

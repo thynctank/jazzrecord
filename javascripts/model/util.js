@@ -1,29 +1,29 @@
 //utilities - used in building query strings
-JazzRecord.Model.prototype.columnNames = function() {
+JazzRecord.columnNames = function(cols) {
   var columns = "(";
-  JazzRecord.each(this.options.columns, function(colType, colName) {
+  JazzRecord.each(cols, function(colType, colName) {
     if(colName != "id")
       columns += colName + ", ";
   });
   columns = columns.substr(0, columns.length - 2);
-  return columns + ")";
+  return columns + ")";  
 };
 
-JazzRecord.Model.prototype.columnValues = function(data) {
+JazzRecord.columnValues = function(cols, data) {
   var values = " VALUES(";
-  JazzRecord.each(this.options.columns, function(colType, colName) {
+  JazzRecord.each(cols, function(colType, colName) {
     if(colName != "id")
-      values += this.typeValue(colName, data[colName]) + ", ";
+      values += JazzRecord.typeValue(cols, colName, data[colName]) + ", ";
   }, this);
   values = values.substr(0, values.length - 2);
-  return values + ")";
+  return values + ")";  
 };
 
-JazzRecord.Model.prototype.typeValue = function(field, val) {
+JazzRecord.typeValue = function(cols, field, val) {
   if(val == null)
     return "NULL";
   else
-    switch(this.options.columns[field]) {
+    switch(cols[field]) {
       case "string":
       case "text":
         return "'" + val + "'";

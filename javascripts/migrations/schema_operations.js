@@ -100,17 +100,18 @@ JazzRecord.modifyColumn = function(tableName, columnName, options) {
     switch(options["modification"]) {
       case "remove":
         delete recordObj[columnName];
+        JazzRecord.save(tableName, tmpCols, recordObj);
         modelObj.create(recordObj);
         break;
     
       case "rename":
         recordObj[options["newName"]] = recordObj[columnName];
         delete recordObj[columnName];
-        modelObj.create(recordObj);
+        JazzRecord.save(tableName, tmpCols, recordObj);
         break;
     
       case "change":
-        modelObj.create(recordObj);
+        JazzRecord.save(tableName, tmpCols, recordObj);
         break;
     
       default:

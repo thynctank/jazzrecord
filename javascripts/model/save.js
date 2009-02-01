@@ -2,7 +2,7 @@
 JazzRecord.save = function(table, cols, record) {
   this.sql = "{saveMode} {table} {set} {data} {conditions}";
   var defaultOptions = {saveMode: "INSERT INTO", table: table, data: JazzRecord.columnNames(cols) + JazzRecord.columnValues(cols, record)};
-
+  
   var options = {};
   if(record.originalData) {
     options.saveMode = "UPDATE";
@@ -24,5 +24,5 @@ JazzRecord.save = function(table, cols, record) {
 };
 
 JazzRecord.Model.prototype.save = function(record) {
-  JazzRecord.save(this.table, this.options.columns, record);
+  return JazzRecord.save(this.table, this.options.columns, record);
 };

@@ -101,7 +101,6 @@ JazzRecord.modifyColumn = function(tableName, columnName, options) {
       case "remove":
         delete recordObj[columnName];
         JazzRecord.save(tableName, tmpCols, recordObj);
-        JazzRecord.save(tableName, tmpCols, recordObj);
         break;
     
       case "rename":

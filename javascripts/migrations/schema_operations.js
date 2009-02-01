@@ -101,7 +101,7 @@ JazzRecord.modifyColumn = function(tableName, columnName, options) {
       case "remove":
         delete recordObj[columnName];
         JazzRecord.save(tableName, tmpCols, recordObj);
-        modelObj.create(recordObj);
+        JazzRecord.save(tableName, tmpCols, recordObj);
         break;
     
       case "rename":
@@ -125,7 +125,7 @@ JazzRecord.removeColumn = function(tableName, columnName) {
     var options = {
       modification: "remove"
     };
-    modifyColumn(tableName, columnName, options);
+    JazzRecord.modifyColumn(tableName, columnName, options);
   });
 };
 
@@ -135,7 +135,7 @@ JazzRecord.renameColumn = function(tableName, columnName, newColumnName) {
       modification: "rename",
       newName: newColumnName
     };
-    modifyColumn(tableName, columnName, options);
+    JazzRecord.modifyColumn(tableName, columnName, options);
   });
 };
 JazzRecord.changeColumn = function(tableName, columnName, type) {
@@ -144,6 +144,6 @@ JazzRecord.changeColumn = function(tableName, columnName, type) {
       modification: "change",
       newType: type
     };
-    modifyColumn(tableName, columnName, options);
+    JazzRecord.modifyColumn(tableName, columnName, options);
   });
 };

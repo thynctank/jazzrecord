@@ -2,12 +2,12 @@
 
 NICK
 ----
-* Abstract util.js methods to standalone so they migration insertions are not tied to model
+* Fix Record.destroy on second-order record obj so it doesn't cause problems when followed by call to first-order record obj's save()
 * Test Validation methods
 * Test autolinking/unlinking
-* Add ability to pass multiple colnames to all validates methods
 * Test transactions
 * Test performance
+* Add ability to pass multiple colnames to all validates methods
 * Add updateAttributes() method on Record, allow ID cols or association names both in object literal
 * Implement add'l dirty object methods: http://ryandaigle.com/articles/2008/3/31/what-s-new-in-edge-rails-dirty-objects
 

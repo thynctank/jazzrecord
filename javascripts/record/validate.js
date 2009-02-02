@@ -49,14 +49,14 @@ JazzRecord.Record.prototype.isValid = function(timing) {
 
 JazzRecord.Record.prototype.pushError = function(col, errText) {
   if(!this.errors[col]) {
-    this.errors[col] = [];      
+    this.errors[col] = [];
   }
   this.errors[col].push(errText);
 };
 
 JazzRecord.Record.prototype.validatesAcceptanceOf = function(col, errText) {
   var val = this[col];
-  if(val && $chk(val) && JazzRecord.getType(val) === "boolean")
+  if(val && JazzRecord.isDefined(val) && JazzRecord.getType(val) === "boolean")
     return;
   
   errText = JazzRecord.isDefined(errText) ? errText : (col + " must be accepted");
@@ -123,7 +123,7 @@ JazzRecord.Record.prototype.validatesLengthOf = function(col, options, errText) 
 
 JazzRecord.Record.prototype.validatesNumericalityOf = function(col, errText) {
   var val = this[col];
-  if(val && $chk(val) && JazzRecord.getType(val) !== "number") {
+  if(val && JazzRecord.isDefined(val) && JazzRecord.getType(val) !== "number") {
     errText = JazzRecord.isDefined(errText) ? errText : (col + " is not a number"); 
     this.pushError(col, errText);
   }
@@ -171,7 +171,7 @@ JazzRecord.Record.prototype.validatesIsString = function(col, errText) {
 
   if(JazzRecord.getType(val) && JazzRecord.getType(val) !== "string") {
     errText = JazzRecord.isDefined(errText) ? errText : (col + " is not a string");
-    this.pushError(col, errText);        
+    this.pushError(col, errText);
   }
 };
 
@@ -191,7 +191,7 @@ JazzRecord.Record.prototype.validatesIsInt = function(col, errText) {
     if(JazzRecord.getType(val) !== "number" || parseInt(val, 10) !== val) {
       errText = JazzRecord.isDefined(errText) ? errText : (col + " is not an integer");
       this.pushError(col, errText);
-    }    
+    }
 };
 
 JazzRecord.Record.prototype.validatesIsFloat = function(col, errText) {
@@ -200,6 +200,6 @@ JazzRecord.Record.prototype.validatesIsFloat = function(col, errText) {
   if(JazzRecord.getType(val))
     if(JazzRecord.getType(val) !== "number" || parseFloat(val) !== val) {
       errText = JazzRecord.isDefined(errText) ? errText : (col + " is not an float");
-      this.pushError(col, errText);      
-    }    
+      this.pushError(col, errText);
+    }
 };

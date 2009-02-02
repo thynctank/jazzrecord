@@ -59,31 +59,31 @@ JazzRecord.modifyColumn = function(tableName, columnName, options) {
     throw("MIGRATION_EXCEPTION: Not a valid column modification");
   }
     
-  var modelObj = JazzRecord.models.get(tableName);
-  var tmpCols = {};
+  var model = JazzRecord.models.get(tableName);
+  var newCols = {};
      
-  JazzRecord.each(modelObj.options.columns, function(colType, colName) {
+  JazzRecord.each(model.options.columns, function(colType, colName) {
     switch(options["modification"]) {
       case "remove":
         if (colName !== columnName)
-            tmpCols[colName] = colType;
+            newCols[colName] = colType;
         break;
     
       case "rename":
         if (colName !== columnName) {
-          tmpCols[colName] = colType;
+          newCols[colName] = colType;
         }
         else {
-          tmpCols[options.newName] = colType;
+          newCols[options.newName] = colType;
         }
         break;
     
       case "change":
         if (colName !== columnName) {
-          tmpCols[colName] = colType;
+          newCols[colName] = colType;
         }
         else {
-          tmpCols[colName] = options.newType;
+          newCols[colName] = options.newType;
         }
         break;
     
@@ -94,23 +94,23 @@ JazzRecord.modifyColumn = function(tableName, columnName, options) {
 
   var records = JazzRecord.run('SELECT * FROM ' + tableName);
   JazzRecord.dropTable(tableName);
-  JazzRecord.createTable(tableName, tmpCols);
+  JazzRecord.createTable(tableName, newCols);
 
   JazzRecord.each(records, function(record) {
     switch(options.modification) {
       case "remove":
         delete record[columnName];
-        JazzRecord.save(tableName, tmpCols, record);
+        JazzRecord.save(tableName, newCols, record);
         break;
     
       case "rename":
         record[options.newName] = record[columnName];
         delete record[columnName];
-        JazzRecord.save(tableName, tmpCols, record);
+        JazzRecord.save(tableName, newCols, record);
         break;
     
       case "change":
-        JazzRecord.save(tableName, tmpCols, record);
+        JazzRecord.save(tableName, newCols, record);
         break;
     
       default:

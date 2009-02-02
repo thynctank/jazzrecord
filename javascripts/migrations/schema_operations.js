@@ -74,7 +74,7 @@ JazzRecord.modifyColumn = function(tableName, columnName, options) {
           tmpCols[colName] = colType;
         }
         else {
-          tmpCols[options["newName"]] = colType;
+          tmpCols[options.newName] = colType;
         }
         break;
     
@@ -83,7 +83,7 @@ JazzRecord.modifyColumn = function(tableName, columnName, options) {
           tmpCols[colName] = colType;
         }
         else {
-          tmpCols[colName] = options["newType"];
+          tmpCols[colName] = options.newType;
         }
         break;
     
@@ -92,25 +92,25 @@ JazzRecord.modifyColumn = function(tableName, columnName, options) {
     }
   });
 
-  var recordObjects = JazzRecord.run('SELECT * FROM ' + tableName);
+  var records = JazzRecord.run('SELECT * FROM ' + tableName);
   JazzRecord.dropTable(tableName);
   JazzRecord.createTable(tableName, tmpCols);
 
-  JazzRecord.each(recordObjects, function(recordObj) {
-    switch(options["modification"]) {
+  JazzRecord.each(records, function(record) {
+    switch(options.modification) {
       case "remove":
-        delete recordObj[columnName];
-        JazzRecord.save(tableName, tmpCols, recordObj);
+        delete record[columnName];
+        JazzRecord.save(tableName, tmpCols, record);
         break;
     
       case "rename":
-        recordObj[options["newName"]] = recordObj[columnName];
-        delete recordObj[columnName];
-        JazzRecord.save(tableName, tmpCols, recordObj);
+        record[options.newName] = record[columnName];
+        delete record[columnName];
+        JazzRecord.save(tableName, tmpCols, record);
         break;
     
       case "change":
-        JazzRecord.save(tableName, tmpCols, recordObj);
+        JazzRecord.save(tableName, tmpCols, record);
         break;
     
       default:

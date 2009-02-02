@@ -153,7 +153,14 @@ describe("Validation", {
     value_of(p.errors).should_be({});
   },
   "validatesFormatOf should verify the property value matches a regex": function() {
-    
+    p.name = "Nick Carter";
+    // enforce last name, first name format
+    p.validatesFormatOf("name", /\w+, \w+/, "name is not last name, first name");
+    value_of(p.errors.name[0]).should_be("name is not last name, first name");
+    p.errors = {};
+    p.name = "Carter, Nick";
+    p.validatesFormatOf("name", /\w+, \w+/, "name is not last name, first name");
+    value_of(p.errors).should_be({});
   }
 });
 

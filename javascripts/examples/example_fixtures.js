@@ -1,11 +1,11 @@
 var fixtures = {
   tables: {
     people: [
-      {name: "Nick", age: 28, home_id: 1, has_vehicle: true},
-      {name: "Terri", age: 32, home_id: 1, has_vehicle: true},
-      {name: "David", age: 23},
-      {name: "Karen", age: 30},
-      {name: "Jesse", age: 24, has_vehicle: true}
+      {name: "Nick", age: 28, gender: "m", home_id: 1, has_vehicle: true},
+      {name: "Terri", age: 32, gender: "f", home_id: 1, has_vehicle: true},
+      {name: "David", age: 23, gender: "m"},
+      {name: "Karen", age: 30, gender: "f"},
+      {name: "Jesse", age: 24, gender: "m", has_vehicle: true}
     ],
     homes: [
       {address: "4605 Deming Ave"},

@@ -82,7 +82,7 @@ JazzRecord.Record.prototype.validatesExclusionOf = function(col, list, errText) 
 };
 
 JazzRecord.Record.prototype.validatesInclusionOf = function(col, list, errText) {
-  if(this[col] && !JazzRecord.indexOf(list, this[col]) > -1) {
+  if(this[col] && !(JazzRecord.indexOf(list, this[col]) > -1)) {
     errText = JazzRecord.isDefined(errText) ? errText : (col + " is not included in the list");
     this.pushError(col, errText);
   }

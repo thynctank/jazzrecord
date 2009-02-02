@@ -27,7 +27,7 @@ JazzRecord.migrate = function(options) {
     var targetVersion = Infinity;
 
     // did user specify a migration number?
-    if(JazzRecord.getType(options) === "object" && options.number)
+    if(JazzRecord.getType(options) === "object" && JazzRecord.isDefined(options.number))
       targetVersion = options.number;
     else if(JazzRecord.getType(options) === "number")
       targetVersion = options;

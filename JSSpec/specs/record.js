@@ -114,6 +114,46 @@ describe("Validation", {
     value_of(p.save()).should_be_false();
     value_of(p.errors.age).should_have(1, "items");
     value_of(p.errors.age[0]).should_be("age can't be empty, null or blank");
+  },
+  "validatesAcceptanceOf should verify a bool has been set to true": function() {
+    p.has_vehicle = false;
+    value_of(p.errors).should_be({});
+    p.validatesAcceptanceOf("has_vehicle");
+    value_of(p.errors.has_vehicle[0]).should_be("has_vehicle must be accepted");
+    p.errors = {};
+    p.has_vehicle = true;
+    p.validatesAcceptanceOf("has_vehicle");
+    value_of(p.errors).should_be({});
+  },
+  "validatesConfirmationOf should verify a second confirming property has been set": function() {
+    p.password = "simplepassword";
+    p.validatesConfirmationOf("password");
+    value_of(p.errors.password[0]).should_be("password doesn't match confirmation");
+    p.errors = {};
+    p.password_confirmation = "simplepassword";
+    p.validatesConfirmationOf("password");
+    value_of(p.errors).should_be({});
+  },
+  "validatesExclusionOf should verify no elements from the list are used for the given property": function() {
+    p.password = "password";
+    p.validatesExclusionOf("password", ["password", "pass", "idiotic_password"]);
+    value_of(p.errors.password[0]).should_be("password is reserved");
+    p.errors = {};
+    p.password = "waybetterpassword";
+    p.validatesExclusionOf("password", ["password", "pass", "idiotic_password"]);
+    value_of(p.errors).should_be({});
+  },
+  "validatesInclusionOf should verify an element from the list is used for the given property": function() {
+    p.gender = "robot";
+    p.validatesInclusionOf("gender", ["m", "f"], "gender must be m or f");
+    value_of(p.errors.gender[0]).should_be("gender must be m or f");
+    p.errors = {};
+    p.gender = "m";
+    p.validatesInclusionOf("gender", ["m", "f"], "gender must be m or f");
+    value_of(p.errors).should_be({});
+  },
+  "validatesFormatOf should verify the property value matches a regex": function() {
+    
   }
 });
 

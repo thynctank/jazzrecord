@@ -61,5 +61,13 @@ var migrations = {
       JazzRecord.dropTable("homes");
       JazzRecord.dropTable("people");
     }
+  },
+  2: {
+    up: function() {
+      JazzRecord.removeColumn("people", "income");
+    },
+    down: function() {
+      JazzRecord.addColumn("people", "income", "float");
+    }
   }
 };

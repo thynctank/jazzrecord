@@ -32,33 +32,30 @@ JazzRecord.migrate = function(options) {
     else if(JazzRecord.getType(options) === "number")
       targetVersion = options;
 
-    // schema is already up to date
-    if(targetVersion === startVersion) {
-      JazzRecord.puts("Up to date");
-      return;
-    }
-    else {
-      // actually handle a migrations object
-      var i = startVersion;
+    // actually handle a migrations object
+    var i = startVersion;
 
-      do {
-        // migrate up
-        if(i <= targetVersion) {
-          i += 1;
-          if(JazzRecord.isDefined(migrations[i]))
-            migrations[i].up();
-          else
-            break;
-        }
-        // migrate down
-        else {
-          migrations[i].down();
-          i -= 1;
-        }
-        JazzRecord.updateSchemaVersion(i);
-      } while(migrations[i])
-
-    }
+    do {
+      // schema is already up to date
+      if(i === targetVersion) {
+        JazzRecord.puts("Up to date");
+        return;
+      }
+      // migrate up
+      else if(i < targetVersion) {
+        i += 1;
+        if(JazzRecord.isDefined(migrations[i]))
+          migrations[i].up();
+        else
+          break;
+      }
+      // migrate down
+      else {
+        migrations[i].down();
+        i -= 1;
+      }
+      JazzRecord.updateSchemaVersion(i);
+    } while(migrations[i]);
   }
   else {
     //developer can choose to use automigrations while in dev mode

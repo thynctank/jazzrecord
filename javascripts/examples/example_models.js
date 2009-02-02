@@ -9,7 +9,6 @@ var Person = new JazzRecord.Model({
     age: "number",
     gender: "text",
     home_id: "number",
-    income: "float",
     has_vehicle: "bool"
   },
   events: {
@@ -27,7 +26,6 @@ var Person = new JazzRecord.Model({
       this.validatesLengthOf("name", {minimum: 4});
       this.validatesPresenceOf("age");
       this.validatesIsInt("age");
-      this.validatesIsFloat("income");
       this.validatesInclusionOf("gender", ["m", "f"], "gender must be m or f");
       this.validatesExclusionOf("age", [111], "we don't like eleventy-one year olds");
       this.validatesAssociated("vehicle");

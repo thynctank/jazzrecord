@@ -2,8 +2,7 @@
 JazzRecord.columnNames = function(cols) {
   var columns = "(";
   JazzRecord.each(cols, function(colType, colName) {
-    if(colName != "id")
-      columns += colName + ", ";
+    columns += colName + ", ";
   });
   columns = columns.substr(0, columns.length - 2);
   return columns + ")";  
@@ -12,8 +11,7 @@ JazzRecord.columnNames = function(cols) {
 JazzRecord.columnValues = function(cols, data) {
   var values = " VALUES(";
   JazzRecord.each(cols, function(colType, colName) {
-    if(colName != "id")
-      values += JazzRecord.typeValue(cols, colName, data[colName]) + ", ";
+    values += JazzRecord.typeValue(cols, colName, data[colName]) + ", ";
   }, this);
   values = values.substr(0, values.length - 2);
   return values + ")";  

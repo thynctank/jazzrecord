@@ -40,11 +40,12 @@ describe("Manual Migrations", {
                 brand: 'text'
             }
         });
+        JazzRecord.migrate({refresh: true});
         value_of(Caffeine.count()).should_be(0);
         Caffeine.create({
            brand: 'jolt'
         });
-        value_of(Caffeine.count()).should_be(1);       
+        value_of(Caffeine.count()).should_be(1);
     },
     
     "Adding a new column": function() {
@@ -52,8 +53,17 @@ describe("Manual Migrations", {
           brand: 'bawls',
           caffeineContent: 9000
       });
-      value_of(Caffeine.last().caffeineContent).should_be(undefined);      
+      value_of(Caffeine.last().caffeineContent).should_be(undefined);
       JazzRecord.addColumn('caffeine', 'caffeineContent',"int");
+
+      Caffeine = new JazzRecord.Model({
+          table: 'caffeine',
+          columns: {
+              id: 'int',
+              brand: 'text',
+              caffeineContent: "int"
+          }
+      });
       
       Caffeine.create({
           brand: 'fullthrottle',

@@ -6,7 +6,7 @@ JazzRecord is almost feature-complete, and most of it has been tested thoroughly
 
 ##Current Development
 
-Currently underway is work to complete the feature set of JazzRecord, which consists of... getting manual migrations working, rich dirty records support, implementing a few add'l finder options, and adding support for encrypted local databases for AIR 1.5+.
+Currently underway is work to complete the feature set of JazzRecord, which consists of... asynchronous support (primarily for HTML5) rich dirty records support, implementing a few add'l finder options, and adding support for encrypted local databases for AIR 1.5+. Palm Pre and Titanium PR2 are two new target platforms we aim to support in the near future.
 
 JazzRecord is now MooTools free, and works with any other JavaScript library. We're _very_ excited about the possibilities this might open up.
 

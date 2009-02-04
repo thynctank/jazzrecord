@@ -8,6 +8,56 @@ JazzRecord.setupSchema = function(force) {
     var sql = "UPDATE schema_migrations set version = 0";
     JazzRecord.run(sql);
   }
+  JazzRecord.createTable("schema_definitions", {
+    id: "number",
+    table_name: "text",
+    column_names: "text",
+    column_types: "text"
+  });
+};
+
+JazzRecord.schema = new JazzRecord.Model({
+  table: "schema_definitions",
+  columns: {
+    id: "number",
+    table_name: "text",
+    column_names: "text",
+    column_types: "text"
+  }
+});
+
+JazzRecord.writeSchema = function(tableName, cols) {
+  if(tableName === "schema_definitions" || tableName === "schema_migrations")
+    return;
+  var sql = "";
+  var colsHash = new JazzRecord.Hash(cols);
+  var cols = colsHash.getKeys().join();
+  var types = colsHash.getValues().join();
+  var table = JazzRecord.schema.findBy("table_name", tableName);
+  if(table) {
+    table.column_names = cols;
+    table.column_types = types;
+  }
+  else {
+    JazzRecord.schema.create({
+      table_name: tableName,
+      column_names: cols,
+      column_types: types
+    });
+  }
+};
+
+JazzRecord.readSchema = function(tableName) {
+  if(tableName === "schema_definitions" || tableName === "schema_migrations")
+    return;
+  var table = JazzRecord.schema.findBy("table_name", tableName);
+  var column_names = table.column_names.split(",");
+  var column_types = table.column_types.split(",");
+  var cols = {};
+  JazzRecord.each(column_names, function(col, i) {
+    cols[col] = types[i];
+  });
+  return cols;
 };
 
 JazzRecord.currentSchemaVersion = function() {
@@ -37,21 +87,29 @@ JazzRecord.createTable = function(name, columns) {
     sql += ")";
     JazzRecord.run(sql);
   }
+  JazzRecord.writeSchema(name, columns);
 };
 
 JazzRecord.dropTable = function(name) {
   var sql = "DROP TABLE " + name;
   JazzRecord.run(sql);
+  var schemaTable = JazzRecord.schema.findBy("table_name", name);
+  schemaTable.destroy();
 };
 
 JazzRecord.renameTable = function(oldName, newName) {
   var sql = "ALTER TABLE " + oldName + " RENAME TO " + newName;
   JazzRecord.run(sql);
+  var schemaTable = JazzRecord.schema.findBy("table_name", oldName);
+  schemaTable.updateAttribute("table_name", newName);
 };
 
 JazzRecord.addColumn = function(tableName, columnName, dataType) {
   var sql = "ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + dataType.toUpperCase();
   JazzRecord.run(sql);
+  var cols = JazzRecord.readSchema(tableName);
+  cols[columnName] = dataType;
+  JazzRecord.writeSchema(tableName, cols);
 };
 
 JazzRecord.modifyColumn = function(tableName, columnName, options) {
@@ -65,12 +123,12 @@ JazzRecord.modifyColumn = function(tableName, columnName, options) {
   JazzRecord.each(model.options.columns, function(colType, colName) {
     switch(options["modification"]) {
       case "remove":
-        if (colName !== columnName)
-            newCols[colName] = colType;
+        if(colName !== columnName)
+          newCols[colName] = colType;
         break;
     
       case "rename":
-        if (colName !== columnName) {
+        if(colName !== columnName) {
           newCols[colName] = colType;
         }
         else {
@@ -79,7 +137,7 @@ JazzRecord.modifyColumn = function(tableName, columnName, options) {
         break;
     
       case "change":
-        if (colName !== columnName) {
+        if(colName !== columnName) {
           newCols[colName] = colType;
         }
         else {

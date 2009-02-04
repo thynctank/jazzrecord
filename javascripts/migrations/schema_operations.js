@@ -37,6 +37,7 @@ JazzRecord.writeSchema = function(tableName, cols) {
   if(table) {
     table.column_names = cols;
     table.column_types = types;
+    table.save();
   }
   else {
     JazzRecord.schema.create({
@@ -55,7 +56,7 @@ JazzRecord.readSchema = function(tableName) {
   var column_types = table.column_types.split(",");
   var cols = {};
   JazzRecord.each(column_names, function(col, i) {
-    cols[col] = types[i];
+    cols[col] = column_types[i];
   });
   return cols;
 };

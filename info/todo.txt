@@ -2,6 +2,7 @@
 
 NICK
 ----
+* Divorce modifyColumn from model dependency. Need to be able to grab current schema for a table at any given time. Store schema data in table?
 * Fix Record.destroy on second-order record obj so it doesn't cause problems when followed by call to first-order record obj's save()
 * Test Validation methods
 * Test autolinking/unlinking

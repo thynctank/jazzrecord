@@ -99,47 +99,25 @@ describe("Manual Migrations", {
     },
     "Adding a column": function() {
       value_of(Caffeine.last().caffeineContent).should_be(undefined);
-      Caffeine = new JazzRecord.Model({
-        table: 'caffeine',
-        columns: {
-          id: 'int',
-          brand: 'text',
-          caffeineContent: 'int'
-        }
-      });
       JazzRecord.migrate(2);
       Caffeine.create({brand: "Bawls", caffeineContent: 9000});
       value_of(Caffeine.last().caffeineContent).should_be(9000);
     },
     "Renaming a column": function() {
       value_of(JazzRecord.currentSchemaVersion()).should_be(2);
-      Caffeine = new JazzRecord.Model({
-        table: 'caffeine',
-        columns: {
-          id: 'int',
-          brand: 'text',
-          caffeine: 'int'
-        }
-      });
       JazzRecord.migrate(3);
       value_of(JazzRecord.currentSchemaVersion()).should_be(3);
       Caffeine.create({brand: "Bawls", caffeine: 5000});
       value_of(Caffeine.last().caffeine).should_be(5000);
     },
     "Removing a column": function() {
-      Caffeine = new JazzRecord.Model({
-        table: 'caffeine',
-        columns: {
-          id: 'int',
-          brand: 'text',
-        }
-      });
       JazzRecord.migrate(4);
       value_of(JazzRecord.currentSchemaVersion()).should_be(4);
       Caffeine.create({brand: "Bawls" });
-      value_of(Caffeine.last().caffeine).should_be(undefined);
+      value_of(Caffeine.last().caffeine).should_be(null);
     },
     "Changing a columns type": function() {
+      JazzRecord.debug = true;
       value_of(JazzRecord.currentSchemaVersion()).should_be(4);
       JazzRecord.migrate(5);
       value_of(JazzRecord.currentSchemaVersion()).should_be(5);

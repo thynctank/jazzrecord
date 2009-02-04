@@ -161,7 +161,73 @@ describe("Validation", {
     p.name = "Carter, Nick";
     p.validatesFormatOf("name", /\w+, \w+/, "name is not last name, first name");
     value_of(p.errors).should_be({});
-  }
+  },
+  "validatesNumericalityOf should verify the property is numeric or int": function() {
+    p.age = "shfify shfive";
+    p.validatesNumericalityOf("age", "must be numeric");
+    value_of(p.errors.age[0]).should_be("must be numeric");
+    p.errors = {};
+    
+    p.age = 1.25;
+    p.validatesNumericalityOf("age", "must be numeric");
+    value_of(p.errors).should_be({});
+    
+    p.age = 5;
+    p.validatesNumericalityOf("age", "must be numeric");
+    value_of(p.errors).should_be({});
+  },
+   "validatesPresenceOf should verify the property is not null or empty": function() {
+    p.name = null;
+    p.validatesPresenceOf("name", "can't be null");
+    value_of(p.errors.name[0]).should_be("can't be null");
+    p.errors = {};
+    
+    p.name = "";
+    p.validatesPresenceOf("name", "can't be null");
+    value_of(p.errors.name[0]).should_be("can't be null");
+    p.errors = {};
+    
+    p.name = "Jesse";
+    p.validatesPresenceOf("name", "can't be null");
+    value_of(p.errors).should_be({});
+  },
+   "validatesLengthOf should verify the length of a property": function() {
+    length = { minimum: 5, maximum: 6 };
+    p.name = "J";
+    p.validatesLengthOf("name", length);
+    value_of(p.errors.name[0]).should_be("name is too short");
+    p.errors = {};
+    
+    p.name = "JesseTeates";
+    p.validatesLengthOf("name", length);
+    value_of(p.errors.name[0]).should_be("name is too long");
+    p.errors = {};
+    
+    p.name = "Jesse";
+    p.validatesLengthOf("name", length);
+    value_of(p.errors).should_be({});
+    
+    length = { is: 5 };
+    p.name = "J";
+    p.validatesLengthOf("name", length);
+    value_of(p.errors.name[0]).should_be("name is not the correct length");
+    p.errors = {};
+    
+    p.name = "JesseT";
+    p.validatesLengthOf("name", length);
+    value_of(p.errors.name[0]).should_be("name is not the correct length");
+    p.errors = {};
+    
+    p.name = "Jesse";
+    p.validatesLengthOf("name", length);
+    value_of(p.errors).should_be({});
+    
+    length = { allowEmpty: true };
+    p.name = null;
+    p.validatesLengthOf("name", length);
+    value_of(p.errors).should_be({});
+    p.errors = {};   
+  }  
 });
 
 describe("AssociationLoader", {

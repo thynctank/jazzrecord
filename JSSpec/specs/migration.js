@@ -58,6 +58,22 @@ describe("Manual Migrations", {
           down: function() {
             JazzRecord.renameColumn("caffeine", "caffeine", "caffeineContent");
           }
+        },
+        4: {
+          up: function() {
+            JazzRecord.removeColumn("caffeine", "caffeineContent");
+          },
+          down: function() {
+            JazzRecord.addColumn("caffeine", "caffeineContent", "int");
+          }
+        },
+        5: {
+          up: function() {
+            JazzRecord.changeColumn("caffeine", "brand", "int");
+          },
+          down: function() {
+            JazzRecord.changeColumn("caffeine", "brand", "text");
+          }
         }
       };
       JazzRecord.fixtures = null;
@@ -108,6 +124,29 @@ describe("Manual Migrations", {
       JazzRecord.migrate(3);
       value_of(JazzRecord.currentSchemaVersion()).should_be(3);
       Caffeine.create({brand: "Bawls", caffeine: 5000});
-      //value_of(Caffeine.last().caffeines).should_be(5000);
+      value_of(Caffeine.last().caffeine).should_be(5000);
+    },
+    "Removing a column": function() {
+      Caffeine = new JazzRecord.Model({
+        table: 'caffeine',
+        columns: {
+          id: 'int',
+          brand: 'text',
+        }
+      });
+      JazzRecord.migrate(4);
+      value_of(JazzRecord.currentSchemaVersion()).should_be(4);
+      Caffeine.create({brand: "Bawls" });
+      value_of(Caffeine.last().caffeine).should_be(undefined);
+    },
+    "Changing a columns type": function() {
+      value_of(JazzRecord.currentSchemaVersion()).should_be(4);
+      JazzRecord.migrate(5);
+      value_of(JazzRecord.currentSchemaVersion()).should_be(5);
+      value_of(Caffeine.options.columns.brand).should_be("int");
+      
+      // migrate all the way down
+      JazzRecord.migrate(0);
+      value_of(JazzRecord.currentSchemaVersion()).should_be(0);
     }
 });

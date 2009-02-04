@@ -93,7 +93,6 @@ describe("Record", {
 describe("Validation", {
   before_all: function() {
     initJazz();
-    JazzRecord.migrate({fixtures:fixtures, refresh:true});    
   },
   before_each: function() {
     p = Person.newRecord({name: "Dummy", age: 22});
@@ -192,7 +191,7 @@ describe("Validation", {
     value_of(p.errors).should_be({});
   },
    "validatesLengthOf should verify the length of a property": function() {
-    length = { minimum: 5, maximum: 6 };
+    var length = { minimum: 5, maximum: 6 };
     p.name = "J";
     p.validatesLengthOf("name", length);
     value_of(p.errors.name[0]).should_be("name is too short");

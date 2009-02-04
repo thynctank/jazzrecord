@@ -81,51 +81,6 @@ JazzRecord.updateSchemaVersion = function(number) {
   JazzRecord.run(sql);
 };
 
-
-// used in actual migrations
-
-JazzRecord.createTable = function(name, columns) {
-  if(!(JazzRecord.isDefined(name) && JazzRecord.isDefined(columns))) {
-    return;
-  }
-  var sql = "CREATE TABLE IF NOT EXISTS " + name;
-  if(columns) {
-    sql += "(";
-    JazzRecord.each(columns, function(colType, colName) {
-      if(colName === "id")
-        sql += "id INTEGER PRIMARY KEY AUTOINCREMENT, ";
-      else
-        sql += (colName + " " + colType.toString().toUpperCase() + ", ");
-    });
-    sql = sql.substr(0, sql.length - 2);
-    sql += ")";
-    JazzRecord.run(sql);
-  }
-  JazzRecord.writeSchema(name, columns);
-};
-
-JazzRecord.dropTable = function(name) {
-  var sql = "DROP TABLE " + name;
-  JazzRecord.run(sql);
-  var schemaTable = JazzRecord.schema.findBy("table_name", name);
-  schemaTable.destroy();
-};
-
-JazzRecord.renameTable = function(oldName, newName) {
-  var sql = "ALTER TABLE " + oldName + " RENAME TO " + newName;
-  JazzRecord.run(sql);
-  var schemaTable = JazzRecord.schema.findBy("table_name", oldName);
-  schemaTable.updateAttribute("table_name", newName);
-};
-
-JazzRecord.addColumn = function(tableName, columnName, dataType) {
-  var sql = "ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + dataType.toUpperCase();
-  JazzRecord.run(sql);
-  var cols = JazzRecord.readSchema(tableName);
-  cols[columnName] = dataType;
-  JazzRecord.writeSchema(tableName, cols);
-};
-
 JazzRecord.modifyColumn = function(tableName, columnName, options) {
   if (!options) {
     throw("MIGRATION_EXCEPTION: Not a valid column modification");
@@ -191,6 +146,51 @@ JazzRecord.modifyColumn = function(tableName, columnName, options) {
       }
     });
   });
+};
+
+
+// used in actual migrations
+
+JazzRecord.createTable = function(name, columns) {
+  if(!(JazzRecord.isDefined(name) && JazzRecord.isDefined(columns))) {
+    return;
+  }
+  var sql = "CREATE TABLE IF NOT EXISTS " + name;
+  if(columns) {
+    sql += "(";
+    JazzRecord.each(columns, function(colType, colName) {
+      if(colName === "id")
+        sql += "id INTEGER PRIMARY KEY AUTOINCREMENT, ";
+      else
+        sql += (colName + " " + colType.toString().toUpperCase() + ", ");
+    });
+    sql = sql.substr(0, sql.length - 2);
+    sql += ")";
+    JazzRecord.run(sql);
+  }
+  JazzRecord.writeSchema(name, columns);
+};
+
+JazzRecord.dropTable = function(name) {
+  var sql = "DROP TABLE " + name;
+  JazzRecord.run(sql);
+  var schemaTable = JazzRecord.schema.findBy("table_name", name);
+  schemaTable.destroy();
+};
+
+JazzRecord.renameTable = function(oldName, newName) {
+  var sql = "ALTER TABLE " + oldName + " RENAME TO " + newName;
+  JazzRecord.run(sql);
+  var schemaTable = JazzRecord.schema.findBy("table_name", oldName);
+  schemaTable.updateAttribute("table_name", newName);
+};
+
+JazzRecord.addColumn = function(tableName, columnName, dataType) {
+  var sql = "ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + dataType.toUpperCase();
+  JazzRecord.run(sql);
+  var cols = JazzRecord.readSchema(tableName);
+  cols[columnName] = dataType;
+  JazzRecord.writeSchema(tableName, cols);
 };
 
 JazzRecord.removeColumn = function(tableName, columnName) {

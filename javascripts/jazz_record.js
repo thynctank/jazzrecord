@@ -21,7 +21,7 @@ var JazzRecord = {
 
   // only needs to know basic types and differentiate arrays from other objects
   getType: function(obj) {
-    if(typeof obj === "undefined" || obj === null || obj === NaN)
+    if(typeof obj === "undefined" || obj === null || (typeof obj === "number" && isNaN(obj)))
       return false;
     else if(obj.constructor === Array)
       return "array";

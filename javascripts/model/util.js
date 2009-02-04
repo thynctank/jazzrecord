@@ -18,7 +18,7 @@ JazzRecord.columnValues = function(cols, data) {
 };
 
 JazzRecord.typeValue = function(cols, field, val) {
-  if(val == null)
+  if(val === null)
     return "NULL";
   else
     switch(cols[field]) {

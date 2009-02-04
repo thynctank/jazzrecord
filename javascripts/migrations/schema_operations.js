@@ -1,3 +1,15 @@
+JazzRecord.schema = new JazzRecord.Model({
+  table: "schema_definitions",
+  columns: {
+    id: "number",
+    table_name: "text",
+    column_names: "text",
+    column_types: "text"
+  }
+});
+
+// used elsewhere
+
 JazzRecord.setupSchema = function(force) {
   JazzRecord.createTable("schema_migrations", {version: "text"});
   if(JazzRecord.count("SELECT COUNT(*) FROM schema_migrations") === 0) {
@@ -15,16 +27,6 @@ JazzRecord.setupSchema = function(force) {
     column_types: "text"
   });
 };
-
-JazzRecord.schema = new JazzRecord.Model({
-  table: "schema_definitions",
-  columns: {
-    id: "number",
-    table_name: "text",
-    column_names: "text",
-    column_types: "text"
-  }
-});
 
 JazzRecord.writeSchema = function(tableName, cols) {
   if(tableName === "schema_definitions" || tableName === "schema_migrations")
@@ -70,6 +72,9 @@ JazzRecord.updateSchemaVersion = function(number) {
   var sql = "UPDATE schema_migrations SET version = " + number;
   JazzRecord.run(sql);
 };
+
+
+// used in actual migrations
 
 JazzRecord.createTable = function(name, columns) {
   if(!(JazzRecord.isDefined(name) && JazzRecord.isDefined(columns))) {
@@ -117,11 +122,11 @@ JazzRecord.modifyColumn = function(tableName, columnName, options) {
   if (!options) {
     throw("MIGRATION_EXCEPTION: Not a valid column modification");
   }
-    
-  var model = JazzRecord.models.get(tableName);
+  
+  var oldCols = JazzRecord.readSchema(tableName);
   var newCols = {};
-     
-  JazzRecord.each(model.options.columns, function(colType, colName) {
+  
+  JazzRecord.each(oldCols, function(colType, colName) {
     switch(options["modification"]) {
       case "remove":
         if(colName !== columnName)
@@ -151,57 +156,51 @@ JazzRecord.modifyColumn = function(tableName, columnName, options) {
     }
   });
 
-  var records = JazzRecord.run('SELECT * FROM ' + tableName);
-  JazzRecord.dropTable(tableName);
-  JazzRecord.createTable(tableName, newCols);
+  JazzRecord.runTransaction(function() {
+    var records = JazzRecord.run('SELECT * FROM ' + tableName);
+    JazzRecord.dropTable(tableName);
+    JazzRecord.createTable(tableName, newCols);
 
-  JazzRecord.each(records, function(record) {
-    switch(options.modification) {
-      case "remove":
-        delete record[columnName];
-        JazzRecord.save(tableName, newCols, record);
-        break;
+    JazzRecord.each(records, function(record) {
+      switch(options.modification) {
+        case "remove":
+          delete record[columnName];
+          JazzRecord.save(tableName, newCols, record);
+          break;
     
-      case "rename":
-        record[options.newName] = record[columnName];
-        delete record[columnName];
-        JazzRecord.save(tableName, newCols, record);
-        break;
+        case "rename":
+          record[options.newName] = record[columnName];
+          delete record[columnName];
+          JazzRecord.save(tableName, newCols, record);
+          break;
     
-      case "change":
-        JazzRecord.save(tableName, newCols, record);
-        break;
+        case "change":
+          JazzRecord.save(tableName, newCols, record);
+          break;
     
-      default:
-        throw("MIGRATION_EXCEPTION: Not a valid column modification");
-    }
+        default:
+          throw("MIGRATION_EXCEPTION: Not a valid column modification");
+      }
+    });
   });
 };
 
 JazzRecord.removeColumn = function(tableName, columnName) {
-  JazzRecord.runTransaction(function() {
-    var options = {
-      modification: "remove"
-    };
-    JazzRecord.modifyColumn(tableName, columnName, options);
-  });
+  JazzRecord.modifyColumn(tableName, columnName, { modification: "remove"});
 };
 
 JazzRecord.renameColumn = function(tableName, columnName, newColumnName) {
-  JazzRecord.runTransaction(function() {
-    var options = {
-      modification: "rename",
-      newName: newColumnName
-    };
-    JazzRecord.modifyColumn(tableName, columnName, options);
-  });
+  var options = {
+    modification: "rename",
+    newName: newColumnName
+  };
+  JazzRecord.modifyColumn(tableName, columnName, options);
 };
+
 JazzRecord.changeColumn = function(tableName, columnName, type) {
-  JazzRecord.runTransaction(function() {
-    var options = {
-      modification: "change",
-      newType: type
-    };
-    JazzRecord.modifyColumn(tableName, columnName, options);
-  });
+  var options = {
+    modification: "change",
+    newType: type
+  };
+  JazzRecord.modifyColumn(tableName, columnName, options);
 };

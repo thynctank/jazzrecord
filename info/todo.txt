@@ -23,7 +23,7 @@ JESSE
 
 UNASSIGNED
 ----------
-* Move util.js out of model dir. Need to update includes and rake task
+* Move util.js. save.js out of model dir. Need to update includes and rake task
 * Run JSSpec in AIR/Titanium
 * Privatize all non-API methods by adding initial underscores to names, propagate this change across all calls to those methods
 * Make AIRAdapter optionally work with encrypted local database

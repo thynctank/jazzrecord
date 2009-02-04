@@ -6,11 +6,6 @@ describe("Model", {
       table: "black_boxes",
       foreignKey: "black_box_id",
       hasOne: {content: "box_contents"},
-      columns: {
-        id: "number",
-        label: "string",
-        number: "number"
-      },
       modelMethods: {
         findMiddleBox: function() {
           var middleNumber = Math.round(this.count()/2);
@@ -27,20 +22,24 @@ describe("Model", {
     
     BoxContent = new JazzRecord.Model({
       table: "box_contents",
-      belongsTo: {box: "black_boxes"},
-      columns: {
-        id: "number",
-        description: "string",
-        black_box_id: "number"
-      }
+      belongsTo: {box: "black_boxes"}
     });
-
-    JazzRecord.migrations = null;
-    JazzRecord.fixtures = null;
-    JazzRecord.migrate({refresh: true});
+    
+    JazzRecord.createTable("black_boxes", {
+      id: "number",
+      label: "string",
+      number: "number"
+    });
+    
+    JazzRecord.createTable("box_contents", {
+      id: "number",
+      description: "string",
+      black_box_id: "number"
+    });
   },
   after_all: function() {
-    initJazz();
+    JazzRecord.dropTable("black_boxes");
+    JazzRecord.dropTable("box_contents");
     delete BlackBox;
     delete BoxContent;
   },

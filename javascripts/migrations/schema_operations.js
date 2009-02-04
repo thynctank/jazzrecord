@@ -33,19 +33,27 @@ JazzRecord.writeSchema = function(tableName, cols) {
     return;
   var sql = "";
   var colsHash = new JazzRecord.Hash(cols);
-  var cols = colsHash.getKeys().join();
+  var names = colsHash.getKeys().join();
   var types = colsHash.getValues().join();
   var table = JazzRecord.schema.findBy("table_name", tableName);
   if(table) {
-    table.column_names = cols;
+    table.column_names = names;
     table.column_types = types;
     table.save();
   }
   else {
     JazzRecord.schema.create({
       table_name: tableName,
-      column_names: cols,
+      column_names: names,
       column_types: types
+    });
+  }
+  // update model column definition in memory, allows total separation of model declaration and schema
+  var model = JazzRecord.models.get(tableName);
+  if(model) {
+    model.options.columns = {};
+    JazzRecord.each(cols, function(colType, colName) {
+      model.options.columns[colName] = colType;
     });
   }
 };

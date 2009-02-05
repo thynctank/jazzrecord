@@ -117,7 +117,6 @@ describe("Manual Migrations", {
       value_of(Caffeine.last().caffeine).should_be(null);
     },
     "Changing a columns type": function() {
-      JazzRecord.debug = true;
       value_of(JazzRecord.currentSchemaVersion()).should_be(4);
       JazzRecord.migrate(5);
       value_of(JazzRecord.currentSchemaVersion()).should_be(5);

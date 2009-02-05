@@ -52,6 +52,11 @@ describe("Record", {
     p.destroy();
     value_of(Person.count()).should_be(4);
   },
+  "Destroying a record with associated hasMany objects should unlink those objects and set the main record's id to null": function() {
+    var h = Home.first();
+    h.destroy();
+    value_of(h.id).should_be_null();
+  },
   "updateAttribute updates and saves record": function() {
     value_of(p.name).should_be("Terri");
     p.updateAttribute("name", "Tabitha");

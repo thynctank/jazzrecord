@@ -65,7 +65,7 @@ JazzRecord.Record.prototype = {
       // unlink any hasMany and hasOne records from this record
       JazzRecord.each(this.options.model.options.hasMany, function(assocTable, assoc) {
         this.load(assoc);
-        this[assoc].each(function(record) {
+        JazzRecord.each(this[assoc], function(record) {
           record.updateAttribute(this.options.model.options.foreignKey, null);
         }, this);
         this[assoc + "OriginalRecordIDs"] = [];

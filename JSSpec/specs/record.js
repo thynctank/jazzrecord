@@ -92,6 +92,18 @@ describe("Record", {
     p.save();
     p.name = "Person Test 1";
     p.save();
+  },
+  "Calling isNew() will return true for a new record and false after saved": function() {
+    p = Person.newRecord({name: 'George', age: 43});
+    value_of(p.isNew()).should_be(true);
+    p.save();
+    value_of(p.isNew()).should_be(false);
+  },
+  "Calling isNew() on a record after successful call to create() should return false, unsuccessful return true": function() {
+    p = Person.create({name: 'abc', age: 43});
+    value_of(p.isNew()).should_be(true);
+    p = Person.create({name: 'abcd', age: 43});
+    value_of(p.isNew()).should_be(false);
   }
 });
 

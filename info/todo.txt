@@ -5,13 +5,13 @@ NICK
 * Fix Record.destroy on second-order record obj so it doesn't cause problems when followed by call to first-order record obj's save()
 * Test autolinking/unlinking
 * Test transactions
-* Test performance
 * Add ability to pass multiple colnames to all validates methods
-* Add updateAttributes() method on Record, allow ID cols or association names both in object literal
 * Implement add'l dirty object methods: http://ryandaigle.com/articles/2008/3/31/what-s-new-in-edge-rails-dirty-objects
 
 DAVID
 -----
+* Test performance
+* Add updateAttributes() method on Record, allow ID cols or association names both in object literal
 
 JESSE
 -----

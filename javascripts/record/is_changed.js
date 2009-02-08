@@ -22,6 +22,8 @@ JazzRecord.Record.prototype.isChanged = function() {
           return true;
       }
       else {
+        if(this[assoc].isNew())
+          this[assoc].save();
         if(this[assoc].id !== this.originalData[assocIdCol]) {
           this[assocIdCol] = this[assoc].id;
           return true;

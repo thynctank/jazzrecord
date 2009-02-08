@@ -34,14 +34,15 @@ JazzRecord.Record.prototype.save = function() {
         JazzRecord.each(this[assoc], function(record) {
           record[foreignKey] = this.id;
           record.save();
-          var wasInOriginal = false;
           if(JazzRecord.arrayContainsVal(originalRecordIDs, record.id))
             JazzRecord.removeFromArray(originalRecordIDs, record.id);
         }, this);
       
         // remove association from no longer-assigned records
         JazzRecord.each(originalRecordIDs, function(id) {
-          assocModel.find(id).updateAttribute(foreignKey, null);
+          var existingRecord = assocModel.find(id);
+          if(existingRecord)
+            existingRecord.updateAttribute(foreignKey, null);
         });
       
         // remap originalRecordIDs for new set
@@ -117,15 +118,17 @@ JazzRecord.Record.prototype.save = function() {
       data.originalData = this.originalData ? this.originalData : {id: this.id};
       this.options.model.save(data);
       this.reload();
-      // overwrite original data so it is no longer "dirty"
-      JazzRecord.each(this.options.columns, function(colType, colName) {
-        this.originalData[colName] = this[colName];
-      }, this);
     }
-    else if(!this.id) {
+    else if(this.isNew()) {
       this.onSave();
       this.id = this.options.model.save(data);
     }
+    
+    // overwrite original data so it is no longer "dirty" OR so it is no longer new
+    this.originalData = {};
+    JazzRecord.each(this.options.model.options.columns, function(colType, colName) {
+      this.originalData[colName] = this[colName];
+    }, this);
     
     this.isNew = function() {
       return false;

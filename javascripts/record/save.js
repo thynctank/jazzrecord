@@ -1,6 +1,22 @@
 JazzRecord.Record.prototype.save = function() {
   var foreignKey = this.options.model.options.foreignKey;
 
+  // if record has originalData, check for isChanged, else use this
+  if(!this.originalData) {
+    JazzRecord.each(this.options.model.options.belongsTo, function(assocTable, assoc) {
+      var assocModel = JazzRecord.models.get(assocTable);
+      var assocModelKey = assocModel.options.foreignKey;
+      
+      if(this[assoc]) {
+        if(this[assoc].unloaded)
+          this.load(assoc);
+      }
+      
+      if(this[assoc] && this[assoc].id)
+        this[assocModelKey] = this[assoc].id;
+    }, this);
+  }
+
   JazzRecord.each(this.options.model.options.hasOne, function(assocTable, assoc) {
     // remove original association and replace w/ new one
     if(this[assoc]) {
@@ -20,6 +36,13 @@ JazzRecord.Record.prototype.save = function() {
         this[assoc].updateAttribute(foreignKey, this.id);
       }
       this[assoc + "OriginalRecordID"] = this[assoc].id;
+    }
+    else {
+      if(this[assoc + "OriginalRecordID"]) {
+        var assocModel = JazzRecord.models.get(assocTable);
+        var oldRecord = assocModel.first({id: this[assoc + "OriginalRecordID"], depth:0});
+        oldRecord.updateAttribute(foreignKey, null);
+      }
     }
   }, this);
 

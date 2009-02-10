@@ -292,3 +292,46 @@ describe("AssociationLoader", {
     value_of(s.classes[0].name).should_be("English");
   }
 });
+
+describe("Auto-linking and unlinking", {
+  before_all: function() {
+    initJazz();
+  },
+  after_all: function() {
+    delete p;
+    delete v;
+  },
+  "Loading an record which hasOne other record and deleting association property should unlink": function() {
+    p = Person.first();
+    v = p.vehicle;
+    value_of(v.model).should_be("Forenza");
+    value_of(v.person_id).should_be(1);
+    delete p.vehicle;
+    p.save();
+    p = Person.first();
+    v = Person.find(v.id);
+    value_of(v.person_id).should_be_undefined();
+  },
+  "Assigning blongsTo record to hasOne record by association should update assoc record": function() {
+    p = Person.first();
+    value_of(p.vehicle).should_be_null();
+    p.vehicle = Vehicle.first();
+    value_of(p.vehicle.person_id).should_be_null();
+    p.save();
+    value_of(p.vehicle.person_id).should_be(1);
+  },
+  "Loading a belongsTo record should update belongsTo to null": function() {
+    v = Vehicle.first();
+    value_of(v.owner.name).should_be("Nick");
+    delete v.owner;
+    v.save();
+    value_of(v.owner).should_be_null();
+    value_of(v.person_id).should_be_null();
+  },
+  "Assigning a hasOne record to a belongsTo record by association should update belongsTo property": function() {
+    v = Vehicle.newRecord({model: "Diablo"});
+    v.owner = Person.last();
+    v.save();
+    value_of(v.person_id).should_be(5);
+  }
+});

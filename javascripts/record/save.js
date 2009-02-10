@@ -54,11 +54,19 @@ JazzRecord.Record.prototype.save = function() {
         var originalRecordIDs = this[assoc + "OriginalRecordIDs"];
       
         // save all still-assigned records
-        JazzRecord.each(this[assoc], function(record) {
-          record[foreignKey] = this.id;
-          record.save();
-          if(JazzRecord.arrayContainsVal(originalRecordIDs, record.id))
-            JazzRecord.removeFromArray(originalRecordIDs, record.id);
+        JazzRecord.each(this[assoc], function(record, index) {
+          if(record) {
+            record[foreignKey] = this.id;
+            record.save();
+            if(JazzRecord.arrayContainsVal(originalRecordIDs, record.id))
+              JazzRecord.removeFromArray(originalRecordIDs, record.id);
+          }
+        }, this);
+        
+        //remove undefined/null records from array going forward
+        JazzRecord.each(this[assoc], function(record, index) {
+          if(!JazzRecord.isDefined(record))
+            this[assoc].splice(index, 1);
         }, this);
       
         // remove association from no longer-assigned records
@@ -71,7 +79,8 @@ JazzRecord.Record.prototype.save = function() {
         // remap originalRecordIDs for new set
         var currentOriginalRecordIDs = [];
         JazzRecord.each(this[assoc], function(record) {
-          currentOriginalRecordIDs.push(record.id);
+          if(record)
+            currentOriginalRecordIDs.push(record.id);
         });
         this[assoc + "OriginalRecordIDs"] = currentOriginalRecordIDs;
       }

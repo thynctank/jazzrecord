@@ -300,8 +300,11 @@ describe("Auto-linking and unlinking", {
   after_all: function() {
     delete p;
     delete v;
+    delete h;
+    delete s;
+    delete c;
   },
-  "Loading an record which hasOne other record and deleting association property should unlink": function() {
+  "Loading a record which hasOne other record and deleting association property should unlink": function() {
     p = Person.first();
     v = p.vehicle;
     value_of(v.model).should_be("Forenza");
@@ -309,10 +312,11 @@ describe("Auto-linking and unlinking", {
     delete p.vehicle;
     p.save();
     p = Person.first();
-    v = Person.find(v.id);
-    value_of(v.person_id).should_be_undefined();
+    v = Vehicle.find(v.id);
+    value_of(v.person_id).should_be_null();
+    value_of(p.vehicle).should_be_null();
   },
-  "Assigning blongsTo record to hasOne record by association should update assoc record": function() {
+  "Assigning blongsTo record to hasOne record by association should link the two": function() {
     p = Person.first();
     value_of(p.vehicle).should_be_null();
     p.vehicle = Vehicle.first();
@@ -320,7 +324,7 @@ describe("Auto-linking and unlinking", {
     p.save();
     value_of(p.vehicle.person_id).should_be(1);
   },
-  "Loading a belongsTo record should update belongsTo to null": function() {
+  "Loading a belongsTo record and deleting association property should unlink": function() {
     v = Vehicle.first();
     value_of(v.owner.name).should_be("Nick");
     delete v.owner;
@@ -328,10 +332,35 @@ describe("Auto-linking and unlinking", {
     value_of(v.owner).should_be_null();
     value_of(v.person_id).should_be_null();
   },
-  "Assigning a hasOne record to a belongsTo record by association should update belongsTo property": function() {
+  "Assigning a hasOne record to a belongsTo record by association should link the two": function() {
     v = Vehicle.newRecord({model: "Diablo"});
+    value_of(v.owner).should_be_undefined();
     v.owner = Person.last();
     v.save();
     value_of(v.person_id).should_be(5);
+  },
+  "Loading a record and deleting one of its hasMany items should unlink": function() {
+    h = Home.first();
+    value_of(h.people.length).should_be(2);
+    value_of(h.people[0].name).should_be("Nick");
+    delete h.people[0];
+    h.save();
+    value_of(h.people.length).should_be(1);
+  },
+  "Adding a record to a hasMany array should link the two records": function() {
+    h = Home.first();
+    value_of(h.people.length).should_be(1);
+    h.people.push(Person.last());
+    h.save();
+    value_of(h.people.length).should_be(2);
+  },
+  "Loading a record and deleting one of its hasAndBelongsToMany items should unlink": function() {
+    c = HighSchoolClass.first();
+    value_of(c.students.length).should_be(2);
+    value_of(Student.last().classes.length).should_be(1);
+    c.students.pop();
+    c.save();
+    value_of(c.students.length).should_be(1);
+    value_of(Student.last().classes.length).should_be(0);
   }
 });

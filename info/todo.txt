@@ -2,6 +2,7 @@
 
 NICK
 ----
+* HTML5Adapter - also affects finders, Record.save(), Record.isChanged(), Record.isValid(), Model.create(), JazzRecord.migrate()
 * Test transactions
 * Add ability to pass multiple colnames to all validates methods
 * Implement add'l dirty object methods: http://ryandaigle.com/articles/2008/3/31/what-s-new-in-edge-rails-dirty-objects
@@ -25,10 +26,6 @@ UNASSIGNED
 
 IDEAS
 -----
-Support HTML5 DB access
--http://www.whatwg.org/specs/web-apps/current-work/#sql
--http://www.w3.org/html/wg/html5/#sql
-
 Yahoo BrowserPlus Support
 -http://browserplus.yahoo.com/services/  (PStore - DB ACCESS)
 

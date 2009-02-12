@@ -37,8 +37,10 @@ var JazzRecord = {
     if(typeof console !== "undefined" && console.log) {
       switch(JazzRecord.getType(obj)) {
         case "object":
-          console.dir(obj);
-          break;
+          if(console.dir) {
+            console.dir(obj);
+            break;
+          }
         default:
           console.log(obj);
       }

@@ -35,7 +35,7 @@ JazzRecord.Record.prototype.isValid = function(timing) {
   }
   
   var errorPropCount = 0;
-  for(prop in this.errors) {
+  for(var prop in this.errors) {
     errorPropCount++;
   }
 

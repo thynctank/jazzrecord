@@ -30,12 +30,12 @@
     <script type="text/javascript" charset="utf-8">
       // JazzRecord.adapter = new JazzRecord.AirAdapter({dbFile: "test.db"});
       // JazzRecord.adapter = new JazzRecord.TitaniumAdapter({dbFile: "test.db"});
-      // JazzRecord.adapter = new JazzRecord.GearsAdapter({dbFile: "test.db"});
+      // JazzRecord.adapter = new JazzRecord.HTML5Adapter({dbFile: "test.db"});
+      JazzRecord.adapter = new JazzRecord.GearsAdapter({dbFile: "test.db"});
       JazzRecord.debug = true;
-      JazzRecord.adapter = new JazzRecord.HTML5Adapter({dbFile: "test.db"});
       JazzRecord.migrations = migrations;
       JazzRecord.fixtures = fixtures;
-      // JazzRecord.migrate({refresh: true});
+      JazzRecord.migrate({refresh: true});
     </script>
     
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />

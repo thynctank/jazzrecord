@@ -2,17 +2,24 @@
 
 NICK
 ----
-* Add MIT License, version number and author to build file
-* Fix Record.destroy on second-order record obj so it doesn't cause problems when followed by call to first-order record obj's save()
-* Test autolinking/unlinking
+* Make id optional in model declaration
+* Rearrange all HTML5Adapter-affected code so it uses queryQueue in synchronous as well, to prepare.
+* HTML5Adapter affects:
+  - finders (really just query.js)
+  - Record.save()
+  - Record.isValid() (for validatesUniquenessOf())
+  - Model.create()
+  - JazzRecord.migrate() (if this will even be possible in async)
+  - queryQueue uses push/shift for managing items
+  - Depth is the hardest part
 * Test transactions
-* Test performance
 * Add ability to pass multiple colnames to all validates methods
-* Add updateAttributes() method on Record, allow ID cols or association names both in object literal
 * Implement add'l dirty object methods: http://ryandaigle.com/articles/2008/3/31/what-s-new-in-edge-rails-dirty-objects
 
 DAVID
 -----
+* Test performance
+* Add updateAttributes() method on Record, allow ID cols or association names both in object literal
 
 JESSE
 -----
@@ -28,10 +35,6 @@ UNASSIGNED
 
 IDEAS
 -----
-Support HTML5 DB access
--http://www.whatwg.org/specs/web-apps/current-work/#sql
--http://www.w3.org/html/wg/html5/#sql
-
 Yahoo BrowserPlus Support
 -http://browserplus.yahoo.com/services/  (PStore - DB ACCESS)
 

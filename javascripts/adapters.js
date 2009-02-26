@@ -92,3 +92,48 @@ JazzRecord.TitaniumAdapter = function(options) {
   this.db.open(this.options.dbFile);
   this.result = null;
 };
+
+JazzRecord.HTML5Adapter = function(options) {
+  var defaults = {
+    dbFile: "jazz_record.db"
+  };
+  JazzRecord.setOptions.call(this, options, defaults);
+  JazzRecord.extend.call(this, JazzRecord.Adapter, options);
+  this.db = openDatabase(this.options.dbFile);
+};
+
+JazzRecord.HTML5Adapter.prototype = {
+  run: function(query, callback) {
+    this.parent.run(query);
+    this.db.transaction(function(tx) {
+      tx.executeSql(query, [], function(tx, resultSet) {
+        var rows = [];
+        for(var i = 0, j = resultSet.rows.length; i < j; i++) {
+          rows.push(resultSet.rows.item(i));
+        }
+        if(callback)
+          callback(rows);
+      });
+    });
+  },
+
+  count: function(query, callback) {
+    this.parent.count(query);
+    this.db.transaction(function(tx) {
+      tx.executeSql(query, [], function(tx, resultSet) {
+        if(callback)
+          callback(resultSet.rows.item(0)["COUNT(*)"]);
+      });
+    });
+  },
+
+  save: function(query, callback) {
+    this.parent.save(query);
+    this.db.transaction(function(tx) {
+      tx.executeSql(query, [], function(tx, resultSet) {
+        if(callback)
+          callback(resultSet.insertId);
+      });
+    });
+  }
+};

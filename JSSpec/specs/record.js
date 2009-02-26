@@ -92,6 +92,18 @@ describe("Record", {
     p.save();
     p.name = "Person Test 1";
     p.save();
+  },
+  "Calling isNew() will return true for a new record and false after saved": function() {
+    p = Person.newRecord({name: 'George', age: 43});
+    value_of(p.isNew()).should_be(true);
+    p.save();
+    value_of(p.isNew()).should_be(false);
+  },
+  "Calling isNew() on a record after successful call to create() should return false, unsuccessful return true": function() {
+    p = Person.create({name: 'abc', age: 43});
+    value_of(p.isNew()).should_be(true);
+    p = Person.create({name: 'abcd', age: 43});
+    value_of(p.isNew()).should_be(false);
   }
 });
 
@@ -278,5 +290,77 @@ describe("AssociationLoader", {
     s.load("classes");
     value_of(s.classes.unloaded).should_be_undefined();
     value_of(s.classes[0].name).should_be("English");
+  }
+});
+
+describe("Auto-linking and unlinking", {
+  before_all: function() {
+    initJazz();
+  },
+  after_all: function() {
+    delete p;
+    delete v;
+    delete h;
+    delete s;
+    delete c;
+  },
+  "Loading a record which hasOne other record and deleting association property should unlink": function() {
+    p = Person.first();
+    v = p.vehicle;
+    value_of(v.model).should_be("Forenza");
+    value_of(v.person_id).should_be(1);
+    delete p.vehicle;
+    p.save();
+    p = Person.first();
+    v = Vehicle.find(v.id);
+    value_of(v.person_id).should_be_null();
+    value_of(p.vehicle).should_be_null();
+  },
+  "Assigning blongsTo record to hasOne record by association should link the two": function() {
+    p = Person.first();
+    value_of(p.vehicle).should_be_null();
+    p.vehicle = Vehicle.first();
+    value_of(p.vehicle.person_id).should_be_null();
+    p.save();
+    value_of(p.vehicle.person_id).should_be(1);
+  },
+  "Loading a belongsTo record and deleting association property should unlink": function() {
+    v = Vehicle.first();
+    value_of(v.owner.name).should_be("Nick");
+    delete v.owner;
+    v.save();
+    value_of(v.owner).should_be_null();
+    value_of(v.person_id).should_be_null();
+  },
+  "Assigning a hasOne record to a belongsTo record by association should link the two": function() {
+    v = Vehicle.newRecord({model: "Diablo"});
+    value_of(v.owner).should_be_undefined();
+    v.owner = Person.last();
+    v.save();
+    value_of(v.person_id).should_be(5);
+  },
+  "Loading a record and deleting one of its hasMany items should unlink": function() {
+    h = Home.first();
+    value_of(h.people.length).should_be(2);
+    value_of(h.people[0].name).should_be("Nick");
+    delete h.people[0];
+    h.save();
+    value_of(h.people.length).should_be(1);
+  },
+  "Adding a record to a hasMany array should link the two records": function() {
+    h = Home.first();
+    value_of(h.people.length).should_be(1);
+    h.people.push(Person.last());
+    h.save();
+    value_of(h.people.length).should_be(2);
+  },
+  "Loading a record and deleting one of its hasAndBelongsToMany items should unlink": function() {
+    c = HighSchoolClass.first();
+    value_of(c.students.length).should_be(2);
+    value_of(Student.last().classes.length).should_be(1);
+    c.students.pop();
+    c.save();
+    value_of(c.students.length).should_be(1);
+    value_of(Student.last().classes.length).should_be(0);
   }
 });

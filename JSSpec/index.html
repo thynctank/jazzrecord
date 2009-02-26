@@ -21,6 +21,7 @@
   JazzRecord.adapter = new JazzRecord.GearsAdapter({dbFile: "test.db"});
   function initJazz() {
     JazzRecord.debug = false;
+    JazzRecord.depth = 1;
     JazzRecord.migrations = migrations;
     JazzRecord.fixtures = fixtures;
     JazzRecord.migrate({refresh: true});

@@ -37,8 +37,10 @@ var JazzRecord = {
     if(typeof console !== "undefined" && console.log) {
       switch(JazzRecord.getType(obj)) {
         case "object":
-          console.dir(obj);
-          break;
+          if(console.dir) {
+            console.dir(obj);
+            break;
+          }
         default:
           console.log(obj);
       }
@@ -190,7 +192,7 @@ JazzRecord.Hash.prototype = {
   },
   getLength: function() {
     var length = 0;
-    for(i in this.data) {
+    for(var i in this.data) {
        if(this.data.hasOwnProperty(i))
         length++;
     }

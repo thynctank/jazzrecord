@@ -35,7 +35,7 @@ JazzRecord.Record.prototype.isValid = function(timing) {
   }
   
   var errorPropCount = 0;
-  for(prop in this.errors) {
+  for(var prop in this.errors) {
     errorPropCount++;
   }
 
@@ -157,7 +157,7 @@ JazzRecord.Record.prototype.validatesAssociated = function(assoc, errText) {
   else
     assocArray = [this[assoc]];
   JazzRecord.each(assocArray, function(item) {
-    if(!item.isValid()) {
+    if(item && !item.isValid()) {
       errText = JazzRecord.isDefined(errText) ? errText : assoc + " is not valid";
       this.pushError(assoc, errText);
       return;

@@ -71,6 +71,12 @@ JazzRecord.Record.prototype = {
         this[assoc + "OriginalRecordIDs"] = [];
       }, this);
       
+      JazzRecord.each(this.options.model.options.hasAndBelongsToMany, function(assocTable, assoc) {
+        var mappingTable = [this.options.model.table, assocTable].sort().join("_");
+        sql = "DELETE FROM " + mappingTable + " WHERE " + this.options.model.options.foreignKey + "=" + this.id + ";";
+        JazzRecord.adapter.run(sql);
+      }, this);
+      
       JazzRecord.each(this.options.model.options.hasOne, function(assocTable, assoc) {
         this.load(assoc);
         if(!this[assoc])
@@ -81,6 +87,7 @@ JazzRecord.Record.prototype = {
       
       this.onDestroy();
       this.id = null;
+      this.originalData = null;
       this.isNew = function() {
         return true;
       };

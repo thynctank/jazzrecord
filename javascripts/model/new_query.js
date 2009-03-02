@@ -71,13 +71,15 @@ JazzRecord.Model.prototype.query = function(options) {
       var assocModel = JazzRecord.models.get(assocTable);
       var assocIdCol = assocModel.options.foreignKey;
       if(record[assocIdCol]) {
-        var loadBelongsTo = function(depth) {
-          return assocModel.first({id: record[assocIdCol], depth: depth});
-        };
-        if(options.depth < 1)
-          record[assoc] = new JazzRecord.AssociationLoader(loadBelongsTo);
-        else
-          record[assoc] = loadBelongsTo(remainingDepth);
+        if(options.depth < 1) {
+          record[assoc] = new JazzRecord.AssociationLoader(function(depth) {
+            return assocModel.first({id: record[assocIdCol], depth: depth});
+          });
+        }
+        else {
+          var sql = "SELECT * FROM " + assocTable + " WHERE id=" + record[assocIdCol] + " LIMIT 1";
+          queryQueue.push({record: record, depth: remainingDepth, assoc: assoc, sql: sql, model: assocModel});
+        }
       }
       else
         record[assoc] = null;
@@ -123,18 +125,20 @@ JazzRecord.Model.prototype.query = function(options) {
     queueItem.record[queueItem.assoc] = queueItem.model.query({depth: queueItem.depth});
     if(queueItem.record[queueItem.assoc]) {
       var originalData = null;
-      switch(queueItem.originalDataSuffix) {
-        case "OriginalRecordID":
-          originalData = queueItem.record[queueItem.assoc].id;
-          break;
-        case "OriginalRecordIDs":
-          originalData = [];
-          JazzRecord.each(queueItem.record[queueItem.assoc], function(rec) {
-            originalData.push(rec.id);
-          });
-          break;
+      if(queueItem.originalDataSuffix) {
+        switch(queueItem.originalDataSuffix) {
+          case "OriginalRecordID":
+            originalData = queueItem.record[queueItem.assoc].id;
+            break;
+          case "OriginalRecordIDs":
+            originalData = [];
+            JazzRecord.each(queueItem.record[queueItem.assoc], function(rec) {
+              originalData.push(rec.id);
+            });
+            break;
+        }
+        queueItem.record[queueItem.assoc + queueItem.originalDataSuffix] = originalData;
       }
-      queueItem.record[queueItem.assoc + queueItem.originalDataSuffix] = originalData;
     }
   }, this);
 

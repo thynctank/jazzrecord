@@ -16,7 +16,7 @@
       <script src="javascripts/association_loader.js" type="text/javascript" charset="utf-8"></script>
       <script src="javascripts/model/util.js" type="text/javascript" charset="utf-8"></script>
       <script src="javascripts/record/validate.js" type="text/javascript" charset="utf-8"></script>
-      <script src="javascripts/model/query.js" type="text/javascript" charset="utf-8"></script>
+      <script src="javascripts/model/new_query.js" type="text/javascript" charset="utf-8"></script>
       <script src="javascripts/model/save.js" type="text/javascript" charset="utf-8"></script>
       <script src="javascripts/model/destroy.js" type="text/javascript" charset="utf-8"></script>
       <script src="javascripts/model/find.js" type="text/javascript" charset="utf-8"></script>
@@ -33,9 +33,9 @@
       // JazzRecord.adapter = new JazzRecord.HTML5Adapter({dbFile: "test.db"});
       JazzRecord.adapter = new JazzRecord.GearsAdapter({dbFile: "test.db"});
       JazzRecord.debug = true;
-      JazzRecord.migrations = migrations;
-      JazzRecord.fixtures = fixtures;
-      JazzRecord.migrate({refresh: true});
+      // JazzRecord.migrations = migrations;
+      // JazzRecord.fixtures = fixtures;
+      JazzRecord.migrate();
     </script>
     
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />

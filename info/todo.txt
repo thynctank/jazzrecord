@@ -3,15 +3,18 @@
 NICK
 ----
 * Make id optional in model declaration
-* Rearrange all HTML5Adapter-affected code so it uses queryQueue in synchronous as well, to prepare.
+* Rearrange all HTML5Adapter-affected code so it uses recordQueue in synchronous as well, to prepare.
 * HTML5Adapter affects:
   - finders (really just query.js)
   - Record.save()
   - Record.isValid() (for validatesUniquenessOf())
   - Model.create()
   - JazzRecord.migrate() (if this will even be possible in async)
-  - queryQueue uses push/shift for managing items
-  - Depth is the hardest part
+  - recordQueue uses push/shift for managing items, contains:
+    - record
+    - depth
+    - assoc
+    - sql
 * Test transactions
 * Add ability to pass multiple colnames to all validates methods
 * Implement add'l dirty object methods: http://ryandaigle.com/articles/2008/3/31/what-s-new-in-edge-rails-dirty-objects

@@ -33,9 +33,9 @@
       // JazzRecord.adapter = new JazzRecord.HTML5Adapter({dbFile: "test.db"});
       JazzRecord.adapter = new JazzRecord.GearsAdapter({dbFile: "test.db"});
       JazzRecord.debug = true;
-      // JazzRecord.migrations = migrations;
-      // JazzRecord.fixtures = fixtures;
-      JazzRecord.migrate();
+      JazzRecord.migrations = migrations;
+      JazzRecord.fixtures = fixtures;
+      JazzRecord.migrate({refresh:true});
     </script>
     
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />

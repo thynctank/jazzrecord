@@ -63,8 +63,8 @@ JazzRecord.Model.prototype.select = function(options) {
   
   options = JazzRecord.shallowMerge(defaultOptions, options);
   
-  if(!options.select == "*" && !options.select.contains("id"))
-    options.select = "id, " + options.select;      
+  if(!(options.select.indexOf("id") != -1))
+    options.select = "id, " + options.select;
   if(options.order)
     options.order = "ORDER BY " + options.order;
   if(JazzRecord.getType(options.limit) == "number")

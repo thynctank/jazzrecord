@@ -85,8 +85,7 @@ JazzRecord.Model.prototype.query = function(options) {
         record[assoc] = null;
     });
     
-    // needs to use SQL like
-    // SELEC assocTable.* FROM mappingTable INNER JOIN assocTable ON mappingTable.assocIdCol = assocTable.id
+    // SELECT assocTable.* FROM mappingTable INNER JOIN assocTable ON mappingTable.assocIdCol = assocTable.id
     JazzRecord.each(this.options.hasAndBelongsToMany, function(assocTable, assoc) {
       var context = this;
       var mappingTable = [this.table, assocTable].sort().toString().replace(",", "_");
@@ -125,8 +124,6 @@ JazzRecord.Model.prototype.query = function(options) {
         }
       }
     }, this);
-    
-    // implement eager/lazy loading for associations
     
     records.push(record);
   }, this);

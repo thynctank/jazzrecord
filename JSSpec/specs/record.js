@@ -362,5 +362,21 @@ describe("Auto-linking and unlinking", {
     c.save();
     value_of(c.students.length).should_be(1);
     value_of(Student.last().classes.length).should_be(0);
+  },
+  "Changing a record's id and saving will update any records which belongsTo the record": function() {
+    p = Person.find(5);
+    value_of(p.vehicle.id).should_be(3);
+    value_of(p.vehicle.person_id).should_be(5);
+    p.id = 22;
+    p.save();
+    value_of(p.vehicle.id).should_be(3);
+    value_of(p.vehicle.person_id).should_be(22);
+    
+    h = Home.first();
+    value_of(h.people[0].id).should_be(2);
+    value_of(h.people[0].home_id).should_be(1);
+    h.updateAttribute("id", 15);
+    value_of(h.people[0].id).should_be(2);
+    value_of(h.people[0].home_id).should_be(15);
   }
 });

@@ -58,8 +58,11 @@ JazzRecord.Model.prototype = {
 
     return new JazzRecord.Record(recordOptions);
   },
+  // allows ID or no ID
   create: function(options) {
     var record = this.newRecord(options);
+    delete record.originalData;
+    record.isNew = function() { return true;};
     record.save();
     return record;
   }

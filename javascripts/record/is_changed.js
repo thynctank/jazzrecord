@@ -1,6 +1,6 @@
 JazzRecord.Record.prototype.isChanged = function() {
   //bail if brand-new record
-  if(!this.id)
+  if(this.isNew())
     return false;
 
   JazzRecord.each(this.options.model.options.belongsTo, function(assocTable, assoc) {

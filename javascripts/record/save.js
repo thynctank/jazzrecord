@@ -33,8 +33,8 @@ JazzRecord.Record.prototype.save = function() {
         var assocModel = JazzRecord.models.get(assocTable);
         var oldRecord = assocModel.first({id: this[assoc + "OriginalRecordID"], depth:0});
         oldRecord.updateAttribute(foreignKey, null);
-        this[assoc].updateAttribute(foreignKey, this.id);
       }
+      this[assoc].updateAttribute(foreignKey, this.id);
       this[assoc + "OriginalRecordID"] = this[assoc].id;
     }
     else {

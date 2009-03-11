@@ -2,22 +2,27 @@
 
 NICK
 ----
-* Make id optional in model declaration
 * Rearrange all HTML5Adapter-affected code so it uses recordQueue in synchronous as well, to prepare.
+* Add queryQueue to options in query
+* Make id optional in model declaration again
+* Move util.js. save.js out of model dir. Need to update includes and rake task
 * HTML5Adapter affects:
   - finders (really just query.js)
   - Record.save()
   - Record.isValid() (for validatesUniquenessOf())
   - Model.create()
-  - JazzRecord.migrate() (if this will even be possible in async)
+  - JazzRecord.migrate() (migrations will simply have to be tooled async themselves, and we'll need to setup the numbered migrations to use a queue similar to query)
   - recordQueue uses push/shift for managing items, contains:
+    - original record (setup an empty object and begin pushing values onto it for async?)
+    - original callback
     - record
     - depth
     - assoc
     - sql
-* Test transactions
-* Add ability to pass multiple colnames to all validates methods
-* Implement add'l dirty object methods: http://ryandaigle.com/articles/2008/3/31/what-s-new-in-edge-rails-dirty-objects
+  so all of these features need to be able to take callbacks
+* Test transactions - run assert in callback
+* Test async - asserts in callback
+* Cascading destroy (must work in async!)
 
 DAVID
 -----
@@ -31,9 +36,7 @@ JESSE
 
 UNASSIGNED
 ----------
-* Move util.js. save.js out of model dir. Need to update includes and rake task
 * Run JSSpec in AIR/Titanium
-* Privatize all non-API methods by adding initial underscores to names, propagate this change across all calls to those methods
 * Make AIRAdapter optionally work with encrypted local database
 
 IDEAS

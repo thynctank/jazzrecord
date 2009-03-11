@@ -76,6 +76,8 @@ JazzRecord.migrate = function(options) {
         var sql = "CREATE TABLE IF NOT EXISTS " + mappingTable + "(" + keys[0] + " INTEGER, " + keys[1] + " INTEGER)";
         JazzRecord.run(sql);
       });
+      
+      model.options.columns.id = "int";
     });
   }
     

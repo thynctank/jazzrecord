@@ -4,7 +4,6 @@ var Person = new JazzRecord.Model({
   belongsTo: { home: "homes"},
   hasOne: { vehicle: "vehicles"},
   columns: {
-    id: "number",
     name: "text",
     age: "number",
     gender: "text",
@@ -40,7 +39,6 @@ var Home = new JazzRecord.Model({
   foreignKey: "home_id",
   hasMany: { people: "people", students: "students"},
   columns: {
-    id: "number",
     style: "text",
     footage: "number",
     address: "text",
@@ -58,7 +56,6 @@ var Vehicle = new JazzRecord.Model({
   foreignKey: "vehicle_id",
   belongsTo: { owner: "people"},
   columns: {
-    id: "number",
     make: "text",
     model: "text",
     year: "number",
@@ -76,7 +73,6 @@ var HighSchoolClass = new JazzRecord.Model({
   foreignKey: "high_school_class_id",
   hasAndBelongsToMany: { students: "students"},
   columns: {
-    id: "number",
     name: "text",
     room: "number"
   }
@@ -88,7 +84,6 @@ var Student = new JazzRecord.Model({
   belongsTo: { home: "homes"},
   hasAndBelongsToMany: { classes: "high_school_classes"},
   columns: {
-    id: "number",
     name: "text",
     grade: "text",
     home_id: "number"
@@ -99,7 +94,6 @@ var Animal = new JazzRecord.Model({
   table: "animals",
   foreignKey: "animal_id",
   columns: {
-    id: "number",
     name: "text",
     species: "text",
     say: "text"

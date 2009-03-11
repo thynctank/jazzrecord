@@ -85,8 +85,7 @@ JazzRecord.Model.prototype.query = function(options) {
         record[assoc] = null;
     });
     
-    // needs to use SQL like
-    // SELEC assocTable.* FROM mappingTable INNER JOIN assocTable ON mappingTable.assocIdCol = assocTable.id
+    // SELECT assocTable.* FROM mappingTable INNER JOIN assocTable ON mappingTable.assocIdCol = assocTable.id
     JazzRecord.each(this.options.hasAndBelongsToMany, function(assocTable, assoc) {
       var context = this;
       var mappingTable = [this.table, assocTable].sort().toString().replace(",", "_");
@@ -94,13 +93,23 @@ JazzRecord.Model.prototype.query = function(options) {
       var assocIdCol = assocModel.options.foreignKey;
       if(assocIdCol) {
         var loadHasAndBelongsToMany = function(depth) {
-          var sql = "SELECT * FROM " + mappingTable + " WHERE " + context.options.foreignKey + "=" + record.id;
-          // setup temporary array of mapping records
-          var mappingRecords = JazzRecord.adapter.run(sql);
+          var sql = "SELECT " + assocTable + ".* FROM " + mappingTable + " INNER JOIN " + assocTable + " ON " + mappingTable + "." + assocIdCol + "=" + assocTable + ".id WHERE " + mappingTable + "." + context.options.foreignKey + "=" + record.id;
+          var assocData = JazzRecord.adapter.run(sql);
           var assocRecords = [];
-          JazzRecord.each(mappingRecords, function(mappingRecord) {
-            assocRecords.push(assocModel.first({id: mappingRecord[assocIdCol], depth: depth}));
-          }, context);
+          JazzRecord.each(assocData, function(rowData) {
+            var recordOptions = {
+              model: assocModel,
+              columns: assocModel.options.columns,
+              data: rowData
+            };
+
+            JazzRecord.each(assocModel.options.events, function(eventHandler, eventName) {
+              recordOptions[eventName] = eventHandler;
+            });
+            
+            var assocRecord = new JazzRecord.Record(recordOptions);
+            assocRecords.push(assocRecord);
+          });
           return assocRecords;
         };
         if(options.depth < 1)
@@ -115,8 +124,6 @@ JazzRecord.Model.prototype.query = function(options) {
         }
       }
     }, this);
-    
-    // implement eager/lazy loading for associations
     
     records.push(record);
   }, this);

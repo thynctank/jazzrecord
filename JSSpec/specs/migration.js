@@ -35,8 +35,8 @@ describe("Manual Migrations", {
       1: {
         up: function() {
           JazzRecord.createTable("caffeine", {
-            id: 'int',
-            brand: 'text'
+            id: "int",
+            brand: "text"
           });
         },
         down: function() {

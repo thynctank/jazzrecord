@@ -4,7 +4,6 @@ NICK
 ----
 * Rearrange all HTML5Adapter-affected code so it uses recordQueue in synchronous as well, to prepare.
 * Add queryQueue to options in query
-* Make id optional in model declaration again
 * Move util.js. save.js out of model dir. Need to update includes and rake task
 * HTML5Adapter affects:
   - finders (really just query.js)

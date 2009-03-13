@@ -1,5 +1,6 @@
 // Primary method for initializing JazzRecord via manual or automigration
 JazzRecord.migrate = function(options) {
+  JazzRecord.setupSchema();
   if(JazzRecord.getType(options) === "object") {
     // Drop tables
     if(options.refresh) {
@@ -22,7 +23,6 @@ JazzRecord.migrate = function(options) {
 
   // test for apparently-valid obj literal based on migration 1 being present
   if(migrations[1] && JazzRecord.getType(migrations[1]) === "object") {
-    JazzRecord.setupSchema();
     var startVersion = JazzRecord.currentSchemaVersion();
     var targetVersion = Infinity;
 

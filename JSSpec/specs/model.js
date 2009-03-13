@@ -52,7 +52,7 @@ describe("Model", {
       b.content = BoxContent.create({description: "Box Contents " + boxNum});
       b.save();
     });
-    
+
     value_of(BlackBox.count()).should_be(3);
     value_of(BlackBox.find(1).getData()).should_be({id: 1, label: "Box 1", number: 1});
   },

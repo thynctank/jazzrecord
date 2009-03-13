@@ -56,8 +56,15 @@ JazzRecord.Model.prototype = {
       recordOptions[eventName] = eventHandler;
     });
 
-    return new JazzRecord.Record(recordOptions);
+    var record = new JazzRecord.Record(recordOptions);
+    
+    record.isNew = function() {
+      return true;
+    };
+    
+    return record;
   },
+  // allows ID or no ID
   create: function(options) {
     var record = this.newRecord(options);
     record.save();

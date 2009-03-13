@@ -24,6 +24,8 @@ JazzRecord.typeValue = function(cols, field, val) {
     switch(cols[field]) {
       case "string":
       case "text":
+        if(JazzRecord.getType(val) === "string")
+          val = val.replace(/'/g, "''");
         return "'" + val + "'";
       
       case "int":

@@ -103,36 +103,51 @@ JazzRecord.HTML5Adapter = function(options) {
 };
 
 JazzRecord.HTML5Adapter.prototype = {
-  run: function(query, callback) {
+  run: function(query, success, error) {
     this.parent.run(query);
     this.db.transaction(function(tx) {
       tx.executeSql(query, [], function(tx, resultSet) {
-        var rows = [];
-        for(var i = 0, j = resultSet.rows.length; i < j; i++) {
-          rows.push(resultSet.rows.item(i));
-        }
-        if(callback)
-          callback(rows);
-      });
+          var rows = [];
+          for(var i = 0, j = resultSet.rows.length; i < j; i++) {
+            rows.push(resultSet.rows.item(i));
+          }
+          if(success)
+            success(rows);
+        }, function(tx, err) {
+          if(error)
+            error(err.message);
+          else
+            JazzRecord.puts("There was an error: " + err.message);
+        });
     });
   },
 
-  count: function(query, callback) {
+  count: function(query, success, error) {
     this.parent.count(query);
     this.db.transaction(function(tx) {
       tx.executeSql(query, [], function(tx, resultSet) {
-        if(callback)
-          callback(resultSet.rows.item(0)["COUNT(*)"]);
+        if(success)
+          success(resultSet.rows.item(0)["COUNT(*)"]);
+        }, function(tx, err) {
+        if(error)
+          error(err.message);
+        else
+          JazzRecord.puts("There was an error: " + err.message);
       });
     });
   },
 
-  save: function(query, callback) {
+  save: function(query, success, error) {
     this.parent.save(query);
     this.db.transaction(function(tx) {
       tx.executeSql(query, [], function(tx, resultSet) {
-        if(callback)
-          callback(resultSet.insertId);
+        if(success)
+          success(resultSet.insertId);
+        }, function(tx, err) {
+        if(error)
+          error(err.message);
+        else
+          JazzRecord.puts("There was an error: " + err.message);
       });
     });
   }

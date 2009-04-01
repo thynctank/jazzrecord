@@ -222,14 +222,14 @@ JazzRecord.models = new JazzRecord.Hash();
 
 // Globals can be overridden in site-specific js
 JazzRecord.depth = 1;
-JazzRecord.run = function(sql) {
-  return JazzRecord.adapter.run(sql);
+JazzRecord.run = function(sql, success, error) {
+  return JazzRecord.adapter.run(sql, success, error);
 };
-JazzRecord.count = function(sql) {
-  return JazzRecord.adapter.count(sql);
+JazzRecord.count = function(sql, success, error) {
+  return JazzRecord.adapter.count(sql, success, error);
 };
-JazzRecord.save = function(sql) {
-  return JazzRecord.adapter.save(sql);
+JazzRecord.save = function(sql, success, error) {
+  return JazzRecord.adapter.save(sql, success, error);
 };
 
 // Thanks to Uriel Katz and his JStORM lib (http://labs.urielkatz.com/wiki/JStORM) for this idea

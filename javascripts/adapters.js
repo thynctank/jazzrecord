@@ -88,8 +88,9 @@ JazzRecord.GearsAdapter.prototype = {
 
 JazzRecord.TitaniumAdapter = function(options) {
   JazzRecord.extend.call(this, JazzRecord.GearsAdapter, options);
-  this.db = new ti.Database;
-  this.db.open(this.options.dbFile);
+  // use the synchronous DB API in Titanium 0.4+ which
+  // is API compatible with Gears DB API
+  this.db = Titanium.Database.open(this.options.dbFile);
   this.result = null;
 };
 

@@ -90,7 +90,7 @@ JazzRecord.Record.prototype.validatesInclusionOf = function(col, list, errText) 
 
 JazzRecord.Record.prototype.validatesFormatOf = function(col, regex, errText) {
   val = this[col];
-  if (!val.match(regex)) {
+  if (val && !val.match(regex)) {
     errText = JazzRecord.isDefined(errText) ? errText : (col + " does not match expected format: " + regex.toString());
     this.pushError(col, errText);
   }  

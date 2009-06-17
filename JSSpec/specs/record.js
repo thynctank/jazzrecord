@@ -178,6 +178,16 @@ describe("Validation", {
     p.validatesFormatOf("name", /\w+, \w+/, "name is not last name, first name");
     value_of(p.errors).should_be({});
   },
+  "validatesFormatOf should not push error if value is empty/null": function() {
+    p.name = "";
+    p.validatesFormatOf("name", /\w+, \w+/);
+    value_of(p.errors).should_be({});
+    // and again with null
+    p.errors = {};
+    p.name = null;
+    p.validatesFormatOf("name", /\w+, \w+/);
+    value_of(p.errors).should_be({});
+  },
   "validatesNumericalityOf should verify the property is numeric or int": function() {
     p.age = "shfify shfive";
     p.validatesNumericalityOf("age", "must be numeric");

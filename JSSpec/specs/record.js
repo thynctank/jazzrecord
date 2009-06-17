@@ -141,6 +141,17 @@ describe("Validation", {
     r.validatesUniquenessOf("name");
     value_of(r.errors).should_be({});
   },
+  "validatesUniquenessOf should not allow existing records to be updated to value of other existing records": function() {
+    p = Person.last();
+    p.name = Person.first().name;
+    p.validatesUniquenessOf("name");
+    value_of(p.errors.name[0]).should_be("name is not unique");
+
+    p.errors = {};
+    p.name = "Unused";
+    p.validatesUniquenessOf("name");
+    value_of(p.errors).should_be({});
+  },
   "validatesAcceptanceOf should verify a bool has been set to true": function() {
     p.has_vehicle = false;
     value_of(p.errors).should_be({});

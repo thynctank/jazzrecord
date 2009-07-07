@@ -85,6 +85,10 @@ var JazzRecord = {
         };
     }
     
+    else {
+      JazzRecord.puts = function(obj) {};
+    }
+    
     JazzRecord.puts(obj);
   },
 

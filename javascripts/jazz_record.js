@@ -34,31 +34,58 @@ var JazzRecord = {
   puts: function(obj) {
     if(JazzRecord.debug === false)
       return;
-    if(typeof console !== "undefined" && console.log) {
-      switch(JazzRecord.getType(obj)) {
-        case "object":
-          if(console.dir) {
-            console.dir(obj);
-            break;
-          }
-        default:
-          console.log(obj);
-      }
+      
+    // branch the lazy definition of puts
+    if(typeof Titanium !== "undefined") {
+      JazzRecord.puts = function(obj) {
+        console.debug(obj);
+      };
     }
-    if(typeof air !== "undefined") {
-      if (air.Introspector && air.Introspector.Console) {
+    
+    else if(typeof console !== "undefined" && console.log) {
+      JazzRecord.puts = function(obj) {
+        if(JazzRecord.debug === false)
+          return;
+
         switch(JazzRecord.getType(obj)) {
-          case "string":
-            air.Introspector.Console.log(obj);
-            break;
           case "object":
-            air.Introspector.Console.dump(obj);
-            break;
+            if(console.dir) {
+              console.dir(obj);
+              break;
+            }
+          default:
+            console.log(obj);
         }
+      };
+    }
+
+    else if(typeof air !== "undefined") {
+      if (air.Introspector && air.Introspector.Console) {
+        JazzRecord.puts = function(obj) {
+          if(JazzRecord.debug === false)
+            return;
+
+          switch(JazzRecord.getType(obj)) {
+            case "string":
+              air.Introspector.Console.log(obj);
+              break;
+            case "object":
+              air.Introspector.Console.dump(obj);
+              break;
+          }
+        };
+        
       }
       else
-        air.trace(obj);
+        JazzRecord.puts = function(obj) {
+          if(JazzRecord.debug === false)
+            return;
+            
+          air.trace(obj);
+        };
     }
+    
+    JazzRecord.puts(obj);
   },
 
   merge: function() {

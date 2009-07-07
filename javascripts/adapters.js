@@ -5,10 +5,9 @@ JazzRecord.Adapter = function() {
 };
 
 JazzRecord.AirAdapter = function(options) {
-  var defaults = {
+  JazzRecord.setOptions.call(this, options, {
     dbFile: "jazz_record.db"
-  };
-  JazzRecord.setOptions.call(this, options, defaults);
+  });
   JazzRecord.extend.call(this, JazzRecord.Adapter);
 
   this.connection = new air.SQLConnection();
@@ -42,10 +41,9 @@ JazzRecord.AirAdapter.prototype = {
 };
 
 JazzRecord.GearsAdapter = function(options) {
-  var defaults = {
+  JazzRecord.setOptions.call(this, options, {
     dbFile: "jazz_record.db"
-  };
-  JazzRecord.setOptions.call(this, options, defaults);
+  });
   JazzRecord.extend.call(this, JazzRecord.Adapter);
 
   this.db = google.gears.factory.create("beta.database");
@@ -87,18 +85,23 @@ JazzRecord.GearsAdapter.prototype = {
 };
 
 JazzRecord.TitaniumAdapter = function(options) {
-  JazzRecord.extend.call(this, JazzRecord.GearsAdapter, options);
   // use the synchronous DB API in Titanium 0.4+ which
   // is API compatible with Gears DB API
+  JazzRecord.setOptions.call(this, options, {
+    dbFile: "jazz_record.db"
+  });
+  JazzRecord.extend.call(this, JazzRecord.Adapter);
+
   this.db = Titanium.Database.open(this.options.dbFile);
   this.result = null;
 };
 
+JazzRecord.TitaniumAdapter.prototype = JazzRecord.GearsAdapter.prototype;
+
 JazzRecord.HTML5Adapter = function(options) {
-  var defaults = {
+  JazzRecord.setOptions.call(this, options, {
     dbFile: "jazz_record.db"
-  };
-  JazzRecord.setOptions.call(this, options, defaults);
+  });
   JazzRecord.extend.call(this, JazzRecord.Adapter, options);
   this.db = openDatabase(this.options.dbFile);
 };

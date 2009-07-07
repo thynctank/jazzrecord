@@ -131,6 +131,27 @@ describe("Validation", {
     value_of(p.errors.age).should_have(1, "items");
     value_of(p.errors.age[0]).should_be("age can't be empty, null or blank");
   },
+  "validatesUniquenessOf should verify a value is not inserted twice in a column": function() {
+    //initialize data w/ p
+    p.save();
+    var q = Person.newRecord({name: "Dummy"});
+    q.validatesUniquenessOf("name");
+    value_of(q.errors.name[0]).should_be("name is not unique");
+    var r = Person.newRecord({name: "Anotherdummy"});
+    r.validatesUniquenessOf("name");
+    value_of(r.errors).should_be({});
+  },
+  "validatesUniquenessOf should not allow existing records to be updated to value of other existing records": function() {
+    p = Person.last();
+    p.name = Person.first().name;
+    p.validatesUniquenessOf("name");
+    value_of(p.errors.name[0]).should_be("name is not unique");
+
+    p.errors = {};
+    p.name = "Unused";
+    p.validatesUniquenessOf("name");
+    value_of(p.errors).should_be({});
+  },
   "validatesAcceptanceOf should verify a bool has been set to true": function() {
     p.has_vehicle = false;
     value_of(p.errors).should_be({});
@@ -176,6 +197,16 @@ describe("Validation", {
     p.errors = {};
     p.name = "Carter, Nick";
     p.validatesFormatOf("name", /\w+, \w+/, "name is not last name, first name");
+    value_of(p.errors).should_be({});
+  },
+  "validatesFormatOf should not push error if value is empty/null": function() {
+    p.name = "";
+    p.validatesFormatOf("name", /\w+, \w+/);
+    value_of(p.errors).should_be({});
+    // and again with null
+    p.errors = {};
+    p.name = null;
+    p.validatesFormatOf("name", /\w+, \w+/);
     value_of(p.errors).should_be({});
   },
   "validatesNumericalityOf should verify the property is numeric or int": function() {

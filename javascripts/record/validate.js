@@ -90,7 +90,7 @@ JazzRecord.Record.prototype.validatesInclusionOf = function(col, list, errText) 
 
 JazzRecord.Record.prototype.validatesFormatOf = function(col, regex, errText) {
   val = this[col];
-  if (!val.match(regex)) {
+  if (val && !val.match(regex)) {
     errText = JazzRecord.isDefined(errText) ? errText : (col + " does not match expected format: " + regex.toString());
     this.pushError(col, errText);
   }  
@@ -140,8 +140,8 @@ JazzRecord.Record.prototype.validatesPresenceOf = function(col, errText) {
 
 JazzRecord.Record.prototype.validatesUniquenessOf = function(col, errText) {
   var val = this[col];
-  var acceptableCount = this.id ? 1 : 0;
-  if(this.options.model.findAllBy(col, val, 0).length > acceptableCount) {
+  var existingRecord = this.options.model.findBy(col, val, 0);
+  if(existingRecord && existingRecord.id != this.id) {
     errText = JazzRecord.isDefined(errText) ? errText : (col + " is not unique");
     this.pushError(col, errText);
   }

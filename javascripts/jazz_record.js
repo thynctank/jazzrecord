@@ -38,7 +38,7 @@ var JazzRecord = {
     // branch the lazy definition of puts
     if(typeof Titanium !== "undefined") {
       JazzRecord.puts = function(obj) {
-        console.debug(obj);
+        Titanium.API.debug(obj);
       };
     }
     

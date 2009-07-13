@@ -56,6 +56,9 @@ JazzRecord.GearsAdapter.prototype = {
     this.parent.run(query);
     this.result = this.db.execute(query);
     var rows = [];
+    if(query.indexOf("CREATE") > -1) {
+      return rows;
+    }
     while(this.result.isValidRow()) {
       var row = {};
       for(var i = 0, j = this.result.fieldCount(); i < j; i++) {

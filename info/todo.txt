@@ -36,6 +36,7 @@ UNASSIGNED
 ----------
 * Run JSSpec in AIR/Titanium
 * Make AIRAdapter optionally work with encrypted local database
+* Add support for SQL LIKE "%X%" clause
 
 IDEAS
 -----

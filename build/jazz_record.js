@@ -1,4 +1,4 @@
-//JazzRecord Version 0.7 build 1248428645
+//JazzRecord Version 0.7 build 1248430702
 //Copyright (c) 2009 Nick Carter <thynctank@thynctank.com>
 //
 //Permission is hereby granted, free of charge, to any person

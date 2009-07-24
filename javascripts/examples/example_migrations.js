@@ -47,6 +47,14 @@ var migrations = {
         say: "text"
       });
       
+      JazzRecord.createTable("books", {
+        id: "number",
+        title: "text",
+        author: "text",
+        category: "text",
+        person_id: "number"
+      });
+      
       JazzRecord.createTable("high_school_classes_students", {
         student_id: "number",
         high_school_class_id: "number"

@@ -5,7 +5,7 @@ describe("Automigration", {
   "Migrating clean with no Fixtures": function() {
     JazzRecord.fixtures = null;
     JazzRecord.migrate({refresh: true});
-    value_of(JazzRecord.models.getLength()).should_be(7);
+    value_of(JazzRecord.models.getLength()).should_be(8);
     value_of(Person.count()).should_be(0);
   },
   "Loading Fixtures with Refresh": function() {

@@ -3,6 +3,7 @@ var Person = new JazzRecord.Model({
   foreignKey: "person_id",
   belongsTo: { home: "homes"},
   hasOne: { vehicle: "vehicles"},
+  hasMany: { books: "books"},
   columns: {
     name: "text",
     age: "number",
@@ -107,5 +108,18 @@ var Animal = new JazzRecord.Model({
     speak: function() {
       return this["say"];
     }
+  }
+});
+
+var Book = new JazzRecord.Model({
+  table: "books",
+  foreignKey: "book_id",
+  order: "author",
+  belongsTo: {owner: "people"},
+  columns: {
+    title: "text",
+    author: "text",
+    category: "text",
+    person_id: "number"
   }
 });

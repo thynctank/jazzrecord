@@ -138,8 +138,20 @@ JazzRecord.Record.prototype = {
     }
     return this[association];
   },
-  updateAttribute: function(name, val) {
+  updateAttribute: function(name, val, saveAfter) {
     this[name] = val;
-    this.save();
+    if(typeof saveAfter === "undefined")
+      saveAfter = true;
+    if(saveAfter)
+      this.save();
+  },
+  updateAttributes: function(obj, saveAfter) {
+    JazzRecord.each(this.options.columns, function(colType, colName) {
+      this[colName] = obj[colName] || this[colName];
+    }, this);
+    if(typeof saveAfter === "undefined")
+      saveAfter = true;
+    if(saveAfter)
+      this.save();
   }
 };

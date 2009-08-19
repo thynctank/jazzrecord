@@ -25,7 +25,6 @@ NICK
 DAVID
 -----
 * Test performance
-* Add updateAttributes() method on Record, allow ID cols or association names both in object literal
 
 JESSE
 -----

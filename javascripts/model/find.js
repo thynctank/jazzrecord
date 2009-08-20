@@ -65,8 +65,12 @@ JazzRecord.Model.prototype.select = function(options) {
   
   if(options.select.indexOf("id") === -1 && options.select.indexOf("*") === -1)
     options.select = "id, " + options.select;
-  if(options.order)
+  if(options.order || this.options.order) {
+    if(!options.order && this.options.order)
+      options.order = this.options.order;
+
     options.order = "ORDER BY " + options.order;
+  }
   if(JazzRecord.getType(options.limit) == "number")
     options.limit = "LIMIT " + options.limit;
   if(JazzRecord.getType(options.offset) == "number")

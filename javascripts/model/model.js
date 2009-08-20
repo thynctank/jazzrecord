@@ -5,6 +5,7 @@ JazzRecord.Model = function(options) {
     columns: {},
     // association data
     foreignKey: "",
+    order: "",
     hasOne: {},
     belongsTo: {},
     hasMany: {},

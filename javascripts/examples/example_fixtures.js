@@ -1,7 +1,7 @@
 var fixtures = {
   tables: {
     people: [
-      {name: "Nick", age: 28, gender: "m", home_id: 1, has_vehicle: true},
+      {name: "Nick", age: 29, gender: "m", home_id: 1, has_vehicle: true},
       {name: "Terri", age: 32, gender: "f", home_id: 1, has_vehicle: true},
       {name: "David", age: 23, gender: "m"},
       {name: "Karen", age: 30, gender: "f"},
@@ -25,11 +25,16 @@ var fixtures = {
       {name: "Peggy Sue"}
     ],
     animals: [
-    {name: "Tigra", species: "tiger", say: "rawr!"},
-    {name: "Shere Khan", species: "tiger", say: "rawr!"},
-    {name: "Tweety", species: "bird", say: "bawk!!"},
-    {name: "Punkin", species: "cat", say: "meow!!"},
-    {name: "Akai", species: "dog", say: "woof!"}
+      {name: "Tigra", species: "tiger", say: "rawr!"},
+      {name: "Shere Khan", species: "tiger", say: "rawr!"},
+      {name: "Tweety", species: "bird", say: "bawk!!"},
+      {name: "Punkin", species: "cat", say: "meow!!"},
+      {name: "Akai", species: "dog", say: "woof!"}
+    ],
+    books: [
+      {title: "Even Faster Web Sites", author: "Steve Souders", category: "Web Programming", person_id: 1},
+      {title: "Quicksilver", author: "Neal Stephenson", category: "Fiction", person_id: 1},
+      {title: "Pragmatic Thinking & Learning: Refactor Your Wetware", author: "Andy Hunt", category: "Programming", person_id: 1}
     ]
   },
   

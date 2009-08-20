@@ -80,7 +80,11 @@ describe("Finders", {
   },
   
   // test for ID or array, custom select, custom order, limit, offset, conditions
-  
+  "default order vs custom order": function() {
+    value_of(Book.options.order).should_be("author");
+    value_of(Book.all()[0].title).should_be("Pragmatic Thinking & Learning: Refactor Your Wetware");
+    value_of(Book.all({order:"title"})[0].title).should_be("Even Faster Web Sites");
+  },
   "find": function() {
     // single ID
     value_of(Person.find(1).name).should_be("Nick");

@@ -212,3 +212,13 @@ JazzRecord.changeColumn = function(tableName, columnName, type) {
   };
   JazzRecord.modifyColumn(tableName, columnName, options);
 };
+
+JazzRecord.addIndex = function(tableName, columnName) {
+  var sql = "CREATE INDEX IF NOT EXISTS " + tableName + "_" + columnName + "_index ON " + tableName + " (" + columnName + ")";
+  JazzRecord.run(sql);
+};
+
+JazzRecord.removeIndex = function(tableName, columnName) {
+  var sql = "DROP INDEX IF EXISTS " + tableName + "_" + columnName + "_index";
+  JazzRecord.run(sql);
+};

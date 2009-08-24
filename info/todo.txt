@@ -1,45 +1,26 @@
-# Outstanding to-do items. Can be tentatively assigned as noted below.
-
-NICK
-----
-* Rearrange all HTML5Adapter-affected code so it uses recordQueue in synchronous as well, to prepare.
-* Add queryQueue to options in query
-* HTML5Adapter affects:
-  - finders (really just query.js)
-  - Record.save()
-  - Record.isValid() (for validatesUniquenessOf())
-  - Model.create()
-  - JazzRecord.migrate() (migrations will simply have to be tooled async themselves, and we'll need to setup the numbered migrations to use a queue similar to query)
-  - recordQueue uses push/shift for managing items, contains:
-    - original record (setup an empty object and begin pushing values onto it for async?)
-    - original callback
-    - record
-    - depth
-    - assoc
-    - sql
-  so all of these features need to be able to take callbacks
-* Test transactions - run assert in callback
-* Test async - asserts in callback
-* Cascading destroy (must work in async!)
-
-DAVID
------
-* Test performance
-
-JESSE
------
-* add update, updateAll on Model
-* add createIndex/dropIndex methods in schema_operations.js (copy names from activerecord, natch)
-
-UNASSIGNED
+Priorities
 ----------
-* Run JSSpec in AIR/Titanium
-* Make AIRAdapter optionally work with encrypted local database
-* Add support for SQL LIKE "%X%" clause
+  * write tests for all of these first:
+    * add update, updateAll on Model
+    * model.destroy() takes id or array of ids
+  * Abstract out conditionsSql (used in finders, count, update, model.destroy), updateSql (used in save/model.update)
+  * remove model/util.js, clean up files in general
+  * Clean up/simplify query.js
+
+Secondary
+---------
+  * Integrate Syncopate into JazzRecord for async w/ no preloading of associations, but w/ most validations
+  * Cascading destroy (must work in async!)
+  * Run JSSpec in AIR/Titanium
+  * Test performance
+  
+Later
+-----
+  * Make AIRAdapter optionally work with encrypted local database
+  * Add support for SQL LIKE "%X%" clause
 
 IDEAS
 -----
-Yahoo BrowserPlus Support
--http://browserplus.yahoo.com/services/  (PStore - DB ACCESS)
-
-Jaxer
+  * Yahoo BrowserPlus Support
+  * http://browserplus.yahoo.com/services/  (PStore - DB ACCESS)
+  * Jaxer

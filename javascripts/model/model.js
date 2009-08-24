@@ -70,5 +70,17 @@ JazzRecord.Model.prototype = {
     var record = this.newRecord(options);
     record.save();
     return record;
+  },
+  update: function(id, options) {
+    
+  },
+  // updates is hash of col/values
+  // conditions should be abstracted out
+  updateAll: function(updates, conditions) {
+    
+  },
+  // selector is ID or array of IDs
+  destroy: function(selector) {
+    
   }
 };

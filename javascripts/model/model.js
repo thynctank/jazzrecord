@@ -71,16 +71,19 @@ JazzRecord.Model.prototype = {
     record.save();
     return record;
   },
-  update: function(id, options) {
+  // update methods enforce validation
+  // options is hash of col/values, id is single ID or array
+  // returns modified record object whether passed or failed validation if single ID
+  update: function(ids, options) {
     
   },
   // updates is hash of col/values
   // conditions should be abstracted out
-  updateAll: function(updates, conditions) {
+  updateAll: function(updates, conditions, options) {
     
   },
   // selector is ID or array of IDs
-  destroy: function(selector) {
+  destroy: function(ids) {
     
   }
 };

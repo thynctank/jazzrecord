@@ -161,3 +161,46 @@ describe("Finder association loading", {
     value_of(Student.first().classes[1].name).should_be("Phys. Ed.");
   }
 });
+
+describe("Updating and destroying from Model", {
+  before_all: function() {
+    initJazz();
+    JazzRecord.migrate({refresh: true});
+  },
+  "Updating a single record": function() {
+    // update from model rather than record
+    var p = Person.update(Person.first().id, {name: "Nicholas"});
+    value_of(p.name).should_be("Nicholas");
+  },
+  "Updating multiple specified records": function() {
+    var folks = new JazzRecord.Hash({
+      1: {
+        name: "Jimmy"
+      },
+      2: {
+        name: "Rosalynn"
+      },
+      3: {
+        name: "Deep"
+      }
+    });
+    Person.update(folks.getKeys(), folks.getValues());
+    value_of(Person.find(1).name).should_be("Jimmy");
+    value_of(Person.find(2).name).should_be("Rosalynn");
+    value_of(Person.find(3).name).should_be("Deep");
+  },
+  "Updating fails validation": function() {
+    //should still return modified record obj
+    var p = Person.update(1, {age: 111});
+    value_of(p.errors).should_include("age");
+  },
+  "Updating all records": function() {
+     
+  },
+  "Destroying a record from Model": function() {
+    
+  },
+  "Destroying multiple records from Model": function() {
+    
+  }
+});

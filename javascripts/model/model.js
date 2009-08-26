@@ -74,20 +74,30 @@ JazzRecord.Model.prototype = {
   // update methods enforce validation
   // options is hash of col/values, id is single ID or array
   // returns modified record object whether passed or failed validation if single ID
-  update: function(ids, options) {
-    
+  update: function(ids, updates) {
+    var records = this.find(ids);
+    if(JazzRecord.getType(records) === "array") {
+      JazzRecord.each(records, function(rec, index) {
+        rec.updateAttributes(updates[index]);
+      });
+      return records;
+    }
+    else {
+      records.updateAttributes(updates);
+      return records;
+    }
   },
   // updates is hash of col/values
   // conditions should be abstracted out
   // does not validate
   updateAll: function(updates, conditions, options) {
-    
-  },
-  // selector is ID or array of IDs
-  destroy: function(ids) {
-    
-  },
-  destroyAll: function(conditions) {
-    
+    if(!JazzRecord.isDefined(options))
+      options = {};
+    if(JazzRecord.isDefined(conditions))
+      options = JazzRecord.shallowMerge(options, {conditions: conditions});
+    var records = this.all(options);
+    JazzRecord.each(records, function(rec, index) {
+      rec.updateAttributes(updates);
+    });
   }
 };

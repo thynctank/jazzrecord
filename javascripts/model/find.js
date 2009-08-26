@@ -11,6 +11,7 @@ JazzRecord.Model.prototype.find = function(options) {
         options = {id: options, limit: 1};
         break;
       case "object":
+        options.limit = 1;
         break;
       default:
         throw("Type Error. Model.find() expects Number, Array or Object");
@@ -63,6 +64,8 @@ JazzRecord.Model.prototype.select = function(options) {
   
   options = JazzRecord.shallowMerge(defaultOptions, options);
   
+  console.log(options);
+  
   if(options.select.indexOf("id") === -1 && options.select.indexOf("*") === -1)
     options.select = "id, " + options.select;
   if(options.order || this.options.order) {
@@ -80,9 +83,40 @@ JazzRecord.Model.prototype.select = function(options) {
 
   //add complex conditions handling as in AR
   if(options.conditions) {
-    options.conditions = "WHERE " + options.conditions;
-    if(options.id)
-      options.conditions += " AND id=" + options.id;
+    var conditionSql = "WHERE ";
+    // // simple string
+    if(JazzRecord.getType(options.conditions) === "string") {
+      options.conditions = conditionSql + options.conditions;
+      if(options.id)
+        options.conditions += " AND id=" + options.id;
+    }
+    else {
+      // obj hash of cols/values
+      JazzRecord.each(this.options.columns, function(colType, colName) {
+        var conditionCol = options.conditions[colName];
+        if(conditionCol) {
+          var conditionType = JazzRecord.getType(conditionCol);
+          switch(conditionType) {
+            // equality
+            case "string":
+              conditionSql += (colName + "='" + conditionCol.replace(/'/g, "''") + "' AND ");
+              break;
+            // arbitrary comparison operator, comparison value
+            case "array":
+              conditionSql += colName + " " + conditionCol[0] + " ";
+              if(JazzRecord.getType(conditionCol[1]) === "string")
+                conditionSql += (conditionCol[1].replace(/'/g, "''") + " AND ");
+              else
+                conditionSql += conditionCol[1] + " AND ";
+              break;
+            default:
+              conditionSql += (colName + "=" + conditionCol + " AND ");
+              break;  
+          }
+        }
+      });
+      options.conditions = conditionSql.slice(0, -4);
+    }
   }
   else if(options.id) {
     if(JazzRecord.getType(options.id)=='number') {

@@ -134,6 +134,13 @@ describe("Finders", {
   },
   "count": function() {
     value_of(Person.count()).should_be(5);
+  },
+  "Finding with columns hash for conditions": function() {
+    value_of(Person.find({conditions:{name: "Nick"}}).id).should_be(1);
+    value_of(Person.find({conditions:{name: "Karen", age: 30}}).id).should_be(4);
+  },
+  "Finding with arbitrary comparison operators for conditions": function() {
+    value_of(Person.find({conditions:{age: ["<", 24]}}).name).should_be("David");
   }
 });
 
@@ -195,10 +202,10 @@ describe("Updating and destroying from Model", {
     value_of(p.errors).should_include("age");
   },
   "Updating all records": function() {
-    Person.updateAll({name: "Bob"});
+    Person.updateAll({name: "Juan"});
     var people = Person.all();
     JazzRecord.each(people, function(record, index) {
-     value_of(record.name).should_be("Bob");
+     value_of(record.name).should_be("Juan");
     });
   },
   "Updating all records conditionally": function() {
@@ -215,7 +222,7 @@ describe("Updating and destroying from Model", {
     var people = [1,2,3];
     Person.destroy(people);
     JazzRecord.each(people, function(id, index) {
-      value_of(id).should_be_null();
+      value_of(Person.find(id)).should_be_null();
     });
   },
   "Destroying all records": function() {
@@ -226,6 +233,6 @@ describe("Updating and destroying from Model", {
   "Destroying all records conditionally": function() {
     value_of(Animal.count()).should_be(5);
     Animal.destroyAll({say: "rawr!"});
-    value_of(Animal.count()).should_be(5);
+    value_of(Animal.count()).should_be(3);
   }
 });

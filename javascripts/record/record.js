@@ -61,7 +61,7 @@ JazzRecord.Record.prototype = {
     if(!this.id)
       throw("Unsaved record cannot be destroyed");
     else {
-      this.options.model.destroy(this.id);
+      this.options.model.deleteRecords(this.id);
       // unlink any hasMany and hasOne records from this record
       JazzRecord.each(this.options.model.options.hasMany, function(assocTable, assoc) {
         this.load(assoc);

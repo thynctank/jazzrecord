@@ -1,9 +1,9 @@
 Priorities
 ----------
-  * write tests for all of these first:
-    * add update, updateAll on Model
-    * model.destroy() takes id or array of ids
-  * Abstract out conditionsSql (used in finders, count, update, model.destroy), updateSql (used in save/model.update)
+  * add update, updateAll on Model
+  * model.destroy() takes id or array of ids
+  * Abstract out conditionsSql (used in finders, count, update, model.updateAll model.destroy), updateSql (used in save/model.update)
+
   * remove model/util.js, clean up files in general
   * Clean up/simplify query.js
 

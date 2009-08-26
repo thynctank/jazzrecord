@@ -163,7 +163,7 @@ describe("Finder association loading", {
 });
 
 describe("Updating and destroying from Model", {
-  before_all: function() {
+  before_each: function() {
     initJazz();
     JazzRecord.migrate({refresh: true});
   },
@@ -195,12 +195,37 @@ describe("Updating and destroying from Model", {
     value_of(p.errors).should_include("age");
   },
   "Updating all records": function() {
-     
+    Person.updateAll({name: "Bob"});
+    var people = Person.all();
+    JazzRecord.each(people, function(record, index) {
+     value_of(record.name).should_be("Bob");
+    });
+  },
+  "Updating all records conditionally": function() {
+    value_of(Person.find(2).name).should_be("Terri");
+    Person.updateAll({name: "Theresa"}, {name: "Terri"});
+    value_of(Person.find(2).name).should_be("Theresa");
   },
   "Destroying a record from Model": function() {
-    
+    value_of(Person.find(1).name).should_be("Nick");
+    Person.destroy(1);
+    value_of(Person.find(1)).should_be_null();
   },
   "Destroying multiple records from Model": function() {
-    
+    var people = [1,2,3];
+    Person.destroy(people);
+    JazzRecord.each(people, function(id, index) {
+      value_of(id).should_be_null();
+    });
+  },
+  "Destroying all records": function() {
+    value_of(Person.count()).should_be(5);
+    Person.destroyAll();
+    value_of(Person.count()).should_be(0);
+  },
+  "Destroying all records conditionally": function() {
+    value_of(Animal.count()).should_be(5);
+    Animal.destroyAll({say: "rawr!"});
+    value_of(Animal.count()).should_be(5);
   }
 });

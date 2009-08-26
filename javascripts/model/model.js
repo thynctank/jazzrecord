@@ -79,11 +79,15 @@ JazzRecord.Model.prototype = {
   },
   // updates is hash of col/values
   // conditions should be abstracted out
+  // does not validate
   updateAll: function(updates, conditions, options) {
     
   },
   // selector is ID or array of IDs
   destroy: function(ids) {
+    
+  },
+  destroyAll: function(conditions) {
     
   }
 };

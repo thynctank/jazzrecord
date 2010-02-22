@@ -1,5 +1,20 @@
 Priorities
 ----------
+=======
+  * Run JSSpec in AIR/Titanium
+  * add update, updateAll on Model
+  * model.destroy() takes id or array of ids
+  * Abstract out conditionsSql (used in finders, count, update, model.updateAll model.destroy), updateSql (used in save/model.update)
+  * Add indexes to model declarations:
+      indexes: ["one", "two", "three"]
+      
+        OR
+      
+      indexes: {
+        one: ["a", "b", "c"],
+        two: ["d", "e"]
+      }
+
   * remove model/util.js, clean up files in general
   * Clean up/simplify query.js
 
@@ -7,7 +22,6 @@ Secondary
 ---------
   * Integrate Syncopate into JazzRecord for async w/ no preloading of associations, but w/ most validations
   * Cascading destroy (must work in async!)
-  * Run JSSpec in AIR/Titanium
   * Test performance
   
 Later

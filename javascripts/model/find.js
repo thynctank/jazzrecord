@@ -64,8 +64,6 @@ JazzRecord.Model.prototype.select = function(options) {
   
   options = JazzRecord.shallowMerge(defaultOptions, options);
   
-  console.log(options);
-  
   if(options.select.indexOf("id") === -1 && options.select.indexOf("*") === -1)
     options.select = "id, " + options.select;
   if(options.order || this.options.order) {

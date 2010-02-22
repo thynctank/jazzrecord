@@ -98,6 +98,9 @@ JazzRecord.Record.prototype = {
     JazzRecord.each(this.options.columns, function(colType, colName) {
       data[colName] = this[colName];
     }, this);
+    if(this.id)
+      data.id = this.id;
+    
     return data;
   },
   revert: function() {

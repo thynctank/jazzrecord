@@ -161,6 +161,8 @@ JazzRecord.Record.prototype.save = function() {
     JazzRecord.each(this.options.model.options.columns, function(colType, colName) {
       this.originalData[colName] = this[colName];
     }, this);
+    if(this.id)
+      this.originalData.id = this.id;
     
     this.isNew = function() {
       return false;

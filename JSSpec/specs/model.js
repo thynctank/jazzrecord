@@ -71,6 +71,31 @@ describe("Model", {
   "Should allow saving of valid data": function() {
     var validBox = BlackBox.create({label: "A box full of crap", number: 30});
     value_of(validBox.id).should_not_be_null();
+  },
+  "Should propagate id automatically to originalData, even when left out of model declaration and auto-migrated, avoiding issues when re-saving changed data": function() {
+    var JunkModel = new JazzRecord.Model({
+      table: "junk_items",
+      columns: {
+        name: "string",
+        description: "string"
+      },
+      validate: {
+        atSave: function() {
+          this.validatesPresenceOf("name");
+        }
+      }
+    });
+    JazzRecord.migrations = {};
+    JazzRecord.migrate();
+    
+    var junk = JunkModel.create({name: "stuff", description: "junk stuff"});
+    var firstID = junk.id;
+    value_of(firstID).should_not_be_null();
+    
+    junk.description = "Still junk stuff, but more of it";
+    junk.save();
+    //shouldn't change arbitrarily, should stay same
+    value_of(junk.id).should_be(firstID);
   }
 });
 describe("Finders", {

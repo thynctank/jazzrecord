@@ -29,8 +29,8 @@ def build_minified_script(output, version)
 HEADER_INFO
 
   script_names.each do |script_name|
-    compressor = IO.popen("java -jar build/yuicompressor-2.3.6.jar --type js --charset UTF-8", "w+")
-    compressor.puts IO.read("javascripts/#{script_name}.js")
+    compressor = IO.popen("java -jar yuicompressor-2.3.6.jar --type js --charset UTF-8", "w+")
+    compressor.puts IO.read("source/#{script_name}.js")
     compressor.close_write
     new_js += compressor.gets
   end

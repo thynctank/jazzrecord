@@ -1,0 +1,11 @@
+<application xmlns="http://ns.adobe.com/air/application/1.5"> 
+    <id>com.thynctank.jazzrecord</id> 
+    <version>0.8</version> 
+    <filename>JazzRecord JSSpec</filename> 
+    <initialWindow> 
+        <content>air_spec_runner.html</content> 
+        <visible>true</visible> 
+        <width>1200</width> 
+        <height>800</height> 
+    </initialWindow> 
+</application>

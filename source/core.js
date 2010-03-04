@@ -263,16 +263,6 @@ JazzRecord.save = function(sql, success, error) {
   return JazzRecord.adapter.save(sql, success, error);
 };
 
-// Thanks to Uriel Katz and his JStORM lib (http://labs.urielkatz.com/wiki/JStORM) for this idea
-// Specify reason for rollback in thrown exception
 JazzRecord.runTransaction = function(func, bind) {
-  JazzRecord.run("BEGIN");
-  try {
-    func.apply(bind || this);
-  }
-  catch(e) {
-    JazzRecord.run("ROLLBACK");
-    throw(e);
-  }
-  JazzRecord.run("END");
+  JazzRecord.adapter.runTransaction(func, bind);
 };

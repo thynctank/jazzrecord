@@ -4,6 +4,19 @@ JazzRecord.Adapter = function() {
   };
 };
 
+JazzRecord.Adapter.prototype = {
+  runTransaction: function(func, bind) {
+    JazzRecord.run("BEGIN");
+    try {
+      func.apply(bind || this);
+      JazzRecord.run("END");
+    }
+    catch(e) {
+      JazzRecord.run("ROLLBACK");
+    }
+  }  
+};
+
 JazzRecord.AirAdapter = function(options) {
   JazzRecord.setOptions.call(this, options, {
     dbFile: "jazz_record.db"
@@ -37,6 +50,17 @@ JazzRecord.AirAdapter.prototype = {
     this.statement.text = query;
     this.statement.execute();
     return this.statement.getResult().lastInsertRowID;
+  },
+  
+  runTransaction: function(func, bind) {
+    this.connection.begin();
+    try {
+      func.apply(bind || this);
+      this.connection.commit();
+    }
+    catch(e) {
+      this.connection.rollback();
+    }
   }
 };
 

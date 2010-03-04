@@ -257,7 +257,7 @@ JazzRecord.run = function(sql, success, error) {
   return JazzRecord.adapter.run(sql, success, error);
 };
 JazzRecord.count = function(sql, success, error) {
-  return JazzRecord.adapter.count(sql, success, error);
+  return parseInt(JazzRecord.adapter.count(sql, success, error), 10);
 };
 JazzRecord.save = function(sql, success, error) {
   return JazzRecord.adapter.save(sql, success, error);

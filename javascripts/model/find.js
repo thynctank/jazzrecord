@@ -52,7 +52,7 @@ JazzRecord.Model.prototype.count = function(conditions) {
   this.sql = "SELECT COUNT(*) FROM " + this.table;
   if(conditions)
     this.sql += " WHERE " + conditions;
-  return JazzRecord.adapter.count(this.sql);
+  return JazzRecord.count(this.sql);
 };
 
 JazzRecord.Model.prototype.select = function(options) {

@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+      <script src="dependencies/gears_init.js" type="text/javascript" charset="utf-8"></script>
+
+      <script src="source/core.js" type="text/javascript" charset="utf-8"></script>
+      <script src="source/adapters.js" type="text/javascript" charset="utf-8"></script>
+      <script src="source/record/record.js" type="text/javascript" charset="utf-8"></script>
+      <script src="source/record/save.js" type="text/javascript" charset="utf-8"></script>
+      <script src="source/record/is_changed.js" type="text/javascript" charset="utf-8"></script>
+      <script src="source/model/model.js" type="text/javascript" charset="utf-8"></script>
+      <script src="source/association_loader.js" type="text/javascript" charset="utf-8"></script>
+      <script src="source/util.js" type="text/javascript" charset="utf-8"></script>
+      <script src="source/save.js" type="text/javascript" charset="utf-8"></script>
+      <script src="source/record/validate.js" type="text/javascript" charset="utf-8"></script>
+      <script src="source/model/new_query.js" type="text/javascript" charset="utf-8"></script>
+      <script src="source/model/destroy.js" type="text/javascript" charset="utf-8"></script>
+      <script src="source/model/find.js" type="text/javascript" charset="utf-8"></script>
+      <script src="source/migrations/schema_operations.js" type="text/javascript" charset="utf-8"></script>
+      <script src="source/migrations/migrate.js" type="text/javascript" charset="utf-8"></script>
+
+      <script src="examples/example_models.js" type="text/javascript" charset="utf-8"></script>
+      <script src="examples/example_migrations.js" type="text/javascript" charset="utf-8"></script>
+      <script src="examples/example_fixtures.js" type="text/javascript" charset="utf-8"></script>
+      
+    <script type="text/javascript" charset="utf-8">
+      JazzRecord.adapter = new JazzRecord.GearsAdapter({dbFile: "test.db"});
+      JazzRecord.migrations = migrations;
+      JazzRecord.fixtures = fixtures;
+      JazzRecord.migrate({refresh:true});
+    </script>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>JazzRecord</title>
+  </head>
+  <body>
+  </body>
+</html>

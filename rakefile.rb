@@ -1,3 +1,5 @@
+require 'fileutils'
+
 def build_minified_script(output, version)
   script_names = %w(core adapters record/record record/is_changed record/save model/model association_loader util record/validate model/query save model/destroy model/find migrations/schema_operations migrations/migrate)
   
@@ -38,6 +40,20 @@ HEADER_INFO
   File.open("build/#{output}.js", "w") { |file| file.write(new_js) }  
 end
 
+def copy_build_specs_and_examples_to_spec_dirs
+  platforms = %w(air titanium_mobile titanium_desktop)
+  directories_to_copy = %w(examples JSSpec/base JSSpec/specs)
+
+  platforms.each do |platform|
+    platform_dir = "JSSpec/platforms/#{platform}"
+    FileUtils.copy("build/jazz_record.js", platform_dir)
+    
+    directories_to_copy.each do |dir|
+      FileUtils.cp_r(dir, platform_dir)
+    end
+  end
+end
+
 desc "Builds custom-named JazzRecord file"
 task :build do
   if ENV['output']
@@ -56,6 +72,8 @@ task :default do
   if ENV['version']
     build_minified_script('jazz_record', ENV['version'])
     puts "Wrote jazz_record.js"
+    copy_build_specs_and_examples_to_spec_dirs
+    puts "Copied latest builds, specs and examples to platform spec directories"
   else
     puts "Usage:"
     puts "\trake version=X.X"

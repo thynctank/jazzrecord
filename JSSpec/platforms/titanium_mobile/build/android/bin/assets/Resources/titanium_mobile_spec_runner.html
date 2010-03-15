@@ -6,7 +6,6 @@
 <link rel="stylesheet" type="text/css" href="base/JSSpec.css" />
 <script type="text/javascript" src="base/diff_match_patch.js"></script>
 <script type="text/javascript" src="base/JSSpec.js"></script>
-<script type="text/javascript" src="base/jsmock.js"></script>
 
 <script type="text/javascript" src="AIRAliases.js"></script>
 <script type="text/javascript" src="AIRIntrospector.js"></script>
@@ -19,19 +18,37 @@
 
 <script type="text/javascript" charset="utf-8">
 // needs to set adapter, turn off debug, reset depth and clear db
-  JazzRecord.adapter = new JazzRecord.TitaniumAdapter({dbFile: "test.db"});
-  function initJazz() {
-    JazzRecord.debug = false;
-    JazzRecord.depth = 1;
-    JazzRecord.migrations = migrations;
-    JazzRecord.fixtures = fixtures;
-    JazzRecord.migrate({refresh: true});
-  }
+// migrations not supported in TI mobile currently... many tests will break
+// Note also that DB name must not include a period in Titanium mobile
+  Titanium.API.info("Before adapter set");
+  JazzRecord.adapter = new JazzRecord.TitaniumMobileAdapter({dbFile: "test"});
+  Titanium.API.info("After adapter set");
+
+  // function initJazz() {
+  //   JazzRecord.debug = false;
+  //   JazzRecord.depth = 1;
+  //   // JazzRecord.migrations = migrations;
+  //   // JazzRecord.fixtures = fixtures;
+  //   JazzRecord.migrate();
+  // }
+  // 
+  Box = new JazzRecord.Model({
+    table: "boxes",
+    columns: {
+      name: "text",
+      contents: "text"
+    }
+  });
+  
+  JazzRecord.migrate({refresh: true});
+  
+  Box.create({name: "Bathroom stuff", contents: "Stuff that belongs in the bathroom"});
+  Titanium.API.info(Box.first().name);
 </script>
 
-<script src="specs/migration.js" type="text/javascript" charset="utf-8"></script>
-<script src="specs/model.js" type="text/javascript" charset="utf-8"></script>
-<script src="specs/record.js" type="text/javascript" charset="utf-8"></script>
+<!-- <script src="specs/migration.js" type="text/javascript" charset="utf-8"></script> -->
+<!-- <script src="specs/model.js" type="text/javascript" charset="utf-8"></script>
+<script src="specs/record.js" type="text/javascript" charset="utf-8"></script> -->
 
 </head>
 <body>

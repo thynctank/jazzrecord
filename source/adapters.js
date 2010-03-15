@@ -19,7 +19,7 @@ JazzRecord.Adapter.prototype = {
 
 JazzRecord.AirAdapter = function(options) {
   JazzRecord.setOptions.call(this, options, {
-    dbFile: "jazz_record.db"
+    dbFile: "jazz_record"
   });
   JazzRecord.extend.call(this, JazzRecord.Adapter);
 
@@ -66,7 +66,7 @@ JazzRecord.AirAdapter.prototype = {
 
 JazzRecord.GearsAdapter = function(options) {
   JazzRecord.setOptions.call(this, options, {
-    dbFile: "jazz_record.db"
+    dbFile: "jazz_record"
   });
   JazzRecord.extend.call(this, JazzRecord.Adapter);
 
@@ -112,10 +112,10 @@ JazzRecord.GearsAdapter.prototype = {
 };
 
 JazzRecord.TitaniumAdapter = function(options) {
-  // use the synchronous DB API in Titanium 0.4+ which
+  // use the synchronous DB API in Titanium which
   // is API compatible with Gears DB API
   JazzRecord.setOptions.call(this, options, {
-    dbFile: "jazz_record.db"
+    dbFile: "jazz_record"
   });
   JazzRecord.extend.call(this, JazzRecord.Adapter);
 
@@ -124,3 +124,51 @@ JazzRecord.TitaniumAdapter = function(options) {
 };
 
 JazzRecord.TitaniumAdapter.prototype = JazzRecord.GearsAdapter.prototype;
+
+JazzRecord.TitaniumMobileAdapter = function(options) {
+  // use the synchronous DB API in Titanium which
+  // is API compatible with Gears DB API
+  JazzRecord.setOptions.call(this, options, {
+    dbFile: "jazz_record"
+  });
+  JazzRecord.extend.call(this, JazzRecord.Adapter);
+
+  this.db = Titanium.Database.open(this.options.dbFile);
+  this.result = null;
+};
+
+JazzRecord.TitaniumMobileAdapter.prototype =  {
+  run: function(query) {
+    this.parent.run(query);
+    this.result = this.db.execute(query);
+    var rows = [];
+    if(query.indexOf("CREATE") > -1) {
+      return rows;
+    }
+    while(this.result.isValidRow()) {
+      var row = {};
+      for(var i = 0, j = this.result.getFieldCount(); i < j; i++) {
+        var field = this.result.getFieldName(i);
+        row[field] = this.result.field(i);
+      }
+      rows.push(row);
+      this.result.next();
+    }
+    this.result.close();
+    return rows;
+  },
+  
+  count: function(query) {
+    this.parent.count(query);
+    this.result = this.db.execute(query);
+    var number = this.result.field(0);
+    this.result.close();
+    return number;
+  },
+  
+  save: function(query) {
+    this.parent.save(query);
+    this.db.execute(query);
+    return this.db.lastInsertRowId;
+  }
+};

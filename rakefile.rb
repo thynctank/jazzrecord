@@ -46,6 +46,7 @@ def copy_build_specs_and_examples_to_spec_dirs
 
   platforms.each do |platform|
     platform_dir = "JSSpec/platforms/#{platform}"
+    platform_dir += "/Resources" if platform_dir.include?("titanium")
     FileUtils.copy("build/jazz_record.js", platform_dir)
     
     directories_to_copy.each do |dir|

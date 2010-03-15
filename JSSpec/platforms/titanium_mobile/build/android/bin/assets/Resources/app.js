@@ -1,0 +1,1 @@
+Titanium.UI.setBackgroundColor('#000');var window=Titanium.UI.createWindow();var specRunner=Titanium.UI.createWebView({url:"titanium_mobile_spec_runner.html",size:{width:600,height:"auto"}});window.add(specRunner);window.open({fullscreen:true});

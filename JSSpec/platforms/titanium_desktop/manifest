@@ -1,0 +1,26 @@
+#appname:titanium_desktop
+#appid:org.jazzrecord.titanium.desktop
+#publisher:thynctank
+#image:default_app_logo.png
+#url:http://www.jazzrecord.org
+#guid:e78a3c6e-25ae-4639-a0ca-41ee666292b6
+#desc:No description provided
+#type:desktop
+runtime:1.0.0
+api:1.0.0
+javascript:1.0.0
+tianalytics:1.0.0
+tiapp:1.0.0
+tifilesystem:1.0.0
+tiplatform:1.0.0
+tiui:1.0.0
+ticodec:1.0.0
+tidatabase:1.0.0
+tidesktop:1.0.0
+tigrowl:1.0.0
+timedia:1.0.0
+timonkey:1.0.0
+tinetwork:1.0.0
+tinotification:1.0.0
+tiprocess:1.0.0
+tiworker:1.0.0

@@ -49,10 +49,11 @@ JazzRecord.Model.prototype.last = function(options) {
 };
 
 JazzRecord.Model.prototype.count = function(conditions) {
-  this.sql = "SELECT COUNT(*) FROM " + this.table;
+  var options = {};
+  options.select = "COUNT(*)";
   if(conditions)
-    this.sql += " WHERE " + conditions;
-  return JazzRecord.count(this.sql);
+    options.conditions = conditions;
+  return this.select(options);
 };
 
 JazzRecord.Model.prototype.select = function(options) {
@@ -126,5 +127,9 @@ JazzRecord.Model.prototype.select = function(options) {
   }
   
   this.sql = JazzRecord.replaceAndClean(this.sql, options);
-  return this.query(options);
+  
+  if(options.select == "COUNT(*)")
+    return JazzRecord.count(this.sql);
+  else
+    return this.query(options);
 };

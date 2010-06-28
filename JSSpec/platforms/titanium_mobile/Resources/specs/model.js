@@ -166,6 +166,12 @@ describe("Finders", {
   },
   "Finding with arbitrary comparison operators for conditions": function() {
     value_of(Person.find({conditions:{age: ["<", 24]}}).name).should_be("David");
+  },
+  "counting with conditions object": function() {
+    value_of(Person.count({conditions: {name: "Nick"}})).should_be(1);
+  },
+  "counting with conditions string": function() {
+    value_of(Person.count({conditions: 'name: "Nick"'})).should_be(1);
   }
 });
 

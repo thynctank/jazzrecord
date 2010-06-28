@@ -41,7 +41,6 @@ JazzRecord.AirAdapter.prototype = {
   
   count: function(query) {
     this.parent.count(query);
-    query = query.toUpperCase();
     return this.run(query)[0]["COUNT(*)"];
   },
   

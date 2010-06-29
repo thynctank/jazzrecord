@@ -24,11 +24,17 @@ JazzRecord.typeValue = function(cols, field, val) {
     switch(cols[field]) {
       case "string":
       case "text":
-        if(JazzRecord.getType(val) === "string")
+        if(JazzRecord.getType(val) === "string") {
+          // escape single quotes and dollar signs.
+          // quotes are escaped for SQLite
           val = val.replace(/'/g, "''");
+          // dollar signs are escaped for use in calling str.replace in JazzRecord.replaceAndClean()
+          val = val.replace(/\$/g, "$$$$");
+        }
         return "'" + val + "'";
       
       case "int":
+      case "integer":
         val = parseInt(val, 10);
         return JazzRecord.getType(val) === "number" ? val : 0;
       case "number":
@@ -41,5 +47,7 @@ JazzRecord.typeValue = function(cols, field, val) {
           return 1;
         else
           return 0;
+      default:
+        return val;
     }
 };

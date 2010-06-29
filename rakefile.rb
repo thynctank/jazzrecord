@@ -1,7 +1,7 @@
 require 'fileutils'
 
 def build_minified_script(output, version)
-  script_names = %w(core adapters record/record record/is_changed record/save model/model association_loader util record/validate model/query save model/destroy model/find migrations/schema_operations migrations/migrate)
+  script_names = %w(core adapters record/record record/is_changed record/save model/model association_loader util record/validate model/query model/save model/destroy model/find migrations/schema_operations migrations/migrate)
   
   build_time = Time.now
   new_js = <<HEADER_INFO

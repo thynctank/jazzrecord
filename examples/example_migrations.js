@@ -2,62 +2,62 @@ var migrations = {
   1: {
     up: function() {
       JazzRecord.createTable("people", {
-        id: "number",
+        id: "integer",
         name: "text",
-        age: "number",
+        age: "integer",
         gender: "text",
-        home_id: "number",
+        home_id: "integer",
         income: "float",
         has_vehicle: "bool"
       });
       
       JazzRecord.createTable("homes", {
-        id: "number",
+        id: "integer",
         style: "text",
-        footage: "number",
+        footage: "integer",
         address: "text",
         vacant: "bool"
       });
       
       JazzRecord.createTable("vehicles", {
-        id: "number",
+        id: "integer",
         make: "text",
         model: "text",
-        year: "number",
-        person_id: "number"
+        year: "integer",
+        person_id: "integer"
       });
       
       JazzRecord.createTable("high_school_classes", {
-        id: "number",
+        id: "integer",
         name: "text",
-        room: "number"
+        room: "integer"
       });
       
       JazzRecord.createTable("students", {
-        id: "number",
+        id: "integer",
         name: "text",
         grade: "text",
-        home_id: "number"
+        home_id: "integer"
       });
       
       JazzRecord.createTable("animals", {
-        id: "number",
+        id: "integer",
         name: "text",
         species: "text",
         say: "text"
       });
       
       JazzRecord.createTable("books", {
-        id: "number",
+        id: "integer",
         title: "text",
         author: "text",
         category: "text",
-        person_id: "number"
+        person_id: "integer"
       });
       
       JazzRecord.createTable("high_school_classes_students", {
-        student_id: "number",
-        high_school_class_id: "number"
+        student_id: "integer",
+        high_school_class_id: "integer"
       });
     },
     down: function() {

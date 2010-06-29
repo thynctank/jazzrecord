@@ -98,7 +98,9 @@ JazzRecord.Model.prototype.select = function(options) {
           switch(conditionType) {
             // equality
             case "string":
-              conditionSql += (colName + "='" + conditionCol.replace(/'/g, "''") + "' AND ");
+            case "text":
+              // see notes in util.js on escapement
+              conditionSql += (colName + "='" + conditionCol.replace(/'/g, "''").replace(/\$/g, "$$$$") + "' AND ");
               break;
             // arbitrary comparison operator, comparison value
             case "array":

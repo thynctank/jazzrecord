@@ -411,3 +411,24 @@ describe("Auto-linking and unlinking", {
     value_of(h.people[0].home_id).should_be(15);
   }
 });
+
+describe("Records with dollar names in their string values", {
+  before_all: function() {
+    initJazz();
+  },
+  after_all: function() {
+    delete p;
+    delete whackName;
+  },
+  "Saving a record with dollar signs should work": function() {
+    whackName = "$Buckaroo$";
+    p = Person.newRecord({name: whackName, age: 22});
+    value_of(p.save()).should_be_true();
+  },
+  "Loading a record with dollar signs should contain the original string": function() {
+    value_of(Person.last().name).should_be(whackName);
+  },
+  "Querying based on a string with dollar signs should work normally": function() {
+    value_of(Person.first({conditions: {name: whackName}}).name).should_be(whackName);
+  }
+});

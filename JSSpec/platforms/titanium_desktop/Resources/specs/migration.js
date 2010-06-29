@@ -35,7 +35,7 @@ describe("Manual Migrations", {
       1: {
         up: function() {
           JazzRecord.createTable("caffeine", {
-            id: "int",
+            id: "integer",
             brand: "text"
           });
         },
@@ -45,7 +45,7 @@ describe("Manual Migrations", {
       },
       2: {
         up: function() {
-          JazzRecord.addColumn("caffeine", "caffeineContent", "int");
+          JazzRecord.addColumn("caffeine", "caffeineContent", "integer");
         },
         down: function() {
           JazzRecord.removeColumn("caffeine", "caffeineContent");
@@ -64,12 +64,12 @@ describe("Manual Migrations", {
           JazzRecord.removeColumn("caffeine", "caffeineContent");
         },
         down: function() {
-          JazzRecord.addColumn("caffeine", "caffeineContent", "int");
+          JazzRecord.addColumn("caffeine", "caffeineContent", "integer");
         }
       },
       5: {
         up: function() {
-          JazzRecord.changeColumn("caffeine", "brand", "int");
+          JazzRecord.changeColumn("caffeine", "brand", "integer");
         },
         down: function() {
           JazzRecord.changeColumn("caffeine", "brand", "text");
@@ -113,14 +113,15 @@ describe("Manual Migrations", {
   "Removing a column": function() {
     JazzRecord.migrate(4);
     value_of(JazzRecord.currentSchemaVersion()).should_be(4);
-    Caffeine.create({brand: "Bawls" });
+    Caffeine.create({brand: "Bawls"});
+    value_of(Caffeine.last().brand).should_be("Bawls");
     value_of(Caffeine.last().caffeine).should_be(null);
   },
   "Changing a columns type": function() {
     value_of(JazzRecord.currentSchemaVersion()).should_be(4);
     JazzRecord.migrate(5);
     value_of(JazzRecord.currentSchemaVersion()).should_be(5);
-    value_of(Caffeine.options.columns.brand).should_be("int");
+    value_of(Caffeine.options.columns.brand).should_be("integer");
   
     // migrate all the way down
     JazzRecord.migrate(0);

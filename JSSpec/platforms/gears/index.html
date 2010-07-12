@@ -18,7 +18,7 @@
 // needs to set adapter, turn off debug, reset depth and clear db
   JazzRecord.adapter = new JazzRecord.GearsAdapter({dbFile: "test.db"});
   function initJazz() {
-    JazzRecord.debug = false;
+    // JazzRecord.debug = true;
     JazzRecord.depth = 1;
     JazzRecord.migrations = migrations;
     JazzRecord.fixtures = fixtures;

@@ -419,6 +419,8 @@ describe("Records with dollar names in their string values", {
   after_all: function() {
     delete p;
     delete whackName;
+    JazzRecord.debug = true;
+    initJazz();
   },
   "Saving a record with dollar signs should work": function() {
     whackName = "$Buckaroo$";

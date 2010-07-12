@@ -24,6 +24,8 @@ JazzRecord.Model.prototype.query = function(options) {
   var records = [];
   
   JazzRecord.each(data, function(rowData) {
+    // JazzRecord.puts("Row Data:");
+    // JazzRecord.puts(rowData);
     var recordOptions = {
       model: this,
       columns: this.options.columns,
@@ -123,8 +125,6 @@ JazzRecord.Model.prototype.query = function(options) {
         }
       }
     }, this);
-    
-    // implement eager/lazy loading for associations
     
     records.push(record);
   }, this);

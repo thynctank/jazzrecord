@@ -26,15 +26,15 @@ describe("Model", {
     });
     
     JazzRecord.createTable("black_boxes", {
-      id: "number",
+      id: "integer",
       label: "string",
-      number: "number"
+      number: "integer"
     });
     
     JazzRecord.createTable("box_contents", {
-      id: "number",
+      id: "integer",
       description: "string",
-      black_box_id: "number"
+      black_box_id: "integer"
     });
   },
   after_all: function() {

@@ -202,7 +202,7 @@ JazzRecord.Hash.toQueryString = function(obj) {
       default:
         result = key + "=" + encodeURIComponent(val);
     }
-    if(val)
+    if(JazzRecord.getType(val))
       queryStringComponents.push(result);
   });
   return queryStringComponents.join("&");

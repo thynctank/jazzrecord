@@ -4,6 +4,10 @@ JazzRecord is a (Rails 2) ActiveRecord clone for providing a JavaScript ORM laye
 
 JazzRecord is almost feature-complete, and it has been tested thoroughly across all major browsers and other runtimes using a test suite called [JSSpec](http://jania.pe.kr/aw/moin.cgi/JSSpec). Titanium testing will be implemented shortly. AIR support is fully tested.
 
+<div style="color:red;">
+  NOTE: a [Titanium bug](https://appcelerator.lighthouseapp.com/projects/25719/tickets/425-null-values-return-as-typecast-values-rather-than-null) is causing JazzRecord to misbehave. The test suite is currently failing. JazzRecord will not behave correctly in Titanium.
+</div>
+
 ##Future Development
 
 Currently underway is work to complete the feature set of JazzRecord, which consists of... rich dirty records support, implementing a few add'l finder options, and adding support for encrypted local databases for AIR 1.5+. We aim to support as many runtimes as we can, so feel free to submit a request or write your own adapter!
